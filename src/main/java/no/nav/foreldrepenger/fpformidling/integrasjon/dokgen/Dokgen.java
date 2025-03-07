@@ -11,4 +11,5 @@ public interface Dokgen {
 
     byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata);
 
+    String genererHtml(String maltype, Språkkode språkkode, Dokumentdata dokumentdata);
 }

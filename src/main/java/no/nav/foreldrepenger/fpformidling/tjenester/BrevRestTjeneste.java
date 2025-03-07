@@ -75,6 +75,25 @@ public class BrevRestTjeneste {
     }
 
     @POST
+    @Path("/generer/html/v3")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Returnerer en html som er en forhåndsvisning av brevet", tags = "brev")
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Response genererBrevHtml(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = ForhåndsvisV3Supplier.class) @Valid DokumentForhåndsvisDto dokumentbestillingDto) {
+        var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
+
+        LOG.info("Forhåndsvis V3 hendelse: {}", dokumentHendelse);
+        var dokument = brevBestillerTjeneste.genererBrevHtml(dokumentHendelse);
+        if (dokument != null && !dokument.isEmpty()) {
+            return Response.ok(dokument)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+        return Response.serverError().build();
+    }
+
+    @POST
     @Path("/bestill/v3")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")

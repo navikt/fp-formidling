@@ -22,6 +22,7 @@ public final class DokumentHendelseDtoMapper {
             .medRevurderingÅrsak(mapRevurderingÅrsak(forhåndsvisDto.revurderingÅrsak()))
             .medFritekst(forhåndsvisDto.fritekst())
             .medTittel(forhåndsvisDto.tittel())
+            .medFritekstHtml(forhåndsvisDto.fritekstHtml())
             .build();
     }
 
@@ -32,6 +33,7 @@ public final class DokumentHendelseDtoMapper {
             .medDokumentMal(mapDokumentMal(dokumentbestillingDto.dokumentMal()))
             .medRevurderingÅrsak(mapRevurderingÅrsak(dokumentbestillingDto.revurderingÅrsak()))
             .medFritekst(dokumentbestillingDto.fritekst())
+            .medFritekstHtml(dokumentbestillingDto.fritekstHtml())
             .medJournalførSom(Optional.ofNullable(dokumentbestillingDto.journalførSom()).map(DokumentHendelseDtoMapper::mapDokumentMal).orElse(null))
             .build();
     }
@@ -39,6 +41,7 @@ public final class DokumentHendelseDtoMapper {
     public static no.nav.foreldrepenger.fpformidling.typer.DokumentMal mapDokumentMal(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
             case FRITEKSTBREV -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV;
+            case FRITEKSTBREV_HTML -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV_HTML;
             case ENGANGSSTØNAD_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_INNVILGELSE;
             case ENGANGSSTØNAD_AVSLAG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_AVSLAG;
             case FORELDREPENGER_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_INNVILGELSE;

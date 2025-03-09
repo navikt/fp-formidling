@@ -61,7 +61,7 @@ public class BrevRestTjeneste {
     @Path("/forhaandsvis/v3")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
-    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK, sporingslogg = true)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response forhåndsvisDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = ForhåndsvisV3Supplier.class) @Valid DokumentForhåndsvisDto dokumentbestillingDto) {
         var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
@@ -78,7 +78,7 @@ public class BrevRestTjeneste {
     @Path("/bestill/v3")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")
-    @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.FAGSAK)
+    @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response bestillDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingV3Supplier.class) @Valid DokumentBestillingDto dokumentbestillingDto) { // NOSONAR
         var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);

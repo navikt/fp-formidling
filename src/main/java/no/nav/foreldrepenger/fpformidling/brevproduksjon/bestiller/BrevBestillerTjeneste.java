@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.tjenester.ForhåndsvisDokumentHTMLDto;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ApplicationScoped

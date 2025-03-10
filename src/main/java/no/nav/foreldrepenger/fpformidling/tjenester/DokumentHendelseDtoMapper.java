@@ -22,7 +22,6 @@ public final class DokumentHendelseDtoMapper {
             .medRevurderingÅrsak(mapRevurderingÅrsak(forhåndsvisDto.revurderingÅrsak()))
             .medFritekst(forhåndsvisDto.fritekst())
             .medTittel(forhåndsvisDto.tittel())
-            .medFritekstHtml(forhåndsvisDto.fritekstHtml())
             .build();
     }
 
@@ -33,7 +32,6 @@ public final class DokumentHendelseDtoMapper {
             .medDokumentMal(mapDokumentMal(dokumentbestillingDto.dokumentMal()))
             .medRevurderingÅrsak(mapRevurderingÅrsak(dokumentbestillingDto.revurderingÅrsak()))
             .medFritekst(dokumentbestillingDto.fritekst())
-            .medFritekstHtml(dokumentbestillingDto.fritekstHtml())
             .medJournalførSom(Optional.ofNullable(dokumentbestillingDto.journalførSom()).map(DokumentHendelseDtoMapper::mapDokumentMal).orElse(null))
             .build();
     }

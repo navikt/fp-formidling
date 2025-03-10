@@ -44,9 +44,6 @@ public class DokumentHendelse extends BaseEntitet {
     @Column
     private String fritekst;
 
-    @Column(name = "fritekst_html")
-    private String fritekstHtml;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "revurdering_aarsak")
     private RevurderingÅrsak revurderingÅrsak;
@@ -77,10 +74,6 @@ public class DokumentHendelse extends BaseEntitet {
 
     public String getFritekst() {
         return fritekst;
-    }
-
-    public String getFritekstHtml() {
-        return fritekstHtml;
     }
 
     public DokumentMal getDokumentMal() {
@@ -138,11 +131,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medFritekst(String fritekst) {
             this.kladd.fritekst = fritekst;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medFritekstHtml(String fritekstHtml) {
-            this.kladd.fritekstHtml = fritekstHtml;
             return this;
         }
 

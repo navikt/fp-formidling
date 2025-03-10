@@ -43,7 +43,7 @@ public class FritekstbrevHtmlDokumentdataMapper implements DokumentdataMapper {
     }
 
     private String finnFritekstHtml(DokumentHendelse hendelse, Behandling behandling) {
-        return hendelse.getFritekstHtml() != null && !hendelse.getFritekstHtml().isEmpty() ? hendelse.getFritekstHtml() : behandling.getBehandlingsresultat()
+        return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty() ? hendelse.getFritekst() : behandling.getBehandlingsresultat()
                 .getFritekstbrevHtml();
     }
 }

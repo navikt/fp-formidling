@@ -30,7 +30,6 @@ import jakarta.ws.rs.core.Response;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
-import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
@@ -64,7 +63,10 @@ public class ForvaltningRestTjeneste {
     }
 
     @Inject
-    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste, BrevBestillerTjeneste brevBestillerTjeneste) {
+    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient,
+                                   DokumentHendelseTjeneste dokumentHendelseTjeneste,
+                                   ProsessTaskTjeneste taskTjeneste,
+                                   BrevBestillerTjeneste brevBestillerTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.taskTjeneste = taskTjeneste;
@@ -87,8 +89,7 @@ public class ForvaltningRestTjeneste {
         var dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper()
             .readValue(dokgenJsonTilPdfDto.getDokumentdataJson(), Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
-        var resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.defaultNorsk(dokgenJsonTilPdfDto.getSpråkKode()),
-            dokumentdata);
+        var resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), dokgenJsonTilPdfDto.getSpråkKode(), dokumentdata);
 
         var responseBuilder = Response.ok(resultat);
         responseBuilder.type("application/pdf");
@@ -123,7 +124,8 @@ public class ForvaltningRestTjeneste {
     @Produces(APPLICATION_JSON)
     @Operation(description = "Generer brevdata-json for siste vedtak i en behandling", tags = "forvaltning")
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
-    public Response genererBrevdata(@Parameter(description = "Behandling uuid det skal genereres json for.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("behandlingUuid") @Valid @NotNull UUID behandlingUuid, @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("dokumentMal") @Valid @NotNull DokumentMal dokumentMal) {
+    public Response genererBrevdata(@Parameter(description = "Behandling uuid det skal genereres json for.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("behandlingUuid") @Valid @NotNull UUID behandlingUuid,
+                                    @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("dokumentMal") @Valid @NotNull DokumentMal dokumentMal) {
 
         var resultat = brevBestillerTjeneste.genererJson(behandlingUuid, DokumentHendelseDtoMapper.mapDokumentMal(dokumentMal));
 

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public class Prosent {
@@ -14,7 +15,8 @@ public class Prosent {
     @JsonValue
     private BigDecimal verdi;
 
-    private Prosent(BigDecimal verdi) {
+    @JsonCreator
+    public Prosent(BigDecimal verdi) {
         if (verdi == null || verdi.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalStateException("Ugyldig prosent-verdi: " + (verdi == null ? "null" : verdi.toPlainString()));
         }

@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.tjenester.forvaltning;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.QueryParam;
-
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
@@ -14,7 +14,7 @@ class DokgenJsonTilPdfDto implements AbacDto {
 
     @NotNull
     @QueryParam("språkKode")
-    private String språkKode;
+    private Språkkode språkKode;
 
     @NotNull
     @QueryParam("dokumentdataKlasse")
@@ -24,7 +24,7 @@ class DokgenJsonTilPdfDto implements AbacDto {
     @QueryParam("dokumentdataJson")
     private String dokumentdataJson;
 
-    DokgenJsonTilPdfDto(@NotNull String malType, @NotNull String språkKode, @NotNull String dokumentdataKlasse, @NotNull String dokumentdataJson) {
+    DokgenJsonTilPdfDto(@NotNull String malType, @NotNull Språkkode språkKode, @NotNull String dokumentdataKlasse, @NotNull String dokumentdataJson) {
         this.malType = malType;
         this.språkKode = språkKode;
         this.dokumentdataKlasse = dokumentdataKlasse;
@@ -38,7 +38,7 @@ class DokgenJsonTilPdfDto implements AbacDto {
         return malType;
     }
 
-    public String getSpråkKode() {
+    public Språkkode getSpråkKode() {
         return språkKode;
     }
 

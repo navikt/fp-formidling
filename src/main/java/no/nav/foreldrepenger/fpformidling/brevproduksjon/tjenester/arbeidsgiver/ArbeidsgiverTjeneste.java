@@ -58,14 +58,14 @@ public class ArbeidsgiverTjeneste {
         if (Objects.equals(KUNSTIG_ORG, arbeidsgiverReferanse)) {
             return "Arbeidsgiver utenom register";
         }
-        var personinfo = hentInformasjonFraTps(arbeidsgiverReferanse);
+        var personinfo = hentInformasjonFraPdl(arbeidsgiverReferanse);
         if (personinfo.isPresent()) {
             var info = personinfo.get();
             var nyttNavn = info.getNavn();
             cache.put(arbeidsgiverReferanse, nyttNavn);
             return nyttNavn;
         }
-        // Putter bevist ikke denne i cache da denne aktøren ikke er kjent, men legger denne i en backoff cache som benyttes for at vi ikke skal hamre på tps ved sikkerhetsbegrensning
+        // Putter bevist ikke denne i cache da denne aktøren ikke er kjent, men legger denne i en backoff cache som benyttes for at vi ikke skal hamre på pdl ved sikkerhetsbegrensning
         var nyttNavn = "N/A";
         failBackoffCache.put(arbeidsgiverReferanse, nyttNavn);
         return nyttNavn;
@@ -75,7 +75,7 @@ public class ArbeidsgiverTjeneste {
         return virksomhetTjeneste.getNavnFor(orgNummer);
     }
 
-    private Optional<Personinfo> hentInformasjonFraTps(String arbeidsgiver) {
+    private Optional<Personinfo> hentInformasjonFraPdl(String arbeidsgiver) {
         try {
             return personAdapter.hentBrukerForAktør(FagsakYtelseType.FORELDREPENGER, new AktørId(arbeidsgiver));
         } catch (VLException | IllegalArgumentException feil) {

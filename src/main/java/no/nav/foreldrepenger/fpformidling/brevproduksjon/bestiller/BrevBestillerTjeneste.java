@@ -55,7 +55,7 @@ public class BrevBestillerTjeneste {
 
     private DokumentMalType utledDokumentType(DokumentHendelse dokumentHendelse) {
         var dokumentMal = dokumentHendelse.getDokumentMal();
-        if (DokumentMal.FRITEKSTBREV.equals(dokumentMal)) {
+        if (DokumentMal.FRITEKSTBREV.equals(dokumentMal) || DokumentMal.FRITEKSTBREV_HTML.equals(dokumentMal)) {
             return mapDokumentMalType(dokumentHendelse.getJournalførSom());
         }
         return mapDokumentMalType(dokumentMal);

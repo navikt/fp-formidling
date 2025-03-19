@@ -7,11 +7,20 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMal;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.RevurderingÅrsak;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentBestillingDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentBestillingHtmlDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentForhåndsvisDto;
 
 public final class DokumentHendelseDtoMapper {
 
     private DokumentHendelseDtoMapper() {
+    }
+
+    public static DokumentHendelse mapFra(DokumentBestillingHtmlDto dokumentBestillingHtmlDto) {
+        return DokumentHendelse.builder()
+                .medBehandlingUuid(dokumentBestillingHtmlDto.behandlingUuid())
+                .medBestillingUuid(UUID.randomUUID())
+                .medDokumentMal(mapDokumentMal(dokumentBestillingHtmlDto.dokumentMal()))
+                .build();
     }
 
     public static DokumentHendelse mapFra(DokumentForhåndsvisDto forhåndsvisDto) {

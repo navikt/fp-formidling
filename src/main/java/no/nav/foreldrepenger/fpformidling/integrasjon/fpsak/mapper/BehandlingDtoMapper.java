@@ -44,7 +44,7 @@ public final class BehandlingDtoMapper {
             .medToTrinnsBehandling(dto.getToTrinnsBehandling())
             .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
             .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
-            .medSpråkkode(dto.getSprakkode())
+            .medSpråkkode(dto.getSpråkkode())
             .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
             .medMedlemskapOpphørsårsak(dto.getMedlemskapOpphørsårsak())
             .medMedlemskapFom(dto.getMedlemskapFom())

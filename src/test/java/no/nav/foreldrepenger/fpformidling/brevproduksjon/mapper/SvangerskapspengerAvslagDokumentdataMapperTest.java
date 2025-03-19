@@ -183,7 +183,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(
                 Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).medAvslagsårsak(årsak).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .build();
     }

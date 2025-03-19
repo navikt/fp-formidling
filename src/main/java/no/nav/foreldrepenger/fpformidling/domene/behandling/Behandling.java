@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -16,29 +17,30 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
     private List<BehandlingResourceLink> resourceLinker;
-    private List<BehandlingResourceLink> formidlingRessurser;
 
     //Felter brukt i brev
-    private UUID uuid;
-    private BehandlingType behandlingType;
-    private LocalDateTime opprettetDato;
-    private LocalDateTime avsluttet;
+    private UUID uuid; //
+    private BehandlingType behandlingType; //
+    private LocalDateTime opprettetDato; //
+    private LocalDateTime avsluttet; //
     private List<BehandlingÅrsak> behandlingÅrsaker;
-    private boolean toTrinnsBehandling;
+    private boolean toTrinnsBehandling; //
 
-    private String behandlendeEnhetId;
-    private FagsakBackend fagsakBackend;
-    private BehandlingStatus status;
-    private Språkkode språkkode;
-    private boolean harAvklartAnnenForelderRett;
+    private String behandlendeEnhetId; //
+    private FagsakBackend fagsak;
+    private BehandlingStatus status; //
+    private Språkkode språkkode; //
+    private boolean harAvklartAnnenForelderRett; //
     private List<Vilkår> vilkår;
-    private UUID originalBehandlingUuid;
-    private Avslagsårsak medlemskapOpphørsårsak;
-    private LocalDate medlemskapFom;
+
+    private UUID originalBehandlingUuid; //
+    private Avslagsårsak medlemskapOpphørsårsak; //
+    private LocalDate medlemskapFom; //
+
+    private Verge verge;
 
     private Behandling() {
     }
-
 
     public LocalDateTime getAvsluttet() {
         return avsluttet;
@@ -52,7 +54,7 @@ public class Behandling {
         return behandlingType;
     }
 
-    public LocalDateTime getOpprettetDato() {
+    public LocalDateTime getOpprettet() {
         return opprettetDato;
     }
 
@@ -112,8 +114,8 @@ public class Behandling {
         return BehandlingType.INNSYN.equals(getBehandlingType());
     }
 
-    public FagsakBackend getFagsakBackend() {
-        return fagsakBackend;
+    public FagsakBackend getFagsak() {
+        return fagsak;
     }
 
     public String getBehandlendeEnhetId() {
@@ -128,18 +130,22 @@ public class Behandling {
         return originalBehandlingUuid;
     }
 
-    public void leggtilFagsakBackend(FagsakBackend fagsak) {
-        if (this.fagsakBackend == null) {
-            this.fagsakBackend = fagsak;
+    public void leggTilFagsak(FagsakBackend fagsak) {
+        if (this.fagsak == null) {
+            this.fagsak = fagsak;
         }
     }
 
-    public List<BehandlingResourceLink> getFormidlingRessurser() {
-        return formidlingRessurser;
+    public Verge verge() {
+        return verge;
+    }
+
+    public void setVerge(Verge verge) {
+        this.verge = verge;
     }
 
     public boolean harFagsakBackend() {
-        return fagsakBackend != null;
+        return fagsak != null;
     }
 
     public Avslagsårsak getMedlemskapOpphørsårsak() {
@@ -160,7 +166,6 @@ public class Behandling {
         public Builder() {
             this.kladd = new Behandling();
             this.kladd.resourceLinker = new ArrayList<>();
-            this.kladd.formidlingRessurser = new ArrayList<>();
             this.kladd.behandlingÅrsaker = new ArrayList<>();
         }
 
@@ -179,11 +184,6 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder leggTilFormidlingResourceLink(BehandlingResourceLink resourceLink) {
-            this.kladd.formidlingRessurser.add(resourceLink);
-            return this;
-        }
-
         public Behandling.Builder medUuid(UUID uuid) {
             this.kladd.uuid = uuid;
             return this;
@@ -194,7 +194,7 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medOpprettetDato(LocalDateTime opprettetDato) {
+        public Behandling.Builder medOpprettet(LocalDateTime opprettetDato) {
             this.kladd.opprettetDato = opprettetDato;
             return this;
         }
@@ -219,8 +219,8 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medFagsakBackend(FagsakBackend fagsak) {
-            this.kladd.fagsakBackend = fagsak;
+        public Behandling.Builder medFagsak(FagsakBackend fagsak) {
+            this.kladd.fagsak = fagsak;
             return this;
         }
 
@@ -251,6 +251,11 @@ public class Behandling {
 
         public Behandling.Builder medVilkår(List<Vilkår> vilkår) {
             this.kladd.vilkår = vilkår;
+            return this;
+        }
+
+        public Behandling.Builder medVerge(Verge verge) {
+            this.kladd.verge = verge;
             return this;
         }
 

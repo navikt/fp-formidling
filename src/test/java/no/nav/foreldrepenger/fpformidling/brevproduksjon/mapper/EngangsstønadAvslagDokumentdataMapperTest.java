@@ -139,10 +139,10 @@ class EngangsstønadAvslagDokumentdataMapperTest {
             .medUuid(EngangsstønadAvslagDokumentdataMapperTest.ID)
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(behandlingresultat.build())
-            .medFagsakBackend(fagsak);
+            .medFagsak(fagsak);
 
         if (fagsak != null) {
-            behandlingBuilder.medFagsakBackend(fagsak);
+            behandlingBuilder.medFagsak(fagsak);
         }
         return behandlingBuilder;
     }

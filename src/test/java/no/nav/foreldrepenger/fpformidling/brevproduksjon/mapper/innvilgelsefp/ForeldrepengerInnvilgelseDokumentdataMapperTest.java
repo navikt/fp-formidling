@@ -30,9 +30,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +53,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
@@ -84,6 +82,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerInnvilgelseDokumentdataMapperTest {
@@ -122,7 +121,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void skal_mappe_felter_for_brev() {
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
@@ -212,7 +210,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
@@ -288,10 +285,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(resultatPerioder).hasSize(1);
         assertThat(resultatPerioder.getFirst().getTidligstMottattDato()).isEqualTo(formaterDato(tidligstMottatt, Språkkode.NB));
 
-    }
-
-    private FagsakBackend opprettFagsakBackend() {
-        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
@@ -473,7 +466,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
                 .build())
             .medHarAvklartAnnenForelderRett(true)
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).build())
             .build();
     }
 }

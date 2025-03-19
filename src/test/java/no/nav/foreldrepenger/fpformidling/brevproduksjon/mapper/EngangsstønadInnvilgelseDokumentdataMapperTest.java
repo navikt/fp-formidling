@@ -167,7 +167,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
             .medUuid(id)
             .medBehandlingType(behType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.ENGANGSTØNAD).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.ENGANGSTØNAD).build())
             .build();
     }
 

@@ -151,7 +151,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
             .medBehandlingType(BehandlingType.REVURDERING)
             .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medSpråkkode(språkkode)
             .build();
     }

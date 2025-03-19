@@ -9,9 +9,12 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingResourceLinkDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingÅrsakDto;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 
 public final class BehandlingDtoMapper {
 
@@ -32,15 +35,11 @@ public final class BehandlingDtoMapper {
         var behandlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getLinks()
             .stream()
             .map(BehandlingDtoMapper::mapResourceLinkFraDto);
-        var behandlingFormidlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getFormidlingRessurser()
-            .stream()
-            .map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
-        behandlingFormidlingResourceLinkStreamSupplier.get().forEach(builder::leggTilFormidlingResourceLink);
         builder.medUuid(dto.getUuid())
             .medBehandlingType(dto.getType())
             .medStatus(dto.getStatus())
-            .medOpprettetDato(dto.getOpprettet())
+            .medOpprettet(dto.getOpprettet())
             .medAvsluttet(dto.getAvsluttet())
             .medToTrinnsBehandling(dto.getToTrinnsBehandling())
             .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
@@ -56,18 +55,36 @@ public final class BehandlingDtoMapper {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
         }
 
+        if (dto.fagsak() != null) {
+            var fagsakDto = dto.fagsak();
+            var fagsak = FagsakBackend.ny()
+                .medSaksnummer(fagsakDto.saksnummer())
+                .medFagsakYtelseType(fagsakDto.fagsakYtelseType())
+                .medBrukerRolle(fagsakDto.relasjonsRolleType())
+                .medAktørId(new AktørId(fagsakDto.aktørId()))
+                .medDekningsgrad(fagsakDto.dekningsgrad())
+                .build();
+            builder.medFagsak(fagsak);
+        }
+
+        if (dto.verge() != null) {
+            var vergeDto = dto.verge();
+            var verge = new Verge(vergeDto.aktoerId(), vergeDto.organisasjonsnummer(), vergeDto.navn(), vergeDto.gyldigFom(), vergeDto.gyldigTom());
+            builder.medVerge(verge);
+        }
+
         return builder.build();
     }
 
-    private static List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakDto> behandlingÅrsakDtoer) {
-        if (!behandlingÅrsakDtoer.isEmpty()) {
-            return behandlingÅrsakDtoer.stream().map(BehandlingDtoMapper::mapBehandlingÅrsakFraDto).toList();
+    private static List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakType> behandlingÅrsakTyper) {
+        if (!behandlingÅrsakTyper.isEmpty()) {
+            return behandlingÅrsakTyper.stream().map(BehandlingDtoMapper::mapBehandlingÅrsakFraDto).toList();
         }
         return Collections.emptyList();
     }
 
-    private static BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
-        return BehandlingÅrsak.builder().medBehandlingÅrsakType(dto.getBehandlingArsakType()).build();
+    private static BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakType årsakType) {
+        return BehandlingÅrsak.builder().medBehandlingÅrsakType(årsakType).build();
     }
 
 }

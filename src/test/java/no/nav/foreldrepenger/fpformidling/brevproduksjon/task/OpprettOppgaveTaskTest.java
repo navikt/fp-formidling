@@ -35,9 +35,11 @@ class OpprettOppgaveTaskTest {
         var behandlingUuId = UUID.randomUUID();
         var saksnummer = "23424354353";
 
-        var behandling = Behandling.builder().medBehandlendeEnhetId("1233").build();
+        var behandling = Behandling.builder()
+            .medBehandlendeEnhetId("1233")
+            .medFagsak(FagsakBackend.ny().medSaksnummer(saksnummer).build())
+            .build();
         when(provider.hentBehandling(behandlingUuId)).thenReturn(behandling);
-        when(provider.hentFagsakBackend(behandling)).thenReturn(FagsakBackend.ny().medSaksnummer(saksnummer).build());
 
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
         prosessTaskData.setSaksnummer(saksnummer);
@@ -48,6 +50,5 @@ class OpprettOppgaveTaskTest {
 
         verify(tjeneste).opprettOppgave(eq(behandling), eq(journalpostId), any(String.class));
         verify(provider, times(1)).hentBehandling(behandlingUuId);
-        verify(provider, times(1)).hentFagsakBackend(behandling);
     }
 }

@@ -99,7 +99,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(behandlingresultat.build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .medBehandlingÅrsaker(List.of(behÅrsak));
 

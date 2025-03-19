@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,12 +28,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.EngangsstønadInnvilgelseDokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
 import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
@@ -102,7 +100,7 @@ class BrevBestillerTjenesteTest {
     void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
             domeneobjektProvider);
-        var dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
+        var dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, virksomhetTjeneste);
         var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider,
             dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
         tjeneste = new BrevBestillerTjeneste(domeneobjektProvider, dokgenBrevproduksjonTjeneste);
@@ -113,13 +111,11 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(true);
-        var behandling = mockDomeneobjektProvider(personinfo, true);
+        mockDomeneobjektProvider(personinfo, true);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid, DokumentMal.ENGANGSSTØNAD_INNVILGELSE, null);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
-        var verge = new Verge(VERGE.getId(), "", "", LocalDate.now().minusDays(1), LocalDate.now().plusMonths(1));
-        when(domeneobjektProvider.hentVerge(behandling)).thenReturn(Optional.of(verge));
 
         var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
@@ -144,13 +140,11 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(true);
-        var behandling = mockDomeneobjektProvider(personinfo, true);
+        mockDomeneobjektProvider(personinfo, false);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid, DokumentMal.ENGANGSSTØNAD_INNVILGELSE, null);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
-        var verge = new Verge(VERGE.getId(), "", "", LocalDate.now().minusMonths(1), LocalDate.now().minusDays(1));
-        when(domeneobjektProvider.hentVerge(behandling)).thenReturn(Optional.of(verge));
         var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
@@ -184,7 +178,6 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE);
-        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -205,7 +198,6 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE);
-        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -226,7 +218,6 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling);
-        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -273,20 +264,26 @@ class BrevBestillerTjenesteTest {
         return personinfoSøker;
     }
 
-    private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harGyldigVerge) {
+    private void mockDomeneobjektProvider(Personinfo personinfo, boolean harGyldigVerge) {
         var fagsakBackend = FagsakBackend.ny().medSaksnummer(SAKSNUMMER.getVerdi()).medAktørId(personinfo.getAktørId()).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
-        var behandling = Behandling.builder()
+        var behandlingBuilder = Behandling.builder()
             .medUuid(BEHANDLING_UUID)
-            .medFagsakBackend(fagsakBackend)
+            .medFagsak(fagsakBackend)
             .medSpråkkode(Språkkode.NB)
             .medAvsluttet(LocalDateTime.now())
-            .leggTilResourceLink(
-                harGyldigVerge ? BehandlingResourceLink.ny().medRel("verge-backend").build() : BehandlingResourceLink.ny().medRel("annet").build())
-            .build();
-        when(domeneobjektProvider.hentFagsakBackend(behandling)).thenReturn(fagsakBackend);
+            .medFagsak(fagsakBackend);
+            if (harGyldigVerge) {
+                var fom = LocalDate.now().minusDays(1);
+                var tom = LocalDate.now().plusMonths(1);
+                behandlingBuilder.medVerge(new Verge(VERGE.getId(), "", "", fom, tom));
+            } else {
+                var fom = LocalDate.now().minusMonths(1);
+                var tom = LocalDate.now().minusDays(1);
+                behandlingBuilder.medVerge(new Verge(VERGE.getId(), "", "", fom, tom));
+            }
+            var behandling = behandlingBuilder.build();
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling)).thenReturn(new TilkjentYtelseEngangsstønad(1L));
-        return behandling;
     }
 
     private DokumentHendelse opprettDokumentHendelse(UUID randomBestillingsUuid, DokumentMal dokumentMal, DokumentMal journalførSom) {

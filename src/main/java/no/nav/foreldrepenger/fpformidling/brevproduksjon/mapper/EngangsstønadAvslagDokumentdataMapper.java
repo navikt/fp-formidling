@@ -76,7 +76,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             .medFelles(fellesBuilder.build())
             .medFørstegangsbehandling(behandling.erFørstegangssøknad())
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
-            .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
+            .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsak()))
             .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkår(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
             .medAntallBarn(familieHendelse.antallBarn())
             .medMedlemskapFom(formaterDato(behandling.getMedlemskapFom(), dokumentFelles.getSpråkkode()))

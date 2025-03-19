@@ -60,6 +60,6 @@ public class KlageOversendtDokumentdataMapper implements DokumentdataMapper {
     }
 
     private LocalDate utledMottattDato(KlageDokument klageDokument, Behandling behandling) {
-        return klageDokument.mottattDato() != null ? klageDokument.mottattDato() : behandling.getOpprettetDato().toLocalDate();
+        return klageDokument.mottattDato() != null ? klageDokument.mottattDato() : behandling.getOpprettet().toLocalDate();
     }
 }

@@ -97,9 +97,7 @@ public class BrevBestillerTjeneste {
     }
 
     private Behandling hentBehandling(UUID behandlingUuid) {
-        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
-        domeneobjektProvider.hentFagsakBackend(behandling);
-        return behandling;
+        return domeneobjektProvider.hentBehandling(behandlingUuid);
     }
 
 }

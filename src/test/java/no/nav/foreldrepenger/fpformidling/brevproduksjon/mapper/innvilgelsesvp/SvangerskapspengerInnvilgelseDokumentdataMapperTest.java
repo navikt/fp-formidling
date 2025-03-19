@@ -285,7 +285,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(behandlingType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB);
     }
 

@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
@@ -22,7 +22,6 @@ import no.nav.vedtak.exception.TekniskException;
 public class DokumentFellesDataMapper {
     private static final String FANT_IKKE_BRUKER = "Fant ikke bruker for aktørId: %s. Kan ikke bestille dokument";
 
-    private DomeneobjektProvider domeneobjektProvider;
     private PersonAdapter personAdapter;
     private VirksomhetTjeneste virksomhetTjeneste;
 
@@ -31,21 +30,20 @@ public class DokumentFellesDataMapper {
     }
 
     @Inject
-    public DokumentFellesDataMapper(PersonAdapter personAdapter, DomeneobjektProvider domeneobjektProvider, VirksomhetTjeneste virksomhetTjeneste) {
+    public DokumentFellesDataMapper(PersonAdapter personAdapter, VirksomhetTjeneste virksomhetTjeneste) {
         this.personAdapter = personAdapter;
-        this.domeneobjektProvider = domeneobjektProvider;
         this.virksomhetTjeneste = virksomhetTjeneste;
     }
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData) {
 
-        final var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        final var fagsak = behandling.getFagsak();
         final var søkersAktørId = fagsak.getAktørId();
         final var ytelseType = fagsak.getYtelseType();
 
         var brevDato = LocalDate.now();
 
-        var gyldigVerge = domeneobjektProvider.hentVerge(behandling)
+        var gyldigVerge = Optional.ofNullable(behandling.verge())
             .filter(verge -> brevDato.isAfter(verge.gyldigFom()) && (brevDato.isBefore(verge.gyldigTom()) || brevDato.equals(verge.gyldigTom())))
             .orElse(null);
 
@@ -112,7 +110,7 @@ public class DokumentFellesDataMapper {
                                                String vergeNavn,
                                                DokumentFelles.Kopi erKopi) {
 
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = behandling.getFagsak();
 
         var builder = DokumentFelles.builder(dokumentData)
             .medAutomatiskBehandlet(Boolean.TRUE)
@@ -139,7 +137,7 @@ public class DokumentFellesDataMapper {
                                            Personinfo personinfoMottaker,
                                            DokumentFelles.Kopi erKopi) {
 
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = behandling.getFagsak();
 
         var builder = DokumentFelles.builder(dokumentData)
             .medAutomatiskBehandlet(Boolean.TRUE)

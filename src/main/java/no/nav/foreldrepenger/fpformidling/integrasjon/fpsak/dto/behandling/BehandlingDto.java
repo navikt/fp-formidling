@@ -23,7 +23,7 @@ public class BehandlingDto {
     private LocalDateTime opprettet;
     private LocalDateTime avsluttet;
     private String behandlendeEnhetId;
-    private Språkkode sprakkode;
+    private Språkkode språkkode;
     private boolean toTrinnsBehandling;
     private boolean harAvklartAnnenForelderRett;
     private UUID originalBehandlingUuid;
@@ -77,12 +77,12 @@ public class BehandlingDto {
         this.behandlingsresultat = behandlingsresultat;
     }
 
-    public Språkkode getSprakkode() {
-        return sprakkode;
+    public Språkkode getSpråkkode() {
+        return språkkode;
     }
 
-    public void setSprakkode(Språkkode sprakkode) {
-        this.sprakkode = sprakkode;
+    public void setSpråkkode(Språkkode språkkode) {
+        this.språkkode = språkkode;
     }
 
     public boolean getToTrinnsBehandling() {
@@ -184,7 +184,7 @@ public class BehandlingDto {
     @Override
     public String toString() {
         return "BehandlingDto{" + "id=" + uuid + ", type=" + type + ", status=" + status + ", opprettet=" + opprettet + ", avsluttet=" + avsluttet
-            + ", behandlendeEnhetId='" + behandlendeEnhetId + ", behandlingsresultat=" + behandlingsresultat + ", sprakkode=" + sprakkode
+            + ", behandlendeEnhetId='" + behandlendeEnhetId + ", behandlingsresultat=" + behandlingsresultat + ", sprakkode=" + språkkode
             + ", toTrinnsBehandling=" + toTrinnsBehandling + ", links=" + links + ", behandlingÅrsaker=" + behandlingÅrsaker
             + '}';
     }

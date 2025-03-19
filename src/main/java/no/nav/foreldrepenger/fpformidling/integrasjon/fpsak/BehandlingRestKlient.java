@@ -38,16 +38,16 @@ public class BehandlingRestKlient implements Behandlinger {
     }
 
     @Override
-    public BehandlingDto hentBehandling(UUID behandlingId) {
+    public BehandlingDto hentBehandling(UUID behandlingUuid) {
 
         var behandlingUri = UriBuilder.fromUri(restConfig.fpContextPath())
             .path(FPSAK_API)
-            .path("/formidling/ressurser")
-            .queryParam("behandlingId", behandlingId.toString())
+            .path("/formidling/v2/behandling")
+            .queryParam("uuid", behandlingUuid.toString())
             .build();
         var request = RestRequest.newGET(behandlingUri, restConfig);
         return restClient.sendReturnOptional(request, BehandlingDto.class)
-            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingId));
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingUuid));
     }
 
     @Override

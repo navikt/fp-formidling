@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.personopplysning.VergeDto;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
 
     private UUID uuid;
@@ -23,17 +23,19 @@ public class BehandlingDto {
     private LocalDateTime opprettet;
     private LocalDateTime avsluttet;
     private String behandlendeEnhetId;
-    private BehandlingsresultatDto behandlingsresultat;
     private Språkkode sprakkode;
     private boolean toTrinnsBehandling;
-    private List<BehandlingResourceLinkDto> links = new ArrayList<>();
-    private List<BehandlingResourceLinkDto> formidlingRessurser = new ArrayList<>();
-    private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
     private boolean harAvklartAnnenForelderRett;
-    private List<VilkårDto> vilkår;
     private UUID originalBehandlingUuid;
     private Avslagsårsak medlemskapOpphørsårsak;
     private LocalDate medlemskapFom;
+    private BehandlingsresultatDto behandlingsresultat;
+    private FagsakDto fagsak;
+    private VergeDto verge;
+
+    private List<BehandlingÅrsakType> behandlingÅrsaker = new ArrayList<>();
+    private List<VilkårType> vilkår;
+    private List<BehandlingResourceLinkDto> links = new ArrayList<>();
 
     public BehandlingType getType() {
         return type;
@@ -107,11 +109,11 @@ public class BehandlingDto {
         this.opprettet = opprettet;
     }
 
-    public List<BehandlingÅrsakDto> getBehandlingÅrsaker() {
+    public List<BehandlingÅrsakType> getBehandlingÅrsaker() {
         return behandlingÅrsaker;
     }
 
-    public void setBehandlingÅrsaker(List<BehandlingÅrsakDto> behandlingÅrsaker) {
+    public void setBehandlingÅrsaker(List<BehandlingÅrsakType> behandlingÅrsaker) {
         this.behandlingÅrsaker = behandlingÅrsaker;
     }
 
@@ -123,20 +125,12 @@ public class BehandlingDto {
         this.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
     }
 
-    public List<VilkårDto> getVilkår() {
+    public List<VilkårType> getVilkår() {
         return vilkår;
     }
 
-    public void setVilkår(List<VilkårDto> vilkår) {
+    public void setVilkår(List<VilkårType> vilkår) {
         this.vilkår = vilkår;
-    }
-
-    public List<BehandlingResourceLinkDto> getFormidlingRessurser() {
-        return formidlingRessurser;
-    }
-
-    public void setFormidlingRessurser(List<BehandlingResourceLinkDto> formidlingRessurser) {
-        this.formidlingRessurser = formidlingRessurser;
     }
 
     public String getBehandlendeEnhetId() {
@@ -169,6 +163,22 @@ public class BehandlingDto {
 
     public void setMedlemskapFom(LocalDate medlemskapFom) {
         this.medlemskapFom = medlemskapFom;
+    }
+
+    public FagsakDto fagsak() {
+        return fagsak;
+    }
+
+    public void setFagsak(FagsakDto fagsak) {
+        this.fagsak = fagsak;
+    }
+
+    public VergeDto verge() {
+        return verge;
+    }
+
+    public void setVerge(VergeDto verge) {
+        this.verge = verge;
     }
 
     @Override

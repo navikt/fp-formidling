@@ -70,7 +70,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                                                                boolean erUtkast) {
 
         var språkkode = behandling.getSpråkkode();
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = behandling.getFagsak();
         var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
         var foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)

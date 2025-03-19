@@ -65,7 +65,7 @@ public class BrevMapperUtil {
             .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
             .medHarVerge(erKopi.isPresent())
             .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-            .medYtelseType(behandling.getFagsakBackend().getYtelseType().getKode())
+            .medYtelseType(behandling.getFagsak().getYtelseType().getKode())
             .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {

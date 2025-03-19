@@ -96,7 +96,7 @@ class InnsynDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.INNSYN)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
             .build();
     }
 

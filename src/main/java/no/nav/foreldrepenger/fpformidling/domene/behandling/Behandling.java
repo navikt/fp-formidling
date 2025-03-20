@@ -130,22 +130,12 @@ public class Behandling {
         return originalBehandlingUuid;
     }
 
-    public void leggTilFagsak(FagsakBackend fagsak) {
-        if (this.fagsak == null) {
-            this.fagsak = fagsak;
-        }
-    }
-
     public Verge verge() {
         return verge;
     }
 
     public void setVerge(Verge verge) {
         this.verge = verge;
-    }
-
-    public boolean harFagsakBackend() {
-        return fagsak != null;
     }
 
     public Avslagsårsak getMedlemskapOpphørsårsak() {

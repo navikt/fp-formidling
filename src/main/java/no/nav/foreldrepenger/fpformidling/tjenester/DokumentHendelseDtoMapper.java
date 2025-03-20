@@ -7,11 +7,20 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMal;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.RevurderingÅrsak;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentBestillingDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentBestillingHtmlDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentForhåndsvisDto;
 
 public final class DokumentHendelseDtoMapper {
 
     private DokumentHendelseDtoMapper() {
+    }
+
+    public static DokumentHendelse mapFra(DokumentBestillingHtmlDto dokumentBestillingHtmlDto) {
+        return DokumentHendelse.builder()
+                .medBehandlingUuid(dokumentBestillingHtmlDto.behandlingUuid())
+                .medBestillingUuid(UUID.randomUUID())
+                .medDokumentMal(mapDokumentMal(dokumentBestillingHtmlDto.dokumentMal()))
+                .build();
     }
 
     public static DokumentHendelse mapFra(DokumentForhåndsvisDto forhåndsvisDto) {
@@ -39,6 +48,7 @@ public final class DokumentHendelseDtoMapper {
     public static no.nav.foreldrepenger.fpformidling.typer.DokumentMal mapDokumentMal(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
             case FRITEKSTBREV -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV;
+            case FRITEKSTBREV_HTML -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV_HTML;
             case ENGANGSSTØNAD_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_INNVILGELSE;
             case ENGANGSSTØNAD_AVSLAG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_AVSLAG;
             case FORELDREPENGER_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_INNVILGELSE;

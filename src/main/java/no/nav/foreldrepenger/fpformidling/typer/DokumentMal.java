@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.typer;
 
 public enum DokumentMal {
     FRITEKSTBREV,
+    FRITEKSTBREV_HTML,
     ENGANGSSTØNAD_INNVILGELSE,
     ENGANGSSTØNAD_AVSLAG,
     FORELDREPENGER_INNVILGELSE,

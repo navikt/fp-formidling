@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.tjenester;
 import java.util.Optional;
 import java.util.function.Function;
 
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentBestillingHtmlDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +76,25 @@ public class BrevRestTjeneste {
     }
 
     @POST
+    @Path("/generer/html/v3")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Returnerer en html som er en forhåndsvisning av brevet", tags = "brev")
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK, sporingslogg = true)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Response genererBrevHtml(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = DokumentBestillingHtmlDtoSupplier.class) @Valid DokumentBestillingHtmlDto dokumentbestillingDto) {
+        var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
+
+        LOG.info("Genererer brev html for behandling {} med mal {}", dokumentHendelse.getBehandlingUuid(), dokumentHendelse.getDokumentMal());
+        var dokument = brevBestillerTjeneste.genererBrevHtml(dokumentHendelse);
+        if (dokument != null && !dokument.isEmpty()) {
+            return Response.ok(dokument)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+        return Response.serverError().build();
+    }
+
+    @POST
     @Path("/bestill/v3")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")
@@ -99,6 +119,16 @@ public class BrevRestTjeneste {
         @Override
         public AbacDataAttributter apply(Object obj) {
             var req = (DokumentForhåndsvisDto) obj;
+            return AbacDataAttributter.opprett()
+                .leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid())
+                .leggTil(StandardAbacAttributtType.SAKSNUMMER, req.saksnummer().saksnummer());
+        }
+    }
+
+    public static class DokumentBestillingHtmlDtoSupplier implements Function<Object, AbacDataAttributter> {
+        @Override
+        public AbacDataAttributter apply(Object obj) {
+            var req = (DokumentBestillingHtmlDto) obj;
             return AbacDataAttributter.opprett()
                 .leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid())
                 .leggTil(StandardAbacAttributtType.SAKSNUMMER, req.saksnummer().saksnummer());

@@ -7,6 +7,7 @@ import java.util.Set;
 public enum DokumentMalType implements Kodeverdi {
 
     FRITEKSTBREV("FRITEK", "Fritekstbrev"),
+    FRITEKSTBREV_HTML("FRIHTM", "Fritekstbrev html"),
     ENGANGSSTØNAD_INNVILGELSE("INNVES", "Vedtak om innvilgelse av engangsstønad"),
     ENGANGSSTØNAD_AVSLAG("AVSLES", "Avslag engangsstønad"),
     FORELDREPENGER_INNVILGELSE("INVFOR", "Innvilgelsesbrev Foreldrepenger"),

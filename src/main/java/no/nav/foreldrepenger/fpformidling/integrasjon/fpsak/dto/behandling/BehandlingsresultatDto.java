@@ -19,6 +19,7 @@ public class BehandlingsresultatDto {
     private String avslagsarsakFritekst;
     private String overskrift;
     private String fritekstbrev;
+    private String fritekstbrevHtml;
     private SkjæringstidspunktDto skjæringstidspunkt;
     private boolean endretDekningsgrad;
     private LocalDate opphørsdato;
@@ -61,6 +62,14 @@ public class BehandlingsresultatDto {
 
     public void setOverskrift(String overskrift) {
         this.overskrift = overskrift;
+    }
+
+    public String getFritekstbrevHtml() {
+        return fritekstbrevHtml;
+    }
+
+    public void setFritekstbrevHtml(String fritekstbrevHtml) {
+        this.fritekstbrevHtml = fritekstbrevHtml;
     }
 
     public String getFritekstbrev() {

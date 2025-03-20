@@ -42,7 +42,7 @@ public class BehandlingRestKlient implements Behandlinger {
 
         var behandlingUri = UriBuilder.fromUri(restConfig.fpContextPath())
             .path(FPSAK_API)
-            .path("/formidling/v2/behandling")
+            .path("/brev/grunnlag/v1")
             .queryParam("uuid", behandlingUuid.toString())
             .build();
         var request = RestRequest.newGET(behandlingUri, restConfig);

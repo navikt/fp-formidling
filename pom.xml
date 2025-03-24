@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-bom</artifactId>
-        <version>3.6.5</version>
+        <version>3.6.6</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -22,7 +22,7 @@
         <!-- Felles artefakter -->
         <felles.version>7.4.13</felles.version>
         <prosesstask.version>5.1.4</prosesstask.version>
-        <kontrakter.version>9.2.6</kontrakter.version>
+        <kontrakter.version>9.2.7</kontrakter.version>
     </properties>
 
     <!-- NB: Unngå å put scope (test, provided) i dependency management. Det har uheldige virkninger ved bruk av import og dependency (bruk composition
@@ -32,7 +32,7 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>fp-bom</artifactId>
-                <version>3.6.5</version>
+                <version>3.6.6</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

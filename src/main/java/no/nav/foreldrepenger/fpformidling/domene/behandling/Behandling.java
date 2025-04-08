@@ -26,7 +26,7 @@ public class Behandling {
     private List<BehandlingÅrsak> behandlingÅrsaker;
     private boolean toTrinnsBehandling; //
 
-    private String behandlendeEnhetId; //
+    private String behandlendeEnhetId; // brukes kun ved opprettelse av GOSYS oppgave ved manglende addresse
     private FagsakBackend fagsak;
     private BehandlingStatus status; //
     private Språkkode språkkode; //

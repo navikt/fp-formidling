@@ -75,6 +75,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                                                                     DokumentHendelse dokumentHendelse,
                                                                     Behandling behandling,
                                                                     boolean erUtkast) {
+
         var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var uttak = domeneobjektProvider.hentForeldrepengerUttak(behandling);

@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.server.abac;
 
-import static no.nav.vedtak.sikkerhet.abac.pdp.ForeldrepengerDataKeys.BEHANDLING_STATUS;
-import static no.nav.vedtak.sikkerhet.abac.pdp.ForeldrepengerDataKeys.FAGSAK_STATUS;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,8 +23,6 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
     private static final MdcExtendedLogContext MDC_EXTENDED_LOG_CONTEXT = MdcExtendedLogContext.getContext("prosess");
 
-    public static final String ABAC_DOMAIN = "foreldrepenger";
-
     private final PipRestKlient pipRestKlient;
 
     @Inject
@@ -38,22 +33,40 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
     @Override
     public AppRessursData lagAppRessursData(AbacDataAttributter dataAttributter) {
         Set<String> saksnummer = new HashSet<>(dataAttributter.getVerdier(StandardAbacAttributtType.SAKSNUMMER));
-        MDC_EXTENDED_LOG_CONTEXT.add("fagsak", saksnummer.stream().findFirst().orElse(null));
         Set<UUID> uuids = dataAttributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
-        var behandlingUuids = uuids.stream().distinct().toList();
+        var behandlingUuids = new HashSet<>(uuids);
         if (behandlingUuids.size() > 1) {
             throw new IllegalArgumentException("Støtter ikke request med to ulike behandlinger. Må utvides");
         }
+        setLogContext(saksnummer, behandlingUuids);
 
-        var appRessursData = AppRessursData.builder();
-        behandlingUuids.stream().findFirst().ifPresent(b -> {
-            MDC_EXTENDED_LOG_CONTEXT.add("behandling", b);
-            var dto = pipRestKlient.hentPipdataForBehandling(b);
-            appRessursData.leggTilAbacAktørIdSet(dto)
-                .leggTilRessurs(FAGSAK_STATUS, PipFagsakStatus.UNDER_BEHANDLING)
-                .leggTilRessurs(BEHANDLING_STATUS, PipBehandlingStatus.UTREDES);
-        });
-        return appRessursData.build();
+        if (behandlingUuids.isEmpty()) {
+            return minimalbuilder().build();
+        } else {
+            var dto = pipRestKlient.hentPipdataForBehandling(behandlingUuids.stream().findFirst().orElseThrow());
+            return minimalbuilder()
+                .leggTilAbacAktørIdSet(dto)
+                .build();
+        }
+    }
+
+    @Override
+    public AppRessursData lagAppRessursDataForSystembruker(AbacDataAttributter dataAttributter) {
+        Set<String> saksnummer = new HashSet<>(dataAttributter.getVerdier(StandardAbacAttributtType.SAKSNUMMER));
+        Set<UUID> uuids = dataAttributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
+        setLogContext(saksnummer, uuids);
+        return minimalbuilder().build();
+    }
+
+    private static void setLogContext(Set<String> saksnummer, Set<UUID> behandlinger) {
+        MDC_EXTENDED_LOG_CONTEXT.add("fagsak", saksnummer.stream().findFirst().orElse(null));
+        MDC_EXTENDED_LOG_CONTEXT.add("behandling", behandlinger.stream().findFirst().map(UUID::toString).orElse(null));
+    }
+
+    private static AppRessursData.Builder minimalbuilder() {
+        return AppRessursData.builder()
+            .medFagsakStatus(PipFagsakStatus.UNDER_BEHANDLING)
+            .medBehandlingStatus(PipBehandlingStatus.UTREDES);
     }
 }
 

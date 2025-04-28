@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import jakarta.enterprise.context.Dependent;
-import jakarta.inject.Inject;
 import no.nav.vedtak.log.mdc.MdcExtendedLogContext;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
@@ -23,13 +22,6 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
     private static final MdcExtendedLogContext MDC_EXTENDED_LOG_CONTEXT = MdcExtendedLogContext.getContext("prosess");
 
-    private final PipRestKlient pipRestKlient;
-
-    @Inject
-    public AppPdpRequestBuilderImpl(PipRestKlient pipRestKlient) {
-        this.pipRestKlient = pipRestKlient;
-    }
-
     @Override
     public AppRessursData lagAppRessursData(AbacDataAttributter dataAttributter) {
         Set<String> saksnummer = new HashSet<>(dataAttributter.getVerdier(StandardAbacAttributtType.SAKSNUMMER));
@@ -40,14 +32,9 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         }
         setLogContext(saksnummer, behandlingUuids);
 
-        if (behandlingUuids.isEmpty()) {
-            return minimalbuilder().build();
-        } else {
-            var dto = pipRestKlient.hentPipdataForBehandling(behandlingUuids.stream().findFirst().orElseThrow());
-            return minimalbuilder()
-                .leggTilAbacAktørIdSet(dto)
-                .build();
-        }
+        var builder = minimalbuilder();
+        behandlingUuids.stream().findFirst().ifPresent(builder::medBehandling);
+        return builder.build();
     }
 
     @Override

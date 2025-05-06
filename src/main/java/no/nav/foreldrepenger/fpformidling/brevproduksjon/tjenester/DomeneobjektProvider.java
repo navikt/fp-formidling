@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.ArbeidsforholdInntektsmelding;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
@@ -41,7 +40,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.SøknadDtoMap
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
-import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -59,29 +57,13 @@ public class DomeneobjektProvider {
         // CDI
     }
 
-    public FagsakBackend hentFagsakBackend(Behandling behandling) {
-        if (behandling.harFagsakBackend()) {
-            return behandling.getFagsakBackend();
-        }
-        var fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
-        var fagsak = FagsakBackend.ny()
-            .medSaksnummer(fagsakDto.saksnummer())
-            .medFagsakYtelseType(fagsakDto.fagsakYtelseType())
-            .medBrukerRolle(fagsakDto.relasjonsRolleType())
-            .medAktørId(new AktørId(fagsakDto.aktørId()))
-            .medDekningsgrad(fagsakDto.dekningsgrad())
-            .build();
-        behandling.leggtilFagsakBackend(fagsak);
-        return fagsak;
-    }
-
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()),
+        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()),
             arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
+        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker())
             .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
@@ -95,21 +77,21 @@ public class DomeneobjektProvider {
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
         return TilkjentYtelseDtoMapper.mapTilkjentYtelseESFraDto(
-            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getFormidlingRessurser()));
+            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
     }
 
     public Optional<TilkjentYtelseEngangsstønad> hentTilkjentYtelseESHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getFormidlingRessurser())
+        return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getResourceLinker())
             .map(TilkjentYtelseDtoMapper::mapTilkjentYtelseESFraDto);
     }
 
     public TilkjentYtelseForeldrepenger hentTilkjentYtelseForeldrepenger(Behandling behandling) {
         return TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(
-            behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+            behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseFPHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getFormidlingRessurser())
+        return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getResourceLinker())
             .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
@@ -128,7 +110,7 @@ public class DomeneobjektProvider {
     }
 
     public List<ArbeidsforholdInntektsmelding> hentArbeidsforholdInntektsmeldingerStatus(Behandling behandling) {
-        return ArbeidsforholdInntektsmeldingDtoMapper.mapArbeidsforholdInntektsmeldingFraDto(behandlingRestKlient.hentArbeidsforholdInntektsmeldingerDto(behandling.getFormidlingRessurser()),
+        return ArbeidsforholdInntektsmeldingDtoMapper.mapArbeidsforholdInntektsmeldingFraDto(behandlingRestKlient.hentArbeidsforholdInntektsmeldingerDto(behandling.getResourceLinker()),
             arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 

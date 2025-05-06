@@ -94,7 +94,6 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_AVSLAG);
         dokumentdataMapper = new ForeldrepengerAvslagDokumentdataMapper(brevParametere, domeneobjektProvider);
 
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(opprettMottattDokument());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
@@ -166,10 +165,6 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
 
     private List<MottattDokument> opprettMottattDokument() {
         return of(new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
-    }
-
-    private FagsakBackend opprettFagsakBackend() {
-        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
@@ -252,7 +247,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
                 .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
                 .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
                 .build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).medBrukerRolle(RelasjonsRolleType.MORA).build())
             .medSpråkkode(Språkkode.NB)
             .build();
     }

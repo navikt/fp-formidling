@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.Behan
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.MottattKlagedokumentDto;
@@ -147,14 +146,6 @@ public interface Behandlinger {
             .flatMap(link -> hentDtoFraLink(link, SvangerskapspengerUttakResultatDto.class));
     }
 
-    default FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-            .filter(dto -> "fagsak".equals(dto.getRel()))
-            .findFirst()
-            .flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
-            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
     default SaldoerDto hentSaldoer(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
             .filter(dto -> "uttak-stonadskontoer".equals(dto.getRel()))
@@ -178,13 +169,6 @@ public interface Behandlinger {
             .flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
             .map(Arrays::asList)
             .orElse(List.of());
-    }
-
-    default Optional<Boolean> harSendtVarselOmRevurdering(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-            .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))
-            .findFirst()
-            .flatMap(link -> hentDtoFraLink(link, Boolean.class));
     }
 
     default YtelseFordelingDto ytelseFordeling(List<BehandlingResourceLink> resourceLinker) {

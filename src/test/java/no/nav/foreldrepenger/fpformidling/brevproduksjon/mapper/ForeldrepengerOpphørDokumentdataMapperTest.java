@@ -91,7 +91,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
 
         dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
@@ -129,10 +128,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(dokumentdata.isEndretDekningsgrad()).isTrue();
-    }
-
-    private FagsakBackend opprettFagsakBackend() {
-        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
@@ -197,7 +192,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .medOpphørsdato(opphørsdato)
                 .build())
             .medSpråkkode(Språkkode.NB)
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).medBrukerRolle(RelasjonsRolleType.MORA).build())
             .build();
     }
 

@@ -98,7 +98,7 @@ public class DokgenBrevproduksjonTjeneste {
 
             var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom, behandling.getFagsakBackend().getYtelseType()) // NoSonar
+                behandling.getFagsak().getSaksnummer(), !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom, behandling.getFagsak().getYtelseType()) // NoSonar
                 ;
 
             var journalpostId = new JournalpostId(response.journalpostId());

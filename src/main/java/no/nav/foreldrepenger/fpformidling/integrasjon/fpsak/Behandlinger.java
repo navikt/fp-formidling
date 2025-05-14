@@ -46,7 +46,11 @@ public interface Behandlinger {
             .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
     }
 
-    BehandlingDto hentBehandling(UUID behandlingId);
+    BehandlingDto hentBehandling(UUID behandlingUuid);
+
+    LocalDate hentSøknadMottattDato(UUID behandlingUuid);
+
+    StartdatoUtsattDto hentStartdatoUtsatt(UUID behandlingUuid);
 
     default Optional<VergeDto> hentVergeHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
@@ -179,6 +183,7 @@ public interface Behandlinger {
             .orElseThrow(() -> new IllegalStateException("Klarte ikke hente ytelse fordeling for behandling " + hentBehandlingId(resourceLinker)));
     }
 
+    @Deprecated(forRemoval = true)
     default StartdatoUtsattDto hentStartdatoUtsatt(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
             .filter(dto -> "utsatt-oppstart".equals(dto.getRel()))
@@ -188,6 +193,7 @@ public interface Behandlinger {
                 "Klarte ikke hente informasjon om utsatt startdato for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
+    @Deprecated(forRemoval = true)
     default LocalDate hentMottattDatoSøknad(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
             .filter(dto -> "motattdato-søknad".equals(dto.getRel()))

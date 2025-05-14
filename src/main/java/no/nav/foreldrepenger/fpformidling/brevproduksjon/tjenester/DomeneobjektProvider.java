@@ -171,9 +171,9 @@ public class DomeneobjektProvider {
     }
 
     public StartdatoUtsattDto hentStartdatoUtsatt(Behandling behandling) {
-        return behandlingRestKlient.hentStartdatoUtsatt(behandling.getResourceLinker());
+        return behandlingRestKlient.hentStartdatoUtsatt(behandling.getUuid());
     }
     public LocalDate hentMottattDatoSøknad(Behandling behandling) {
-        return behandlingRestKlient.hentMottattDatoSøknad(behandling.getResourceLinker());
+        return behandlingRestKlient.hentSøknadMottattDato(behandling.getUuid());
     }
 }

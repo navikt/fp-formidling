@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import jakarta.ws.rs.core.UriBuilderException;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;
@@ -39,16 +41,40 @@ public class BehandlingRestKlient implements Behandlinger {
 
     @Override
     public BehandlingDto hentBehandling(UUID behandlingUuid) {
-
         var behandlingUri = UriBuilder.fromUri(restConfig.fpContextPath())
             .path(FPSAK_API)
-            .path("/formidling/brev/grunnlag/v2")
+            .path("/formidling/brev/behandling")
             .queryParam("uuid", behandlingUuid.toString())
             .build();
         var request = RestRequest.newGET(behandlingUri, restConfig);
         return restClient.sendReturnOptional(request, BehandlingDto.class)
             .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingUuid));
     }
+
+    @Override
+    public LocalDate hentSøknadMottattDato(UUID behandlingUuid) {
+        var uri = UriBuilder.fromUri(restConfig.fpContextPath())
+            .path(FPSAK_API)
+            .path("/formidling/motattDatoSøknad")
+            .queryParam("uuid", behandlingUuid.toString())
+            .build();
+        var request = RestRequest.newGET(uri, restConfig);
+        return restClient.sendReturnOptional(request, LocalDate.class)
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente informasjon om mottatt dato for behandling: " + behandlingUuid));
+    }
+
+    @Override
+    public StartdatoUtsattDto hentStartdatoUtsatt(UUID behandlingUuid) {
+        var uri = UriBuilder.fromUri(restConfig.fpContextPath())
+            .path(FPSAK_API)
+            .path("/formidling/utsattstart")
+            .queryParam("uuid", behandlingUuid.toString())
+            .build();
+        var request = RestRequest.newGET(uri, restConfig);
+        return restClient.sendReturnOptional(request, StartdatoUtsattDto.class)
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente informasjon om utsatt startdato for behandling: " + behandlingUuid));
+    }
+
 
     @Override
     public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {

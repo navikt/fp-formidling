@@ -59,6 +59,11 @@ spec:
       destinations:
         - id: "grafana-lgtm"
         - id: "elastic-apm"
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+        - id: secure_logs
   azure:
     application:
       enabled: true
@@ -72,6 +77,10 @@ spec:
           {{/each}}
   {{#if AZURE_IAC_RULES}}
   accessPolicy:
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
     inbound:
       rules:
       {{#each AZURE_IAC_RULES}}

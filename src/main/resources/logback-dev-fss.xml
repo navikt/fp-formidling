@@ -4,7 +4,4 @@
    <logger name="org.eclipse.jetty.webapp.MetaInfConfiguration" level="DEBUG" />
    <logger name="no.nav.vedtak.sikkerhet" level="DEBUG" />
    <logger name="no.nav.vedtak.felles.integrasjon.rest" level="INFO" />
-   <logger name="no.nav.vedtak.felles.integrasjon.rest.jersey.HeaderLoggingRequestInterceptor" level="trace" />
-   <logger name="no.nav.vedtak.felles.integrasjon.rest.jersey.HeaderLoggingResponseInterceptor" level="trace" />
-   <logger name="no.nav.vedtak.felles.integrasjon.rest.jersey.HeaderLoggingFilter" level="trace" />
 </included>

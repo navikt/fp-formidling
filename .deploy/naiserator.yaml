@@ -63,7 +63,6 @@ spec:
       destinations:
         - id: loki
         - id: elastic
-        - id: secure_logs
   azure:
     application:
       enabled: true

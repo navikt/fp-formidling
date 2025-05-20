@@ -195,16 +195,6 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.papertrailapp</groupId>
-            <artifactId>logback-syslog4j</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- Swagger -->
         <dependency>
@@ -261,8 +251,6 @@
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-formidling-v1</artifactId>
         </dependency>
-
-
 
         <!-- Test -->
         <dependency>

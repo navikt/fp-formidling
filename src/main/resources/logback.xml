@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
 
-    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="stdoutConsoleLogger" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
                 <charset>UTF-8</charset>
@@ -33,20 +33,12 @@
     </appender>
 
     <!-- Sporbarhetslog -->
-    <appender name="auditLogger" class="com.papertrailapp.logback.Syslog4jAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%m%n%xEx</pattern>
-        </layout>
-
-        <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
-            <!-- remote system to log to -->
-            <host>audit.nais</host>
-            <!-- remote port to log to -->
-            <port>6514</port>
-            <ident>fpformidling</ident>
-            <!-- max log message length in bytes -->
-            <maxMessageLength>128000</maxMessageLength>
-        </syslogConfig>
+    <appender name="auditLogger" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>audit.nais:6514</destination>
+        <writeBufferSize>128000</writeBufferSize>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{MMM dd HH:mm:ss} ${HOSTNAME} ${NAIS_APP_NAME}: %msg%n</pattern>
+        </encoder>
     </appender>
 
     <!-- SecureLog -->
@@ -104,7 +96,7 @@
     <logger name="sporing" level="OFF" additivity="false" />
 
     <root level="${log.level.root:-INFO}">
-        <appender-ref ref="stdout_json"/>
+        <appender-ref ref="stdoutConsoleLogger"/>
     </root>
 
     <include optional="true" resource="logback-${NAIS_CLUSTER_NAME}.xml"/>

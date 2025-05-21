@@ -37,7 +37,7 @@
         <destination>audit.nais:6514</destination>
         <writeBufferSize>128000</writeBufferSize>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{MMM dd HH:mm:ss} ${HOSTNAME} ${NAIS_APP_NAME}: %msg%n</pattern>
+            <pattern>&lt;14&gt;%d{MMM dd HH:mm:ss} ${HOSTNAME} ${NAIS_APP_NAME}: %msg%n%n</pattern>
         </encoder>
     </appender>
 

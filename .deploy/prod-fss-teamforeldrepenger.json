@@ -1,6 +1,5 @@
 {
   "environment": "prod",
-  "serviceuserkv": "/serviceuser/data/prod/srvfpformidling",
   "minReplicas": "2",
   "maxReplicas": "3",
   "limits": {

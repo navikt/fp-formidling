@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="60 seconds">
+<configuration>
 
     <appender name="stdoutConsoleLogger" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
                 <charset>UTF-8</charset>
-                <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] -
-                    %m%n
-                </pattern>
                 <maxLength>15000</maxLength>
                 <maxDepthPerThrowable>200</maxDepthPerThrowable>
                 <shortenedClassNameLength>70</shortenedClassNameLength>

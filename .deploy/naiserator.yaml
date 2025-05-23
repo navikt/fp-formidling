@@ -43,6 +43,8 @@ spec:
     requests:
       cpu: "{{requests.cpu}}"
       memory: "{{requests.mem}}"
+  vault:
+    enabled: true
   envFrom:
     - secret: fpformidling
   secureLogs:

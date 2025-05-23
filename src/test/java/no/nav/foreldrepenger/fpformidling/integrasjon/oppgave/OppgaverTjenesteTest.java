@@ -36,7 +36,7 @@ class OppgaverTjenesteTest {
         var aktørId = "12345678";
         var saksnummer = "98766544";
         var behandling = new Behandling.Builder().medBehandlendeEnhetId(behandlendeEnhetId)
-            .medFagsakBackend(FagsakBackend.ny().medAktørId(new AktørId(aktørId)).medSaksnummer(saksnummer).build())
+            .medFagsak(FagsakBackend.ny().medAktørId(new AktørId(aktørId)).medSaksnummer(saksnummer).build())
             .build();
 
         var id = 1234L;

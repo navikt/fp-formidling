@@ -70,7 +70,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = behandling.getFagsak();
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);

@@ -20,10 +20,6 @@ public class Behandlingsresultat {
     private boolean endretDekningsgrad;
     private LocalDate opphørsdato;
 
-    //Objekter
-    private String periode; //Uttaksperiodegrense
-    private Behandling behandling;
-
     private Behandlingsresultat(Builder builder) {
         avslagsårsak = builder.avslagsårsak;
         fritekstbrev = builder.fritekstbrev;
@@ -33,8 +29,6 @@ public class Behandlingsresultat {
         konsekvenserForYtelsen = builder.konsekvenserForYtelsen;
         skjæringstidspunkt = builder.skjæringstidspunkt;
         utenMinsterett = builder.utenMinsterett;
-        periode = builder.periode;
-        behandling = builder.behandling;
         endretDekningsgrad = builder.endretDekningsgrad;
         opphørsdato = builder.opphørsdato;
     }
@@ -67,10 +61,6 @@ public class Behandlingsresultat {
         return avslagarsakFritekst;
     }
 
-    public String getPeriode() {
-        return periode;
-    }
-
     public List<KonsekvensForYtelsen> getKonsekvenserForYtelsen() {
         return konsekvenserForYtelsen;
     }
@@ -85,10 +75,6 @@ public class Behandlingsresultat {
 
     public boolean erAvslått() {
         return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType);
-    }
-
-    public Behandling getBehandling() {
-        return behandling;
     }
 
     public boolean isEndretDekningsgrad() {
@@ -108,8 +94,6 @@ public class Behandlingsresultat {
         private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         private LocalDate skjæringstidspunkt;
         private boolean utenMinsterett = true;
-        private String periode;
-        private Behandling behandling;
         private boolean endretDekningsgrad;
         private LocalDate opphørsdato;
 
@@ -163,16 +147,6 @@ public class Behandlingsresultat {
 
         public Builder medOpphørsdato(LocalDate opphørsdato) {
             this.opphørsdato = opphørsdato;
-            return this;
-        }
-
-        public Builder periode(String periode) {
-            this.periode = periode;
-            return this;
-        }
-
-        public Builder behandling(Behandling behandling) {
-            this.behandling = behandling;
             return this;
         }
 

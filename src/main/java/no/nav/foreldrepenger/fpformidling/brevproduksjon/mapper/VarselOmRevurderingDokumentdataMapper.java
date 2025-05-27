@@ -63,7 +63,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
             .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
             .medAntallBarn(familieHendelse.antallBarn())
             .medAdvarselKode(advarselKode)
-            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.getFagsakBackend().getYtelseType()));
+            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.getFagsak().getYtelseType()));
 
         return dokumentdataBuilder.build();
     }

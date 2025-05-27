@@ -96,7 +96,7 @@ public class DatamapperTestUtil {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
             .medSpråkkode(Språkkode.NB);
     }
 

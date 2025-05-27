@@ -7,3 +7,4 @@ COPY target/classes/logback*.xml ./conf/
 # Application Container (Jetty)
 COPY target/lib/*.jar ./lib/
 COPY target/app.jar .
+

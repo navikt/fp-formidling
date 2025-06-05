@@ -157,6 +157,7 @@ public final class BeregningsgrunnlagDtoMapper {
             case FRILANS -> OpptjeningAktivitetType.FRILANS;
             case NÆRING -> OpptjeningAktivitetType.NÆRING;
             case SVANGERSKAPSPENGER -> OpptjeningAktivitetType.SVANGERSKAPSPENGER;
+            case ARBEID_UNDER_AAP -> OpptjeningAktivitetType.ARBEID_UNDER_AAP;
         };
     }
 

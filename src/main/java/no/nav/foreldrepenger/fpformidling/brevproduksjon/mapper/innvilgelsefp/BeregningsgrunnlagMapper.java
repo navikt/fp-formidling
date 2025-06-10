@@ -69,11 +69,25 @@ public final class BeregningsgrunnlagMapper {
                                                                   BeregningsgrunnlagAktivitetStatus bgAktivitetStatus) {
         var builder = BeregningsgrunnlagRegel.ny();
         var filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
-        builder.medAktivitetStatus(bgAktivitetStatus.aktivitetStatus().name());
+        builder.medAktivitetStatus(utledAktivitetStatus(bgAktivitetStatus.aktivitetStatus(), bgpsaListe));
         builder.medAndelListe(mapAndelListe(filtrertListe));
         builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
         builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
         return builder.build();
+    }
+
+    private static String utledAktivitetStatus(AktivitetStatus aktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+        if (erAAPUnderArbeid(bgpsaListe, aktivitetStatus)) {
+            return AktivitetStatus.ARBEID_UNDER_AAP.name();
+        } else {
+            return aktivitetStatus.name();
+        }
+    }
+
+    private static boolean erAAPUnderArbeid(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe, AktivitetStatus aktivitetStatus) {
+    return bgpsaListe.stream()
+        .filter(andel -> andel.getAktivitetStatus().equals(aktivitetStatus))
+        .anyMatch(andel-> OpptjeningAktivitetType.ARBEID_UNDER_AAP.equals(andel.getArbeidsforholdType()));
     }
 
     private static boolean harMilitærStatusMedDagsatsOgAnnenStatus(List<BeregningsgrunnlagPrStatusOgAndel> andeler) {

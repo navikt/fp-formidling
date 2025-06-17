@@ -184,7 +184,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .medAvslagsårsak(Avslagsårsak.UDEFINERT)
                 .medOpphørsdato(opphørsdato)
                 .build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
+            .medFagsak(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .build();
     }

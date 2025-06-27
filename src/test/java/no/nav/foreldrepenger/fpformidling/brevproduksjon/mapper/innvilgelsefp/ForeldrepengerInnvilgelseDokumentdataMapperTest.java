@@ -97,8 +97,9 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     private static final LocalDate PERIODE_TOM = LocalDate.now().plusMonths(4).plusDays(3);
     private static final int PREMATUR_DAGER = 2;
     private static final int KLAGEFRIST = 6;
-    private static final int BRUTTO_BERENINGSGRUNNLAG = 400;
+    private static final long BRUTTO_BEREGNINGSGRUNNLAG = 52_000;
     private static final int GRUNNBELØP = 100000;
+    private static final long DAGSATS = 200;
 
     private Behandling behandling;
     private DokumentFelles dokumentFelles;
@@ -125,7 +126,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
-        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
+        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
@@ -197,7 +198,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getInkludereAvslag()).isTrue();
 
         assertThat(dokumentdata.getBeregningsgrunnlagregler()).hasSize(1);
-        assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG));
+        assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(of(BRUTTO_BEREGNINGSGRUNNLAG));
         assertThat(dokumentdata.getSeksG()).isEqualTo(GRUNNBELØP * 6);
         assertThat(dokumentdata.getInntektOverSeksG()).isFalse();
         assertThat(dokumentdata.getErBesteberegning()).isTrue();
@@ -214,7 +215,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
-        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
+        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
@@ -290,6 +291,23 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     }
 
+    @Test
+    void brutto_dagsats_når_aap() {
+        var forventetMånedsinntekt = BRUTTO_BEREGNINGSGRUNNLAG / 12;
+        var beregningsgrunnlagRegler = BeregningsgrunnlagMapper.mapRegelListe(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSAVKLARINGSPENGER));
+
+
+        assertThat(beregningsgrunnlagRegler).hasSize(1);
+        assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe()).hasSize(1);
+        var andelsListe = beregningsgrunnlagRegler.getFirst().getAndelListe();
+
+        assertThat(beregningsgrunnlagRegler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.name());
+        assertThat(andelsListe.getFirst().getDagsats()).isEqualTo(DAGSATS);
+        assertThat(andelsListe.getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.name());
+        assertThat(andelsListe.getFirst().getMånedsinntekt()).isEqualTo(forventetMånedsinntekt);
+        assertThat(andelsListe.getFirst().getÅrsinntekt()).isEqualTo(BRUTTO_BEREGNINGSGRUNNLAG);
+    }
+
     private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
     }
@@ -361,10 +379,10 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
             .build();
     }
 
-    private Beregningsgrunnlag opprettBeregningsgrunnlag() {
+    private Beregningsgrunnlag opprettBeregningsgrunnlag(AktivitetStatus aktivitetStatus) {
         return Beregningsgrunnlag.ny()
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode())
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(aktivitetStatus))
+            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(aktivitetStatus))
             .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
             .medhHjemmel(Hjemmel.F_14_7)
             .medBesteberegnet(true)
@@ -374,21 +392,21 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     }
 
-    private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode() {
+    private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode(AktivitetStatus aktivitetStatus) {
         return BeregningsgrunnlagPeriode.ny()
             .medPeriode(fraOgMedTilOgMed(LocalDate.now(), PERIODE_TOM))
-            .medDagsats(100L)
-            .medBruttoPrÅr(new BigDecimal(200))
-            .medAvkortetPrÅr(new BigDecimal(300))
-            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
+            .medDagsats(DAGSATS)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BEREGNINGSGRUNNLAG))
+            .medAvkortetPrÅr(new BigDecimal(30000))
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe(aktivitetStatus))
             .build();
     }
 
-    private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListe() {
+    private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListe(AktivitetStatus aktivitetStatus) {
         return of(BeregningsgrunnlagPrStatusOgAndel.ny()
-            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
-            .medDagsats(500L)
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BEREGNINGSGRUNNLAG))
+            .medDagsats(DAGSATS)
+            .medAktivitetStatus(aktivitetStatus)
             .build());
     }
 

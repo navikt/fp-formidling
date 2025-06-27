@@ -114,14 +114,18 @@ public final class BeregningsgrunnlagMapper {
         var builder = BeregningsgrunnlagAndel.ny();
 
         builder.medAktivitetStatus(andel.getAktivitetStatus().name());
-        builder.medDagsats(andel.getDagsats());
-        builder.medEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
 
-        var bgBruttoPrÅr = getBgBruttoPrÅr(andel);
-        if (bgBruttoPrÅr != null) {
-            builder.medMånedsinntekt(getMånedsinntekt(andel).longValue());
-            builder.medÅrsinntekt(andel.getBruttoPrÅr().longValue());
+        BigDecimal ikkeRedusertDagsatsAAP = null;
+        //Dersom andelen er arbeidsavklaringspenger, kan dagsatsen være redusert hvis bruker har 80% foreldrepenger, men det er brutto dagsats som skal vises i brevet under beregningskapittelet
+        if (AktivitetStatus.ARBEIDSAVKLARINGSPENGER.equals(andel.getAktivitetStatus())) {
+            var bgBruttoPrÅr = andel.getBruttoPrÅr();
+            ikkeRedusertDagsatsAAP = bgBruttoPrÅr != null && bgBruttoPrÅr.compareTo(BigDecimal.ZERO) > 0 ? bgBruttoPrÅr.divide(BigDecimal.valueOf(260), 0, RoundingMode.HALF_UP) : null;
         }
+        builder.medDagsats(ikkeRedusertDagsatsAAP != null ? ikkeRedusertDagsatsAAP.longValue() : andel.getDagsats());
+        builder.medEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
+        builder.medMånedsinntekt(getMånedsinntekt(andel).longValue());
+        builder.medÅrsinntekt(andel.getBruttoPrÅr().longValue());
+
         if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())) {
             builder.medSistLignedeÅr(andel.getBeregningsperiodeTom() == null ? 0 : andel.getBeregningsperiodeTom().getYear());
         }
@@ -138,10 +142,6 @@ public final class BeregningsgrunnlagMapper {
 
     private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagPrStatusOgAndel andel) {
         return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::navn);
-    }
-
-    private static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagPrStatusOgAndel andel) {
-        return andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
     }
 
     private static int tellAntallArbeidsforholdIBeregningUtenSluttpakke(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {

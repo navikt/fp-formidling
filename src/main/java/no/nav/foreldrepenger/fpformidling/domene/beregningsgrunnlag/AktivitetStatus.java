@@ -27,9 +27,6 @@ public enum AktivitetStatus implements Kodeverdi {
     TTLSTØTENDE_YTELSE("TY"),
     VENTELØNN_VARTPENGER("VENTELØNN_VARTPENGER"),
 
-    //Intern status brukt i formidling for å representere en regelstatus som ikke er definert i kodeverket
-    ARBEID_UNDER_AAP("ARBEID_UNDER_AAP"),
-
     UDEFINERT("-");
 
     @JsonValue

@@ -21,7 +21,7 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ApplicationScoped
-@RestClientConfig(tokenConfig = TokenFlow.ADAPTIVE, endpointProperty = "dokdist.rest.base.url", endpointDefault = "http://dokdistfordeling.teamdokumenthandtering/rest/v1", scopesProperty = "dokdist.scopes", scopesDefault = "api://prod-fss.teamdokumenthandtering.saf/.default")
+@RestClientConfig(tokenConfig = TokenFlow.ADAPTIVE, endpointProperty = "dokdist.rest.base.url", endpointDefault = "http://dokdistfordeling.teamdokumenthandtering/rest/v1", scopesProperty = "dokdist.scopes", scopesDefault = "api://prod-fss.teamdokumenthandtering.dokdistfordeling/.default")
 class DokdistRestKlient implements Dokdist {
 
     private static final Logger LOG = LoggerFactory.getLogger(DokdistRestKlient.class);

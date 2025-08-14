@@ -129,7 +129,6 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
         assertThat(dokumentdata.getGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getBarnErFødt()).isFalse();
-        assertThat(dokumentdata.getAnnenForelderHarRett()).isTrue();
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(2);
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
@@ -219,7 +218,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
             .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
             .build();
         return Optional.of(
-            new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3), List.of(), false, true, false, false));
+            new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3), List.of()));
     }
 
     private Optional<ForeldrepengerUttak> opprettUttaksresultat2() {
@@ -241,7 +240,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
             .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
             .build();
-        return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode3), List.of(), false, true, false, false));
+        return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode3), List.of()));
     }
 
     private Behandling opprettBehandling() {

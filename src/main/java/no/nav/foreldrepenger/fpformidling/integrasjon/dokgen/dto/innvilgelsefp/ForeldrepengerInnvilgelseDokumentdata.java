@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
@@ -24,11 +26,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean inntektOverSeksG;
     private ForMyeUtbetalt forMyeUtbetalt;
     private boolean inntektMottattArbeidsgiver;
-    private boolean annenForelderHarRett;
-    private boolean annenForelderRettEØS;
-    private boolean oppgittAnnenForelderRettEØS;
-    private VurderingsKode annenForelderHarRettVurdert;
-    private VurderingsKode aleneomsorgKode;
     private boolean ikkeOmsorg;
     private boolean avslagBarnOver3år;
     private boolean barnErFødt;
@@ -51,6 +48,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private int disponibleDagerUtenAktivitetskrav;
     private int disponibleDagerMedAktivitetskrav;
     private int disponibleFellesDager;
+    private int maksukerUtenAktivitetskrav;
     private String sisteDagAvSistePeriode;
     private String stønadsperiodeFom;
     private String stønadsperiodeTom;
@@ -83,9 +81,15 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean varierendeDagsats;
     private boolean starterMedFullUtbetaling;
     private String medlemskapOpphørsårsak;
+    private Rettigheter rettigheter;
+    private RelasjonsRolleType relasjonsRolleType;
 
     public String getBehandlingType() {
         return behandlingType;
+    }
+
+    public RelasjonsRolleType getRelasjonsRolleType() {
+        return relasjonsRolleType;
     }
 
     public String getBehandlingResultatType() {
@@ -144,26 +148,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return inntektMottattArbeidsgiver;
     }
 
-    public boolean getAnnenForelderHarRett() {
-        return annenForelderHarRett;
-    }
-
-    public VurderingsKode getAnnenForelderHarRettVurdert() {
-        return annenForelderHarRettVurdert;
-    }
-
-    public boolean isAnnenForelderRettEØS() {
-        return annenForelderRettEØS;
-    }
-
-    public boolean isOppgittAnnenForelderRettEØS() {
-        return oppgittAnnenForelderRettEØS;
-    }
-
-    public VurderingsKode getAleneomsorgKode() {
-        return aleneomsorgKode;
-    }
-
     public boolean getIkkeOmsorg() {
         return ikkeOmsorg;
     }
@@ -202,6 +186,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getFullRefusjon() {
         return fullRefusjon;
+    }
+
+    public int getMaksukerUtenAktivitetskrav() {
+        return maksukerUtenAktivitetskrav;
     }
 
     public boolean getFbEllerRvInnvilget() {
@@ -344,6 +332,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return graderingOgFulltUttakIAnnenAktivitet;
     }
 
+    public Rettigheter getRettigheter() {
+        return rettigheter;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -354,50 +346,46 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         }
         var that = (ForeldrepengerInnvilgelseDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(behandlingType, that.behandlingType) && Objects.equals(behandlingResultatType,
-            that.behandlingResultatType) && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse)
-            && Objects.equals(dekningsgrad, that.dekningsgrad) && Objects.equals(endretDekningsgrad, that.endretDekningsgrad) && Objects.equals(harUtbetaling, that.harUtbetaling)
-            && Objects.equals(dagsats, that.dagsats) && Objects.equals(månedsbeløp, that.månedsbeløp) && Objects.equals(seksG, that.seksG)
-            && Objects.equals(inntektOverSeksG, that.inntektOverSeksG) && Objects.equals(forMyeUtbetalt, that.forMyeUtbetalt) && Objects.equals(
-            inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver) && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
-            && Objects.equals(annenForelderRettEØS, that.annenForelderRettEØS) && Objects.equals(oppgittAnnenForelderRettEØS,
-            that.oppgittAnnenForelderRettEØS) && Objects.equals(annenForelderHarRettVurdert, that.annenForelderHarRettVurdert) && Objects.equals(
-            aleneomsorgKode, that.aleneomsorgKode) && Objects.equals(ikkeOmsorg, that.ikkeOmsorg) && Objects.equals(barnErFødt, that.barnErFødt)
-            && Objects.equals(årsakErFødselshendelse, that.årsakErFødselshendelse) && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(
-            gjelderFødsel, that.gjelderFødsel) && Objects.equals(erBesteberegning, that.erBesteberegning) && Objects.equals(seksAvDeTiBeste, that.seksAvDeTiBeste)
-            && Objects.equals(ingenRefusjon, that.ingenRefusjon) && Objects.equals(delvisRefusjon, that.delvisRefusjon) && Objects.equals(fullRefusjon, that.fullRefusjon)
-            && Objects.equals(fbEllerRvInnvilget, that.fbEllerRvInnvilget) && Objects.equals(antallPerioder, that.antallPerioder) && Objects.equals(
+            that.behandlingResultatType) && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse) && Objects.equals(
+            dekningsgrad, that.dekningsgrad) && Objects.equals(endretDekningsgrad, that.endretDekningsgrad) && Objects.equals(harUtbetaling,
+            that.harUtbetaling) && Objects.equals(dagsats, that.dagsats) && Objects.equals(månedsbeløp, that.månedsbeløp) && Objects.equals(seksG,
+            that.seksG) && Objects.equals(inntektOverSeksG, that.inntektOverSeksG) && Objects.equals(forMyeUtbetalt, that.forMyeUtbetalt)
+            && Objects.equals(inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver) && Objects.equals(ikkeOmsorg, that.ikkeOmsorg)
+            && Objects.equals(barnErFødt, that.barnErFødt) && Objects.equals(årsakErFødselshendelse, that.årsakErFødselshendelse) && Objects.equals(
+            gjelderMor, that.gjelderMor) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(erBesteberegning,
+            that.erBesteberegning) && Objects.equals(seksAvDeTiBeste, that.seksAvDeTiBeste) && Objects.equals(ingenRefusjon, that.ingenRefusjon)
+            && Objects.equals(delvisRefusjon, that.delvisRefusjon) && Objects.equals(fullRefusjon, that.fullRefusjon) && Objects.equals(
+            fbEllerRvInnvilget, that.fbEllerRvInnvilget) && Objects.equals(antallPerioder, that.antallPerioder) && Objects.equals(
             antallInnvilgedePerioder, that.antallInnvilgedePerioder) && Objects.equals(antallAvslåttePerioder, that.antallAvslåttePerioder)
             && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere) && Objects.equals(dagerTaptFørTermin, that.dagerTaptFørTermin)
             && Objects.equals(disponibleDager, that.disponibleDager) && Objects.equals(disponibleDagerUtenAktivitetskrav,
             that.disponibleDagerUtenAktivitetskrav) && Objects.equals(disponibleDagerMedAktivitetskrav, that.disponibleDagerMedAktivitetskrav)
             && Objects.equals(disponibleFellesDager, that.disponibleFellesDager) && Objects.equals(sisteDagAvSistePeriode,
             that.sisteDagAvSistePeriode) && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom) && Objects.equals(stønadsperiodeTom,
-            that.stønadsperiodeTom) && Objects.equals(flerbarnsdagerUtvidetUker, that.flerbarnsdagerUtvidetUker) && Objects.equals(
-            antallBarn, that.antallBarn) && Objects.equals(prematurDager, that.prematurDager) && Objects.equals(antallDødeBarn, that.antallDødeBarn)
-            && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel) && Objects.equals(medlemskapOpphørsårsak, that.medlemskapOpphørsårsak)
-            && Objects.equals(perioder, that.perioder) && Objects.equals(
+            that.stønadsperiodeTom) && Objects.equals(flerbarnsdagerUtvidetUker, that.flerbarnsdagerUtvidetUker) && Objects.equals(antallBarn,
+            that.antallBarn) && Objects.equals(prematurDager, that.prematurDager) && Objects.equals(antallDødeBarn, that.antallDødeBarn)
+            && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel)
+            && Objects.equals(medlemskapOpphørsårsak, that.medlemskapOpphørsårsak) && Objects.equals(perioder, that.perioder) && Objects.equals(
             bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag) && Objects.equals(harBruktBruttoBeregningsgrunnlag,
             that.harBruktBruttoBeregningsgrunnlag) && Objects.equals(beregningsgrunnlagregler, that.beregningsgrunnlagregler) && Objects.equals(
             klagefristUker, that.klagefristUker) && Objects.equals(lovhjemlerUttak, that.lovhjemlerUttak) && Objects.equals(lovhjemlerBeregning,
             that.lovhjemlerBeregning) && Objects.equals(inkludereInnvilget, that.inkludereInnvilget) && Objects.equals(inkludereAvslag,
-            that.inkludereAvslag) && Objects.equals(
-            utenMinsterett, that.utenMinsterett) && Objects.equals(ønskerJustertVedFødsel, that.ønskerJustertVedFødsel) && Objects.equals(
-            graderingOgFulltUttakIAnnenAktivitet, that.graderingOgFulltUttakIAnnenAktivitet);
+            that.inkludereAvslag) && Objects.equals(utenMinsterett, that.utenMinsterett) && Objects.equals(ønskerJustertVedFødsel,
+            that.ønskerJustertVedFødsel) && Objects.equals(graderingOgFulltUttakIAnnenAktivitet, that.graderingOgFulltUttakIAnnenAktivitet);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, dekningsgrad, endretDekningsgrad, harUtbetaling,
-            dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver, annenForelderHarRett,
-            annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse, gjelderMor, gjelderFødsel, erBesteberegning,
-            seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
-            antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
-            sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, flerbarnsdagerUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
-            dødsdato, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, medlemskapOpphørsårsak,
-            beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
-            inkludereInnvilget, inkludereAvslag, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav,
-            utenMinsterett, ønskerJustertVedFødsel, graderingOgFulltUttakIAnnenAktivitet);
+        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, dekningsgrad, endretDekningsgrad,
+            harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver, ikkeOmsorg, barnErFødt,
+            årsakErFødselshendelse, gjelderMor, gjelderFødsel, erBesteberegning, seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon,
+            fbEllerRvInnvilget, antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere,
+            dagerTaptFørTermin, disponibleDager, disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom,
+            flerbarnsdagerUtvidetUker, antallBarn, prematurDager, antallDødeBarn, dødsdato, morKanSøkeOmDagerFørFødsel, perioder,
+            bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, medlemskapOpphørsårsak, beregningsgrunnlagregler, klagefristUker,
+            lovhjemlerUttak, lovhjemlerBeregning, inkludereInnvilget, inkludereAvslag, disponibleDagerUtenAktivitetskrav,
+            disponibleDagerMedAktivitetskrav, utenMinsterett, ønskerJustertVedFødsel, graderingOgFulltUttakIAnnenAktivitet);
     }
 
     public static Builder ny() {
@@ -476,31 +464,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medAnnenForelderHarRett(boolean annenForelderHarRett) {
-            this.kladd.annenForelderHarRett = annenForelderHarRett;
-            return this;
-        }
-
-        public Builder medAnnenForelderRettEØS(boolean annenForelderRettEØS) {
-            this.kladd.annenForelderRettEØS = annenForelderRettEØS;
-            return this;
-        }
-
-        public Builder medOppgittAnnenForelderRettEØS(boolean oppgittAnnenForelderRettEØS) {
-            this.kladd.oppgittAnnenForelderRettEØS = oppgittAnnenForelderRettEØS;
-            return this;
-        }
-
-        public Builder medAnnenForelderHarRettVurdert(VurderingsKode annenForelderHarRettVurdert) {
-            this.kladd.annenForelderHarRettVurdert = annenForelderHarRettVurdert;
-            return this;
-        }
-
-        public Builder medAleneomsorgKode(VurderingsKode aleneomsorgKode) {
-            this.kladd.aleneomsorgKode = aleneomsorgKode;
-            return this;
-        }
-
         public Builder medIkkeOmsorg(boolean ikkeOmsorg) {
             this.kladd.ikkeOmsorg = ikkeOmsorg;
             return this;
@@ -530,6 +493,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             this.kladd.erBesteberegning = erBesteberegning;
             return this;
         }
+
         public Builder medSeksAvDeTiBeste(boolean seksAvDeTiBeste) {
             this.kladd.seksAvDeTiBeste = seksAvDeTiBeste;
             return this;
@@ -696,6 +660,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
+        public Builder medRettigheter(Rettigheter rettigheter) {
+            this.kladd.rettigheter = rettigheter;
+            return this;
+        }
+
         public Builder medØnskerJustertVedFødsel(boolean ønskerJustertVedFødsel) {
             this.kladd.ønskerJustertVedFødsel = ønskerJustertVedFødsel;
             return this;
@@ -728,6 +697,16 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medStarterMedFullUtbetaling(boolean starterMedFullUtbetaling) {
             kladd.starterMedFullUtbetaling = starterMedFullUtbetaling;
+            return this;
+        }
+
+        public Builder medRelasjonsRolleType(RelasjonsRolleType relasjonsRolleType) {
+            kladd.relasjonsRolleType = relasjonsRolleType;
+            return this;
+        }
+
+        public Builder medMaksukerUtenAktivitetskrav(int maksukerUtenAktivitetskrav) {
+            kladd.maksukerUtenAktivitetskrav = maksukerUtenAktivitetskrav;
             return this;
         }
 

@@ -21,6 +21,9 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynResulta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
@@ -35,12 +38,8 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.F
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 class DokumentdataSerializationTest {
@@ -147,9 +146,6 @@ class DokumentdataSerializationTest {
             .medInntektOverSekgG(true)
             .medForMyeUtbetalt(ForMyeUtbetalt.GENERELL)
             .medInntektMottattArbeidsgiver(true)
-            .medAnnenForelderHarRett(true)
-            .medAnnenForelderHarRettVurdert(VurderingsKode.JA)
-            .medAleneomsorgKode(VurderingsKode.JA)
             .medIkkeOmsorg(true)
             .medBarnErFødt(true)
             .medÅrsakErFødselshendelse(true)

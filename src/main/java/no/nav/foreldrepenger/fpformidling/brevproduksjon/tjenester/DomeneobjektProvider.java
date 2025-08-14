@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmel
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
-import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
@@ -37,7 +36,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.Inntektsmeldi
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.KlageDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.MottattDokumentDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.StønadskontoDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.SøknadDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
@@ -143,10 +141,6 @@ public class DomeneobjektProvider {
 
     public KlageDokument hentKlageDokument(Behandling behandling) {
         return KlageDtoMapper.mapKlagedokumentFraDto(behandlingRestKlient.hentKlagedokument(behandling.getResourceLinker()));
-    }
-
-    public Optional<Søknad> hentSøknad(Behandling behandling) {
-        return behandlingRestKlient.hentSoknadHvisFinnes(behandling.getResourceLinker()).map(SøknadDtoMapper::mapSøknadFraDto);
     }
 
     public Optional<ForeldrepengerUttak> hentForeldrepengerUttakHvisFinnes(Behandling behandling) {

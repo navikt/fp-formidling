@@ -182,8 +182,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
             .medPeriodeResultatÅrsak(BARN_DØD)
             .build();
         return Optional.of(
-            new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), List.of(), false,
-                true, false, false));
+            new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), List.of()));
     }
 
     private Behandling opprettBehandling(LocalDate opphørsdato) {

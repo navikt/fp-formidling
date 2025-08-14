@@ -28,6 +28,10 @@ public final class StønadskontoMapper {
         return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), stønadskontoType).map(sk -> Math.max(sk.saldo(), 0)).orElse(0);
     }
 
+    public static int finnMaksdager(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), stønadskontoType).map(Stønadskonto::maxDager).orElse(0);
+    }
+
     public static int finnDisponibleFellesDager(Saldoer saldoer) {
         return finnSaldo(saldoer, SaldoVisningStønadskontoType.FELLESPERIODE);
     }

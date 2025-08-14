@@ -10,31 +10,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     private DokumentFelles dokumentFelles;
@@ -108,7 +105,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
     private ForeldrepengerUttak settOppUttaksperioder(DatoIntervall periodeEn, DatoIntervall periodeTo) {
         return new ForeldrepengerUttak(List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)),
-            List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)), false, false, false, false);
+            List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)));
     }
 
     private UttakResultatPeriode lagUttakResPeriode(DatoIntervall periode) {

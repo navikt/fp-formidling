@@ -83,7 +83,6 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
             .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
             .medGjelderFødsel(familiehendelse.gjelderFødsel())
             .medBarnErFødt(familiehendelse.barnErFødt())
-            .medAnnenForelderHarRett(uttakResultatPerioder.map(ForeldrepengerUttak::annenForelderHarRett).orElse(false))
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)
             .medKlagefristUker(brevParametere.getKlagefristUker())

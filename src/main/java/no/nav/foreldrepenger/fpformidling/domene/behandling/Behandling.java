@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -30,11 +31,11 @@ public class Behandling {
     private FagsakBackend fagsakBackend;
     private BehandlingStatus status;
     private Språkkode språkkode;
-    private boolean harAvklartAnnenForelderRett;
     private List<Vilkår> vilkår;
     private UUID originalBehandlingUuid;
     private Avslagsårsak medlemskapOpphørsårsak;
     private LocalDate medlemskapFom;
+    private Rettigheter rettigheter;
 
     private Behandling() {
     }
@@ -66,10 +67,6 @@ public class Behandling {
 
     public UUID getUuid() {
         return uuid;
-    }
-
-    public boolean getHarAvklartAnnenForelderRett() {
-        return harAvklartAnnenForelderRett;
     }
 
     public List<Vilkår> getVilkår() {
@@ -148,6 +145,10 @@ public class Behandling {
 
     public LocalDate getMedlemskapFom() {
         return medlemskapFom;
+    }
+
+    public Rettigheter getRettigheter() {
+        return rettigheter;
     }
 
     public static Behandling.Builder builder() {
@@ -234,11 +235,6 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
-            this.kladd.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
-            return this;
-        }
-
         public Behandling.Builder medMedlemskapOpphørsårsak(Avslagsårsak medlemskapOpphørsårsak) {
             this.kladd.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
             return this;
@@ -246,6 +242,11 @@ public class Behandling {
 
         public Behandling.Builder medMedlemskapFom(LocalDate medlemskapFom) {
             this.kladd.medlemskapFom = medlemskapFom;
+            return this;
+        }
+
+        public Behandling.Builder medRettigheter(Rettigheter rettigheter) {
+            this.kladd.rettigheter = rettigheter;
             return this;
         }
 

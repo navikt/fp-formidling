@@ -14,7 +14,6 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     private String mottattDato;
     private boolean gjelderFødsel;
     private boolean barnErFødt;
-    private boolean annenForelderHarRett;
     private int antallBarn;
     private long halvG;
     private int klagefristUker;
@@ -36,10 +35,6 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
     public boolean getBarnErFødt() {
         return barnErFødt;
-    }
-
-    public boolean getAnnenForelderHarRett() {
-        return annenForelderHarRett;
     }
 
     public int getAntallBarn() {
@@ -76,15 +71,15 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
         }
         var that = (ForeldrepengerAvslagDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(relasjonskode, that.relasjonskode) && Objects.equals(mottattDato,
-            that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(barnErFødt, that.barnErFødt) && Objects.equals(
-            annenForelderHarRett, that.annenForelderHarRett) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
+            that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(barnErFødt, that.barnErFødt)
+            && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
             && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag)
             && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett, antallBarn, halvG, klagefristUker,
+        return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, antallBarn, halvG, klagefristUker,
             lovhjemmelForAvslag, gjelderMor, avslåttePerioder);
     }
 
@@ -121,11 +116,6 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
         public Builder medBarnErFødt(boolean barnErFødt) {
             this.kladd.barnErFødt = barnErFødt;
-            return this;
-        }
-
-        public Builder medAnnenForelderHarRett(boolean annenForelderHarRett) {
-            this.kladd.annenForelderHarRett = annenForelderHarRett;
             return this;
         }
 

@@ -3,8 +3,7 @@ package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 import java.util.Comparator;
 import java.util.List;
 
-public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder, List<UttakResultatPeriode> perioderAnnenPart, boolean aleneomsorg,
-                                  boolean annenForelderHarRett, boolean annenForelderRettEØS, boolean oppgittAnnenForelderRettEØS) {
+public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder, List<UttakResultatPeriode> perioderAnnenPart) {
 
     @Override
     public List<UttakResultatPeriode> perioder() {
@@ -22,6 +21,6 @@ public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder, List<Utta
     }
 
     public static ForeldrepengerUttak tomtUttak() {
-        return new ForeldrepengerUttak(List.of(), List.of(), false, false, false, false);
+        return new ForeldrepengerUttak(List.of(), List.of());
     }
 }

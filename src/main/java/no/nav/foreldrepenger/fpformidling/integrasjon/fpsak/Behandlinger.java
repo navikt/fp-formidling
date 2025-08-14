@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.inntektarbeidyte
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.personopplysning.VergeDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBackendDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.YtelseFordelingDto;
@@ -91,13 +90,6 @@ public interface Behandlinger {
             .filter(dto -> "tilkjentytelse-dagytelse".equals(dto.getRel()))
             .findFirst()
             .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseDagytelseDto.class));
-    }
-
-    default Optional<SoknadBackendDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-            .filter(dto -> "soknad-backend".equals(dto.getRel()))
-            .findFirst()
-            .flatMap(link -> hentDtoFraLink(link, SoknadBackendDto.class));
     }
 
     default InntektsmeldingerDto hentInntektsmeldingerDto(List<BehandlingResourceLink> resourceLinker) {

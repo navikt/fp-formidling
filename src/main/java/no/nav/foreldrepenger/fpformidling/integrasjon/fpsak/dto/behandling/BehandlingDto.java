@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
 
@@ -29,11 +30,11 @@ public class BehandlingDto {
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
     private List<BehandlingResourceLinkDto> formidlingRessurser = new ArrayList<>();
     private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
-    private boolean harAvklartAnnenForelderRett;
     private List<VilkårDto> vilkår;
     private UUID originalBehandlingUuid;
     private Avslagsårsak medlemskapOpphørsårsak;
     private LocalDate medlemskapFom;
+    private Rettigheter rettigheter;
 
     public BehandlingType getType() {
         return type;
@@ -115,14 +116,6 @@ public class BehandlingDto {
         this.behandlingÅrsaker = behandlingÅrsaker;
     }
 
-    public boolean getHarAvklartAnnenForelderRett() {
-        return harAvklartAnnenForelderRett;
-    }
-
-    public void setHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
-        this.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
-    }
-
     public List<VilkårDto> getVilkår() {
         return vilkår;
     }
@@ -169,6 +162,14 @@ public class BehandlingDto {
 
     public void setMedlemskapFom(LocalDate medlemskapFom) {
         this.medlemskapFom = medlemskapFom;
+    }
+
+    public Rettigheter getRettigheter() {
+        return rettigheter;
+    }
+
+    public void setRettigheter(Rettigheter rettigheter) {
+        this.rettigheter = rettigheter;
     }
 
     @Override

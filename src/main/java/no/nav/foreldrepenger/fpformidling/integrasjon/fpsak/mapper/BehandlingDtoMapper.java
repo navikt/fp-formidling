@@ -46,11 +46,11 @@ public final class BehandlingDtoMapper {
             .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
             .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
             .medSpråkkode(dto.getSprakkode())
-            .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
             .medMedlemskapOpphørsårsak(dto.getMedlemskapOpphørsårsak())
             .medMedlemskapFom(dto.getMedlemskapFom())
             .medVilkår(VilkårDtoMapper.mapVilkårFraDto(dto.getVilkår()))
-            .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid());
+            .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid())
+            .medRettigheter(dto.getRettigheter());
 
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

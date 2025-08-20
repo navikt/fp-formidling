@@ -6,18 +6,18 @@ import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultat
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakAktivitet;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 public class UttakDtoMapper {
 
@@ -27,12 +27,7 @@ public class UttakDtoMapper {
     public static ForeldrepengerUttak mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         var uttakResultatPerioder = getUttakResultatPerioder(resultatPerioderDto.perioderSøker(), hentNavn);
         var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.perioderAnnenpart(), s -> null);
-        var aleneomsorg = resultatPerioderDto.aleneomsorg();
-        var annenForelderHarRett = resultatPerioderDto.annenForelderHarRett();
-        var annenForelderRettEØS = resultatPerioderDto.annenForelderRettEØS();
-        var oppgittAnnenForelderRettEØS = resultatPerioderDto.oppgittAnnenForelderRettEØS();
-        return new ForeldrepengerUttak(uttakResultatPerioder, perioderAnnenPart, aleneomsorg, annenForelderHarRett, annenForelderRettEØS,
-            oppgittAnnenForelderRettEØS);
+        return new ForeldrepengerUttak(uttakResultatPerioder, perioderAnnenPart);
     }
 
     private static List<UttakResultatPeriode> getUttakResultatPerioder(List<UttakResultatPeriodeDto> resultatPerioderDto,

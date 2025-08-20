@@ -26,12 +26,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
-import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,12 +52,13 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
@@ -79,11 +76,11 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerInnvilgelseDokumentdataMapperTest {
@@ -124,7 +121,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev() {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
-        when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
@@ -157,9 +153,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(tilkjentYtelseFP));
         assertThat(dokumentdata.getForMyeUtbetalt()).isEqualTo(ForMyeUtbetalt.GENERELL);
         assertThat(dokumentdata.getInntektMottattArbeidsgiver()).isTrue();
-        assertThat(dokumentdata.getAnnenForelderHarRettVurdert()).isEqualTo(VurderingsKode.JA);
-        assertThat(dokumentdata.getAnnenForelderHarRett()).isTrue();
-        assertThat(dokumentdata.getAleneomsorgKode()).isEqualTo(VurderingsKode.JA);
         assertThat(dokumentdata.getBarnErFødt()).isFalse();
         assertThat(dokumentdata.getÅrsakErFødselshendelse()).isTrue();
         assertThat(dokumentdata.getIkkeOmsorg()).isTrue();
@@ -205,8 +198,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getSeksAvDeTiBeste()).isTrue();
         assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
         assertThat(dokumentdata.erUtenMinsterett()).isTrue();
-        assertThat(dokumentdata.isAnnenForelderRettEØS()).isTrue();
-        assertThat(dokumentdata.isOppgittAnnenForelderRettEØS()).isTrue();
         assertThat(dokumentdata.isØnskerJustertVedFødsel()).isTrue();
         assertThat(dokumentdata.isGraderingOgFulltUttakIAnnenAktivitet()).isFalse();
     }
@@ -214,7 +205,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @Test
     void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
-        when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
@@ -314,10 +304,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private FamilieHendelse opprettFamiliehendelse() {
         return new FamilieHendelse(1, 0, null, LocalDate.now(), null, null, false, true);
-    }
-
-    private Optional<Søknad> opprettSøknad() {
-        return Optional.of(new Søknad(SØKNADSDATO, true));
     }
 
     private TilkjentYtelseForeldrepenger opprettTilkjentYtelseFP() {
@@ -444,7 +430,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
             .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE)
             .build();
-        return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3), of(), true, true, true, true);
+        return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3), of());
     }
 
     private ForeldrepengerUttak opprettUttaksresultat2() {
@@ -470,7 +456,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
             .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG)
             .build();
 
-        return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2), of(), true, true, false, false);
+        return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2), of());
     }
 
 
@@ -490,8 +476,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                 .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
                 .build())
-            .medHarAvklartAnnenForelderRett(true)
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medRettigheter(new Rettigheter(Rettigheter.Rettighetstype.BEGGE_RETT, Rettigheter.Rettighetstype.BEGGE_RETT, null))
             .build();
     }
 }

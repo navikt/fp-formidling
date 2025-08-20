@@ -16,7 +16,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -34,9 +38,10 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Saldoer;
@@ -48,7 +53,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.A
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
@@ -56,6 +60,8 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_INNVILGELSE)
 public class ForeldrepengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
+
+    private static final Logger LOG = LoggerFactory.getLogger(ForeldrepengerInnvilgelseDokumentdataMapper.class);
     private final BrevParametere brevParametere;
     private final DomeneobjektProvider domeneobjektProvider;
 
@@ -78,7 +84,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var uttak = domeneobjektProvider.hentForeldrepengerUttak(behandling);
-        var søknad = hentNyesteSøknad(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
             .map(domeneobjektProvider::hentFamiliehendelse);
@@ -107,14 +112,27 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         int utenAktKrav = 0;
         int medAktKrav = 0;
-        if (bfhrMedMinsterett(fagsak, uttak, saldoer)) {
+        int maksukerUtenAktKrav = 0;
+        var rettigheter = behandling.getRettigheter();
+        if (bfhrMedMinsterett(saldoer, rettigheter)) {
             utenAktKrav = disponibleDagerUtenAktivitetskrav(saldoer);
             medAktKrav = disponibleDagerMedAktivitetskrav(saldoer);
+            maksukerUtenAktKrav = maksdagerUtenAktivitetskrav(saldoer) / 5;
+        }
+        var behandlingType = behandling.getBehandlingType();
+        var relasjonsRolleType = fagsak.getRelasjonsRolleType();
+
+        if (rettigheter.opprinnelig() != rettigheter.gjeldende()) {
+            LOG.info("Rettighetstype endret fra {} til {} - {} - {}", rettigheter.opprinnelig(), rettigheter.gjeldende(), behandlingType,
+                relasjonsRolleType);
+        }
+        if (rettigheter.eøsUttak() != null) {
+            LOG.info("Annen parts uttak i eøs {}", rettigheter.eøsUttak());
         }
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medBehandlingType(behandling.getBehandlingType().name())
+            .medBehandlingType(behandlingType.name())
             .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
             .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
             .medDekningsgrad(Optional.ofNullable(fagsak.getDekningsgrad()).orElseThrow())
@@ -124,11 +142,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medMånedsbeløp(TilkjentYtelseMapper.finnMånedsbeløp(tilkjentYtelseForeldrepenger))
             .medForMyeUtbetalt(forMyeUtbetalt(vedtaksperioder, behandling))
             .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
-            .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(behandling, uttak))
-            .medAnnenForelderHarRett(uttak.annenForelderHarRett())
-            .medAnnenForelderRettEØS(uttak.annenForelderRettEØS())
-            .medOppgittAnnenForelderRettEØS(uttak.oppgittAnnenForelderRettEØS())
-            .medAleneomsorgKode(erAleneomsorg(søknad, uttak))
             .medBarnErFødt(familieHendelse.barnErFødt())
             .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
             .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(vedtaksperioder))
@@ -143,7 +156,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medAntallAvslåttePerioder(finnAntallAvslåttePerioder(vedtaksperioder))
             .medAntallArbeidsgivere(TilkjentYtelseMapper.finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger))
             .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
-            .medDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
+            .medDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, relasjonsRolleType))
             .medDisponibleDagerUtenAktivitetskrav(utenAktKrav)
             .medDisponibleDagerMedAktivitetskrav(medAktKrav)
             .medDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer))
@@ -163,10 +176,13 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medInkludereInnvilget(UndermalInkluderingMapper.skalInkludereInnvilget(vedtaksperioder, konsekvensForInnvilgetYtelse))
             .medInkludereAvslag(UndermalInkluderingMapper.skalInkludereAvslag(vedtaksperioder, konsekvensForInnvilgetYtelse))
             .medUtenMinsterett(utenMinsterett)
+            .medRettigheter(map(rettigheter, språkkode))
             .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
             .medGraderingOgFulltUttak(
                 vurderOmGraderingOgFulltUttakISammePeriode(beregningsgrunnlag, TilkjentYtelseMapper.finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger),
-                    innvilgedeUtbetalingsperioder));
+                    innvilgedeUtbetalingsperioder))
+            .medRelasjonsRolleType(relasjonsRolleType)
+            .medMaksukerUtenAktivitetskrav(maksukerUtenAktKrav);
 
         finnSisteDagAvSistePeriode(uttak).ifPresent(
             dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
@@ -187,6 +203,29 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             dokumentdataBuilder.medAntallDødeBarn(0);
         }
         return dokumentdataBuilder.build();
+    }
+
+    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter map(Rettigheter rettigheter, Språkkode språkkode) {
+        var eøsUttak = rettigheter.eøsUttak();
+        return new no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter(map(rettigheter.opprinnelig()), map(rettigheter.gjeldende()),
+            eøsUttak == null ? null : map(eøsUttak, språkkode));
+    }
+
+    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.EøsUttak map(Rettigheter.EøsUttak eøsUttak,
+                                                                                                      Språkkode språkkode) {
+        return new no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.EøsUttak(formaterDato(eøsUttak.fom(), språkkode),
+            formaterDato(eøsUttak.tom(), språkkode), eøsUttak.forbruktFellesperiode(), eøsUttak.fellesperiodeINorge());
+    }
+
+    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype map(Rettigheter.Rettighetstype opprinnelig) {
+        return switch (opprinnelig) {
+            case ALENEOMSORG -> no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.ALENEOMSORG;
+            case BEGGE_RETT -> no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.BEGGE_RETT;
+            case BEGGE_RETT_EØS -> no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.BEGGE_RETT_EØS;
+            case BARE_MOR_RETT, BARE_FAR_RETT -> no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.BARE_SØKER_RETT;
+            case BARE_FAR_RETT_MOR_UFØR ->
+                no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.BARE_FAR_RETT_MOR_UFØR;
+        };
     }
 
     static boolean starterMedFullUtbetaling(List<Vedtaksperiode> vedtaksperioder) {
@@ -218,17 +257,20 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return StønadskontoMapper.finnSaldo(saldoer, MINSTERETT);
     }
 
+    private static int maksdagerUtenAktivitetskrav(Saldoer saldoer) {
+        if (StønadskontoMapper.kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV)) {
+            return StønadskontoMapper.finnMaksdager(saldoer, UTEN_AKTIVITETSKRAV);
+        }
+        return StønadskontoMapper.finnMaksdager(saldoer, MINSTERETT);
+    }
+
     private static int disponibleDagerMedAktivitetskrav(Saldoer saldoer) {
         return StønadskontoMapper.finnSaldo(saldoer, FORELDREPENGER) - disponibleDagerUtenAktivitetskrav(saldoer);
     }
 
-    private static boolean bfhrMedMinsterett(FagsakBackend fagsak, ForeldrepengerUttak uttak, Saldoer saldoer) {
-        return gjelderFarMedmor(fagsak) && !uttak.annenForelderHarRett()
+    private static boolean bfhrMedMinsterett(Saldoer saldoer, Rettigheter rettigheter) {
+        return Set.of(Rettigheter.Rettighetstype.BARE_FAR_RETT, Rettigheter.Rettighetstype.BARE_FAR_RETT_MOR_UFØR).contains(rettigheter.gjeldende())
             && (StønadskontoMapper.kontoEksisterer(saldoer, MINSTERETT) || StønadskontoMapper.kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV));
-    }
-
-    private static boolean gjelderFarMedmor(FagsakBackend fagsak) {
-        return !gjelderMor(fagsak);
     }
 
     private List<Vedtaksperiode> finnInnvilgedePerioderMedUtbetaling(List<Vedtaksperiode> vedtaksperioder) {
@@ -321,46 +363,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                                                     Optional<FamilieHendelse> originalFamiliehendelse) {
         return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) || familieHendelse.barnErFødt() && originalFamiliehendelse.map(
             fh -> !fh.barnErFødt()).orElse(false);
-    }
-
-    private VurderingsKode utledAnnenForelderRettVurdertKode(Behandling behandling, ForeldrepengerUttak foreldrepengerUttak) {
-        VurderingsKode annenForelderHarRettVurdert;
-        if (behandling.getHarAvklartAnnenForelderRett()) {
-            annenForelderHarRettVurdert = foreldrepengerUttak.annenForelderHarRett() ? VurderingsKode.JA : VurderingsKode.NEI;
-        } else {
-            annenForelderHarRettVurdert = VurderingsKode.IKKE_VURDERT;
-        }
-        return annenForelderHarRettVurdert;
-    }
-
-    private VurderingsKode erAleneomsorg(Søknad søknad, ForeldrepengerUttak foreldrepengerUttak) {
-        VurderingsKode vurderingsKode;
-        if (søknad.oppgittAleneomsorg()) {
-            vurderingsKode = foreldrepengerUttak.aleneomsorg() ? VurderingsKode.JA : VurderingsKode.NEI;
-        } else {
-            vurderingsKode = VurderingsKode.IKKE_VURDERT;
-        }
-        return vurderingsKode;
-    }
-
-    private Søknad hentNyesteSøknad(Behandling behandling) {
-        var maxForsøk = 100;
-        var nåværendeForsøk = 0;
-        Optional<Søknad> søknad = Optional.empty();
-        var nåværendeBehandling = behandling;
-        while (søknad.isEmpty() && nåværendeForsøk < maxForsøk) {
-            søknad = domeneobjektProvider.hentSøknad(nåværendeBehandling);
-            if (søknad.isEmpty()) {
-                var nesteBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling)
-                    .orElseThrow(IllegalStateException::new);
-                if (nåværendeBehandling.getUuid() == nesteBehandling.getUuid()) {
-                    throw new IllegalStateException();
-                }
-                nåværendeBehandling = nesteBehandling;
-            }
-            nåværendeForsøk++;
-        }
-        return søknad.orElseThrow(IllegalStateException::new);
     }
 
     private String mapKonsekvensForInnvilgetYtelse(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {

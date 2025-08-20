@@ -21,15 +21,8 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetSta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
@@ -37,6 +30,13 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 class VedtaksperiodeMapperTest {
 
@@ -145,7 +145,7 @@ class VedtaksperiodeMapperTest {
     }
 
     private ForeldrepengerUttak uttak(List<UttakResultatPeriode> søkersPerioder, List<UttakResultatPeriode> annenPartPerioder) {
-        return new ForeldrepengerUttak(søkersPerioder, annenPartPerioder, false, false, false, false);
+        return new ForeldrepengerUttak(søkersPerioder, annenPartPerioder);
     }
 
     @Test

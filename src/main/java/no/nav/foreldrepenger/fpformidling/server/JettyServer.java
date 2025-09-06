@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.server;
 
-import static org.eclipse.jetty.ee10.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
+import static org.eclipse.jetty.ee11.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,13 +9,13 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
-import org.eclipse.jetty.ee10.cdi.CdiDecoratingListener;
-import org.eclipse.jetty.ee10.cdi.CdiServletContainerInitializer;
-import org.eclipse.jetty.ee10.servlet.ErrorPageErrorHandler;
-import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
-import org.eclipse.jetty.ee10.servlet.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.ee10.webapp.WebAppContext;
+import org.eclipse.jetty.ee11.cdi.CdiDecoratingListener;
+import org.eclipse.jetty.ee11.cdi.CdiServletContainerInitializer;
+import org.eclipse.jetty.ee11.servlet.ErrorPageErrorHandler;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.servlet.security.ConstraintMapping;
+import org.eclipse.jetty.ee11.servlet.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.ee11.webapp.WebAppContext;
 import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.security.Constraint;
 import org.eclipse.jetty.server.Connector;
@@ -30,12 +30,11 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import no.nav.foreldrepenger.fpformidling.konfig.ApiConfig;
 import no.nav.foreldrepenger.fpformidling.konfig.InternalApiConfig;
 import no.nav.foreldrepenger.konfig.Environment;
-
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 public class JettyServer {
 

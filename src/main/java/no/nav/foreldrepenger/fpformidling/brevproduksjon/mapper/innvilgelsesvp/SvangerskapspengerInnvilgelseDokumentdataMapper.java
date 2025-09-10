@@ -94,8 +94,8 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
 
         if (behandling.erRevurdering()) {
             var orginalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling);
-            var originalFamiliehendelse = orginalBehandling.map(domeneobjektProvider::hentFamiliehendelse);
-            var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+            var originalFamiliehendelse = orginalBehandling.map(Behandling::getFamilieHendelse);
+            var familieHendelse = behandling.getFamilieHendelse();
 
             dokumentdataBuilder.medEndretFraAvslag(erEndretFraAvslått(orginalBehandling));
             dokumentdataBuilder.medUtbetalingEndret(erRevurderingPgaEndretBeregningsgrunnlag(behandling));

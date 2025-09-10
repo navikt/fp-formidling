@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -49,6 +46,8 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
@@ -164,25 +163,36 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder()).hasSize(2);
         assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().beskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
         assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder()).hasSize(2);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getPeriodeFom()).isEqualTo(PERIODE1_FOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE1));
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getDagsats()).isEqualTo( DAGSATS_PERIODE1.intValue());
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getUtbetaltTilSøker()).isEqualTo( DAGSATS_PERIODE1);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getDagsats()).isEqualTo( DAGSATS_PERIODE2.intValue());
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE2));
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getPeriodeFom()).isEqualTo(
+            PERIODE1_FOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getPeriodeTom()).isEqualTo(
+            PERIODE1_TOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getUtbetalingsgrad()).isEqualTo(
+            Prosent.of(UTBETALINGSGRAD_PERIODE1));
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getDagsats()).isEqualTo(
+            DAGSATS_PERIODE1.intValue());
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getUtbetaltTilSøker()).isEqualTo(
+            DAGSATS_PERIODE1);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(
+            PERIODE2_FOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(
+            PERIODE2_TOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getDagsats()).isEqualTo(
+            DAGSATS_PERIODE2.intValue());
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo(
+            Prosent.of(UTBETALINGSGRAD_PERIODE2));
         assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
 
         assertThat(dokumentdata.getAvslagsperioder()).hasSize(2);
         assertThat(dokumentdata.getAvslagsperioder().getFirst().getPeriodeFom()).isEqualTo(PERIODE3_FOM);
         assertThat(dokumentdata.getAvslagsperioder().getFirst().getPeriodeTom()).isEqualTo(PERIODE3_TOM);
-        assertThat(dokumentdata.getAvslagsperioder().getFirst().getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
+        assertThat(dokumentdata.getAvslagsperioder().getFirst().getÅrsak()).isEqualTo(
+            Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
         assertThat(dokumentdata.getAvslagsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
         assertThat(dokumentdata.getAvslagsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
-        assertThat(dokumentdata.getAvslagsperioder().get(1).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER.getKode()));
+        assertThat(dokumentdata.getAvslagsperioder().get(1).getÅrsak()).isEqualTo(
+            Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER.getKode()));
 
         assertThat(dokumentdata.getAvslåtteAktiviteter()).hasSize(1);
         assertThat(dokumentdata.getAvslåtteAktiviteter().getFirst().getÅrsak()).isEqualTo(Årsak.of(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK.getKode()));
@@ -215,21 +225,22 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_revurdering() {
         // Arrange
-        var behandling = opprettBehandling(BehandlingType.REVURDERING).medBehandlingsresultat(Behandlingsresultat.builder()
-            .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-            .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING))
-            .build()).build();
+        var behandling = opprettBehandling(BehandlingType.REVURDERING).medFamilieHendelse(opprettFamilieHendelse(LocalDate.now().minusDays(1)))
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING))
+                .build())
+            .build();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
 
-        var originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).medBehandlingsresultat(
-            Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build()).build();
+        var originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).medFamilieHendelse(
+                opprettFamilieHendelse(LocalDate.now().minusDays(2)))
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
+            .build();
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(originalBehandling));
-
-        when(domeneobjektProvider.hentFamiliehendelse(originalBehandling)).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(1)));
-        when(domeneobjektProvider.hentFamiliehendelse(behandling)).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(2)));
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -290,7 +301,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamilieHendelse(LocalDate termindato) {
-        return new FamilieHendelse(1, 0, LocalDate.now(), termindato, null, null, true, true);
+        return new FamilieHendelse(List.of(), termindato, 1, null);
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlag() {
@@ -488,8 +499,11 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
                 .medDagsats(DAGSATS_PERIODE1)
                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medAndeler(
-                    of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).medStillingsprosent(BigDecimal.valueOf(100)).medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1).build()))
+                .medAndeler(of(TilkjentYtelseAndel.ny()
+                    .medAktivitetStatus(AktivitetStatus.FRILANSER)
+                    .medStillingsprosent(BigDecimal.valueOf(100))
+                    .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
+                    .build()))
                 .build()))
             .build();
     }
@@ -530,11 +544,13 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
             .medArbeidsgiver(arbeidsgiver1)
-            .leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode5)).build();
+            .leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode5))
+            .build();
         var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .medArbeidsgiver(arbeidsgiver2)
             .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
-            .leggTilPerioder(of(uttakPeriode3)).build();
+            .leggTilPerioder(of(uttakPeriode3))
+            .build();
         var svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .leggTilPerioder(of(uttakPeriode4))
             .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)

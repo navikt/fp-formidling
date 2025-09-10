@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,20 +55,17 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void case_med_endret_sats_blir_satt_riktig() {
         //Arrange
-        var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
-        var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
+        var familieHendelse = lagFamHendelse(1);
+        var orgfamilieHendelse = lagFamHendelse(1);
+        var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID, orgfamilieHendelse);
+        var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV, familieHendelse);
 
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
-        var familieHendelse = lagFamHendelse(1);
-        var orgfamilieHendelse = lagFamHendelse(1);
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(innvilgetES)).thenReturn(Optional.of(orgBehES));
         when(domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(orgBehES)).thenReturn(Optional.of(new TilkjentYtelseEngangsstønad(86000L)));
-
-        when(domeneobjektProvider.hentFamiliehendelse(innvilgetES)).thenReturn(familieHendelse);
-        when(domeneobjektProvider.hentFamiliehendelse(orgBehES)).thenReturn(orgfamilieHendelse);
 
         //Act
         var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
@@ -86,8 +84,8 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_ikke_flagge_endret_sats_hvis_forrige_behandling_manglet_tilkjent_ytelse() {
         //Arrange
-        var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
-        var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
+        var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID, lagFamHendelse(1));
+        var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV, lagFamHendelse(1));
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
@@ -106,7 +104,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     void skal_sende_original_til_verge() {
         //Arrange
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.NEI, true);
-        var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
+        var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV, lagFamHendelse(1));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
 
@@ -124,7 +122,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     void skal_sende_kopi_til_søker() {
         //Arrange
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.JA, false);
-        var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
+        var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV, lagFamHendelse(1));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
 
@@ -141,18 +139,15 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void endring_antall_barn_ikke_endretSats() {
         //Arrange
-        var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
-        var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
         var familieHendelse = lagFamHendelse(2);
         var orgfamilieHendelse = lagFamHendelse(1);
+        var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID, orgfamilieHendelse);
+        var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV, familieHendelse);
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(innvilgetES)).thenReturn(Optional.of(orgBehES));
         when(domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(orgBehES)).thenReturn(Optional.of(new TilkjentYtelseEngangsstønad(86000L)));
-
-        when(domeneobjektProvider.hentFamiliehendelse(innvilgetES)).thenReturn(familieHendelse);
-        when(domeneobjektProvider.hentFamiliehendelse(orgBehES)).thenReturn(orgfamilieHendelse);
         //Act
         var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
 
@@ -162,17 +157,18 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(formaterBeløp(1000L));
     }
 
-    private Behandling opprettBehandling(BehandlingType behType, UUID id) {
+    private Behandling opprettBehandling(BehandlingType behType, UUID id, FamilieHendelse familieHendelse) {
         return Behandling.builder()
             .medUuid(id)
             .medBehandlingType(behType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.ENGANGSTØNAD).build())
+            .medFamilieHendelse(familieHendelse)
             .build();
     }
 
     private FamilieHendelse lagFamHendelse(int antallBarn) {
-        return new FamilieHendelse(antallBarn, 0, LocalDate.now(), null, null, null, true, true);
+        return new FamilieHendelse(List.of(), LocalDate.now(), antallBarn, null);
     }
 
     private String formaterBeløp(long beløp) {

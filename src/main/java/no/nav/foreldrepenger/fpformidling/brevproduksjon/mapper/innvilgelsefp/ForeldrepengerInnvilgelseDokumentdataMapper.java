@@ -84,9 +84,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var uttak = domeneobjektProvider.hentForeldrepengerUttak(behandling);
-        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
-            .map(domeneobjektProvider::hentFamiliehendelse);
+        var familieHendelse = behandling.getFamilieHendelse();
+        var originalFamiliehendelse = Optional.ofNullable(behandling.getOriginalBehandlingUuid())
+            .map(originalBehandlingUuid -> domeneobjektProvider.hentBehandling(originalBehandlingUuid).getFamilieHendelse());
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var saldoer = domeneobjektProvider.hentSaldoer(behandling);
         if (uttak.perioder().isEmpty() || saldoer.stønadskontoer().isEmpty()) {
@@ -107,7 +107,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         var dagsats = TilkjentYtelseMapper.finnDagsats(tilkjentYtelseForeldrepenger);
         var antallBarn = familieHendelse.antallBarn();
-        var antallDødeBarn = familieHendelse.antallDødeBarn();
+        var antallDødeBarn = familieHendelse.barn().stream().filter(b -> b.dødsdato() != null).count();
         var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(vedtaksperioder);
 
         int utenAktKrav = 0;
@@ -128,6 +128,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         }
         if (rettigheter.eøsUttak() != null) {
             LOG.info("Annen parts uttak i eøs {}", rettigheter.eøsUttak());
+        }
+        if (familieHendelse.barn().stream().anyMatch(b -> b.fødselsdato() == null)) {
+            throw new IllegalStateException("Barn mangler fødselsdato");
         }
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
@@ -197,8 +200,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         //Dersom alle barna er døde skal vi sette dødsdato og faktisk antallDødeBarn. Det er kun i disse tilfellene at innvilgelsesbrevet skal informere om at barnet/barna er døde, ellers er saken fortsatt løpende
         if (antallBarn == antallDødeBarn) {
-            familieHendelse.dødsdato().ifPresent(d -> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
-            dokumentdataBuilder.medAntallDødeBarn(antallDødeBarn);
+            familieHendelse.tidligstDødsdato()
+                .ifPresent(d -> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
+            dokumentdataBuilder.medAntallDødeBarn((int) antallDødeBarn);
         } else {
             dokumentdataBuilder.medAntallDødeBarn(0);
         }

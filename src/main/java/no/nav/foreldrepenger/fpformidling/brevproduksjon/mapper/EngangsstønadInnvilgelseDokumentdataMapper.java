@@ -72,8 +72,8 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
             var differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, tilkjentYtelse);
 
             if (differanse != 0L) {
-                var famHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-                var orgFamHendelse = domeneobjektProvider.hentFamiliehendelse(originalBehandling);
+                var famHendelse = behandling.getFamilieHendelse();
+                var orgFamHendelse = originalBehandling.getFamilieHendelse();
                 //dersom årsaken til differanse er økning av antall barn er det ikke endret sats
                 if (!antallBarnEndret(famHendelse, orgFamHendelse)) {
                     dokumentdataBuilder.medErEndretSats(true);

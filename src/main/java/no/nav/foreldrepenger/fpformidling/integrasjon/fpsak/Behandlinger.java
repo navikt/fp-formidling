@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPay
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
@@ -53,18 +52,6 @@ public interface Behandlinger {
             .filter(dto -> "verge-backend".equals(dto.getRel()))
             .findFirst()
             .flatMap(link -> hentDtoFraLink(link, VergeDto.class));
-    }
-
-    default FamilieHendelseGrunnlagDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinker) {
-        return hentFamiliehendelseHvisFinnes(resourceLinker).orElseThrow(
-            () -> new IllegalStateException("Klarte ikke hente Familiehendelse for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default Optional<FamilieHendelseGrunnlagDto> hentFamiliehendelseHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-            .filter(dto -> "familiehendelse-v2".equals(dto.getRel()))
-            .findFirst()
-            .flatMap(link -> hentDtoFraLink(link, FamilieHendelseGrunnlagDto.class));
     }
 
     default Optional<no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto> hentTilkjentYtelseEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {

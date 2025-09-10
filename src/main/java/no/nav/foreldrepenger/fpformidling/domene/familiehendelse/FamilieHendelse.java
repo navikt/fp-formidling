@@ -1,66 +1,27 @@
 package no.nav.foreldrepenger.fpformidling.domene.familiehendelse;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-public class FamilieHendelse {
-
-    private final int antallBarn;
-    private final int antallDødeBarn;
-    private final LocalDate skjæringstidspunkt;
-    private final LocalDate termindato;
-    private final LocalDate fødselsdato;
-    private final LocalDate dødsdato;
-    private final boolean barnErFødt;
-    private final boolean gjelderFødsel;
-
-    public FamilieHendelse(int antallBarn,
-                           int antallDødeBarn,
-                           LocalDate skjæringstidspunkt,
-                           LocalDate termindato,
-                           LocalDate fødselsdato,
-                           LocalDate dødsdato,
-                           boolean barnErFødt,
-                           boolean gjelderFødsel) {
-        this.antallBarn = antallBarn;
-        this.antallDødeBarn = antallDødeBarn;
-        this.skjæringstidspunkt = skjæringstidspunkt;
-        this.termindato = termindato;
-        this.fødselsdato = fødselsdato;
-        this.dødsdato = dødsdato;
-        this.barnErFødt = barnErFødt;
-        this.gjelderFødsel = gjelderFødsel;
+public record FamilieHendelse(List<Barn> barn, LocalDate termindato, int antallBarn, LocalDate omsorgsovertakelse) {
+    public boolean barnErFødt() {
+        return !barn.isEmpty();
     }
 
     public boolean gjelderFødsel() {
-        return gjelderFødsel;
+        return omsorgsovertakelse == null;
     }
 
-    public boolean barnErFødt() {
-        return barnErFødt;
+    public Optional<LocalDate> tidligstDødsdato() {
+        return barn.stream().map(FamilieHendelse.Barn::dødsdato).filter(Objects::nonNull).min(LocalDate::compareTo);
     }
 
-    public Optional<LocalDate> skjæringstidspunkt() {
-        return Optional.ofNullable(skjæringstidspunkt);
+    public Optional<LocalDate> tidligstFødselsdato() {
+        return barn.stream().map(FamilieHendelse.Barn::fødselsdato).filter(Objects::nonNull).min(LocalDate::compareTo);
     }
 
-    public Optional<LocalDate> termindato() {
-        return Optional.ofNullable(termindato);
-    }
-
-    public Optional<LocalDate> fødselsdato() {
-        return Optional.ofNullable(fødselsdato);
-    }
-
-    public Optional<LocalDate> dødsdato() {
-        return Optional.ofNullable(dødsdato);
-    }
-
-    public int antallBarn() {
-        return antallBarn;
-    }
-
-    public int antallDødeBarn() {
-        return antallDødeBarn;
+    public record Barn(LocalDate fødselsdato, LocalDate dødsdato) {
     }
 }

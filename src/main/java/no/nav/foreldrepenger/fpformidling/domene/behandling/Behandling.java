@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
@@ -36,6 +37,7 @@ public class Behandling {
     private Avslagsårsak medlemskapOpphørsårsak;
     private LocalDate medlemskapFom;
     private Rettigheter rettigheter;
+    private FamilieHendelse familieHendelse;
 
     private Behandling() {
     }
@@ -151,6 +153,10 @@ public class Behandling {
         return rettigheter;
     }
 
+    public FamilieHendelse getFamilieHendelse() {
+        return familieHendelse;
+    }
+
     public static Behandling.Builder builder() {
         return new Behandling.Builder();
     }
@@ -252,6 +258,11 @@ public class Behandling {
 
         public Behandling.Builder medVilkår(List<Vilkår> vilkår) {
             this.kladd.vilkår = vilkår;
+            return this;
+        }
+
+        public Behandling.Builder medFamilieHendelse(FamilieHendelse familieHendelse) {
+            this.kladd.familieHendelse = familieHendelse;
             return this;
         }
 

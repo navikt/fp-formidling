@@ -12,12 +12,11 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -67,9 +66,6 @@ class VarselOmRevurderingDokumentdataMapperTest {
         brevMapperUtil = new BrevMapperUtil(brevParametere);
         dokumentData = lagStandardDokumentData(DokumentMalType.VARSEL_OM_REVURDERING);
         dokumentdataMapper = new VarselOmRevurderingDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
-
-        var familieHendelse = opprettFamiliehendelse();
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(familieHendelse);
     }
 
     @Test
@@ -136,7 +132,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(ANTALL_BARN, 0, null, TERMINDATO, null, null, false, false);
+        return new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
     }
 
     private Behandling opprettBehandling() {
@@ -146,6 +142,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
             .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFamilieHendelse(opprettFamiliehendelse())
             .build();
     }
 

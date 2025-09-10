@@ -3,36 +3,23 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(MockitoExtension.class)
 class ForlengetSaksbehandlingstidDokumentdataMapperTest {
-
-    private static final int ANTALL_BARN = 2;
-
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
     private DokumentData dokumentData;
 
@@ -41,13 +28,11 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
     @BeforeEach
     void before() {
         dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
-        dokumentdataMapper = new ForlengetSaksbehandlingstidDokumentdataMapper(domeneobjektProvider);
+        dokumentdataMapper = new ForlengetSaksbehandlingstidDokumentdataMapper();
     }
 
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
-        var familieHendelse = opprettFamiliehendelse();
-        when(domeneobjektProvider.hentFamiliehendelseHvisFinnes(any(Behandling.class))).thenReturn(Optional.of(familieHendelse));
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -71,10 +56,6 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
         assertThat(dokumentdata.getVariantType()).isEqualTo(ForlengetSaksbehandlingstidDokumentdata.VariantType.MEDLEM);
         assertThat(dokumentdata.getDød()).isFalse();
         assertThat(dokumentdata.getBehandlingsfristUker()).isEqualTo(6);
-        assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
-    }
-
-    private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(ANTALL_BARN, 0, null, null, null, null, false, false);
+        assertThat(dokumentdata.getAntallBarn()).isEqualTo(behandling.getFamilieHendelse().antallBarn());
     }
 }

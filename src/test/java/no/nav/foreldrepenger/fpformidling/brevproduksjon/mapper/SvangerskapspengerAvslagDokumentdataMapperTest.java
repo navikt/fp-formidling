@@ -73,10 +73,9 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
         var mottattDokument = new MottattDokument(LocalDate.now(), DokumentTypeId.SØKNAD_SVANGERSKAPSPENGER, DokumentKategori.SØKNAD);
 
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(
-            opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT));
+            opprettUttaksresultat());
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(List.of(mottattDokument));
     }
 
@@ -141,8 +140,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        var now = LocalDate.now();
-        return new FamilieHendelse(2, 0, null, now, now, null, false, true);
+        return new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
@@ -154,7 +152,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             .build());
     }
 
-    private Optional<SvangerskapspengerUttak> opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak) {
+    private Optional<SvangerskapspengerUttak> opprettUttaksresultat() {
         var uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
             .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
             .medArbeidsgiverNavn(ARBEIDSGIVER_1)
@@ -162,7 +160,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             .build();
         var uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeIkkeOppfyltÅrsak(periodeIkkeOppfyltÅrsak)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
             .medArbeidsgiverNavn(ARBEIDSGIVER_1)
             .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
             .build();
@@ -185,6 +183,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
                 Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).medAvslagsårsak(årsak).build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
+            .medFamilieHendelse(opprettFamiliehendelse())
             .build();
     }
 }

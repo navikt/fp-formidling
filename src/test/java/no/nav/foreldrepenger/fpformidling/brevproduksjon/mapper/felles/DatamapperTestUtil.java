@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.List;
 import java.util.UUID;
 
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -97,6 +99,7 @@ public class DatamapperTestUtil {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medFamilieHendelse(new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null))
             .medSpråkkode(Språkkode.NB);
     }
 

@@ -126,7 +126,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
 
@@ -208,7 +207,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP2());
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat2());
 
@@ -303,7 +301,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(1, 0, null, LocalDate.now(), null, null, false, true);
+        return new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
     }
 
     private TilkjentYtelseForeldrepenger opprettTilkjentYtelseFP() {
@@ -478,6 +476,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medRettigheter(new Rettigheter(Rettigheter.Rettighetstype.BEGGE_RETT, Rettigheter.Rettighetstype.BEGGE_RETT, null))
+            .medFamilieHendelse(opprettFamiliehendelse())
             .build();
     }
 }

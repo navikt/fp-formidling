@@ -71,7 +71,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
         var språkkode = behandling.getSpråkkode();
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var familiehendelse = behandling.getFamilieHendelse();
 
         var foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
             .orElseGet(ForeldrepengerUttak::tomtUttak); // bestående av tomme lister.
@@ -135,12 +135,11 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         return "ANNET";
     }
 
-    private Optional<LocalDate> finnDødsdatoHvisFinnes(final FamilieHendelse familieHendelse, List<String> årsakListe) {
-        Optional<LocalDate> dødsdato = Optional.empty();
+    private Optional<LocalDate> finnDødsdatoHvisFinnes(FamilieHendelse familieHendelse, List<String> årsakListe) {
         if (årsakListe.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {
-            dødsdato = familieHendelse.dødsdato();
+            return familieHendelse.tidligstDødsdato();
         }
-        return dødsdato;
+        return Optional.empty();
     }
 
     private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<ForeldrepengerUttak> originaltUttakResultat) {

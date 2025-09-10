@@ -54,7 +54,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
-        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var familieHendelse = behandling.getFamilieHendelse();
 
         var advarselKode = utledAdvarselkode(hendelse);
         var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
@@ -69,7 +69,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     }
 
     private Optional<String> finnTermindato(FamilieHendelse familieHendelse, Språkkode språkkode) {
-        return familieHendelse.termindato().map(termindato -> formaterDato(termindato, språkkode));
+        return Optional.ofNullable(familieHendelse.termindato()).map(termindato -> formaterDato(termindato, språkkode));
     }
 
     private String utledAdvarselkode(DokumentHendelse hendelse) {

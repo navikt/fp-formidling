@@ -92,7 +92,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
     }
@@ -100,7 +99,9 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        var behandling = opprettBehandling(PERIODE2_FOM);
+        var dødsdato = LocalDate.now();
+        var behandling = opprettBehandling(PERIODE2_FOM,
+            new FamilieHendelse(List.of(new FamilieHendelse.Barn(LocalDate.now(), dødsdato)), LocalDate.now(), ANTALL_BARN, null));
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
@@ -125,7 +126,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmelForAvslag()).isEmpty();
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
-        assertThat(dokumentdata.getBarnDødsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
+        assertThat(dokumentdata.getBarnDødsdato()).isEqualTo(formaterDato(dødsdato, Språkkode.NB));
         assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(dokumentdata.isEndretDekningsgrad()).isTrue();
@@ -133,11 +134,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
 
     private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
-    }
-
-    private FamilieHendelse opprettFamiliehendelse() {
-        var now = LocalDate.now();
-        return new FamilieHendelse(2, 0, now, now, null, now, false, true);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
@@ -185,7 +181,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
             new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), List.of()));
     }
 
-    private Behandling opprettBehandling(LocalDate opphørsdato) {
+    private Behandling opprettBehandling(LocalDate opphørsdato, FamilieHendelse familieHendelse) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.REVURDERING)
@@ -197,6 +193,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .build())
             .medSpråkkode(Språkkode.NB)
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFamilieHendelse(familieHendelse)
             .build();
     }
 

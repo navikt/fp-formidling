@@ -54,7 +54,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
                                                                    boolean erUtkast) {
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
-        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var familieHendelse = behandling.getFamilieHendelse();
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
         var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling)
             .map(TilkjentYtelseForeldrepenger::getPerioder)
@@ -80,9 +80,9 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
 
         opphørsdato.ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
 
-        familieHendelse.dødsdato().ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
+        familieHendelse.tidligstDødsdato().ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
 
-        familieHendelse.fødselsdato().ifPresent(d -> dokumentdatabuilder.medFødselsdato(formaterDato(d, språkkode)));
+        familieHendelse.tidligstFødselsdato().ifPresent(d -> dokumentdatabuilder.medFødselsdato(formaterDato(d, språkkode)));
 
         return dokumentdatabuilder.build();
     }

@@ -69,7 +69,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var familieHendelse = behandling.getFamilieHendelse();
 
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
             .medAvslagsÅrsak(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
@@ -89,7 +89,9 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     private boolean isSkjæringstidspunktPassert(FamilieHendelse familieHendelse) {
-        return familieHendelse.skjæringstidspunkt().map(stp -> stp.isBefore(LocalDate.now())).orElse(false);
+        var stp = familieHendelse.omsorgsovertakelse() != null ? familieHendelse.omsorgsovertakelse() : familieHendelse.tidligstFødselsdato()
+            .orElse(familieHendelse.termindato());
+        return stp.isBefore(LocalDate.now());
     }
 
     String utledRelasjonsRolle(FagsakBackend fagsak) {
@@ -122,9 +124,11 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         if (VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD.equals(vilkårType)
             || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType) && !behandling.erRevurdering()) {
             return "FPVK1_4";
-        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType)) && behandling.erFørstegangssøknad()) {
+        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType))
+            && behandling.erFørstegangssøknad()) {
             return "FPVK2_FB";
-        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType)) && behandling.erRevurdering()) {
+        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType))
+            && behandling.erRevurdering()) {
             return "FPVK2_RV";
         } else if (erVilkår213(vilkårType) && behandling.erRevurdering()) {
             return "FPVK1_4_5_8_RV";
@@ -158,8 +162,9 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
                                                              Avslagsårsak årsak,
                                                              boolean skjæringstispunktPassert,
                                                              boolean gjelderFødsel) {
-        if (vilkår.stream().anyMatch(v -> v.vilkårType().equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE) &&
-            VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak))) {
+        if (vilkår.stream()
+            .anyMatch(v -> v.vilkårType().equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE)
+                && VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak))) {
             return Optional.of("IKKE_MEDL_FORUTGÅENDE");
         }
         if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && !skjæringstispunktPassert) {

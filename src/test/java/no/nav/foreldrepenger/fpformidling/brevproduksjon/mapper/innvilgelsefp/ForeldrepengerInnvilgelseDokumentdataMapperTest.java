@@ -84,7 +84,7 @@ import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerInnvilgelseDokumentdataMapperTest {
-    
+
     private static final int DEKNINGSGRAD = 100;
     private static final int DISPONIBLE_DAGER = 5;
     private static final int DISPONIBLE_DAGER_FELLES = 10;

@@ -50,7 +50,8 @@ public final class BehandlingDtoMapper {
             .medMedlemskapFom(dto.getMedlemskapFom())
             .medVilkår(VilkårDtoMapper.mapVilkårFraDto(dto.getVilkår()))
             .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid())
-            .medRettigheter(dto.getRettigheter());
+            .medRettigheter(dto.getRettigheter())
+            .medFamilieHendelse(dto.getFamilieHendelse());
 
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

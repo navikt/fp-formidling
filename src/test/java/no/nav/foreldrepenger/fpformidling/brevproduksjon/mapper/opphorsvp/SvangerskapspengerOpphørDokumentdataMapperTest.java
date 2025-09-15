@@ -82,7 +82,6 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR);
         dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
@@ -113,7 +112,8 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
 
         assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(opphørsdato, Språkkode.NB));
         assertThat(dokumentdata.getDødsdatoBarn()).isNull();
-        assertThat(dokumentdata.getFødselsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
+        assertThat(dokumentdata.getFødselsdato()).isEqualTo(
+            formaterDato(behandling.getFamilieHendelse().barn().getFirst().fødselsdato(), Språkkode.NB));
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4 og forvaltningsloven § 35");
@@ -125,8 +125,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        var now = LocalDate.now();
-        return new FamilieHendelse(2, 0, null, now, now, null, false, true);
+        return new FamilieHendelse(List.of(new FamilieHendelse.Barn(LocalDate.now(), null)), LocalDate.now(), 1, null);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
@@ -186,6 +185,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
+            .medFamilieHendelse(opprettFamiliehendelse())
             .build();
     }
 }

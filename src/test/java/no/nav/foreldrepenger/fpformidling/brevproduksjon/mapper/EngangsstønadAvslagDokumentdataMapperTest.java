@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -78,14 +77,15 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     void mapTilDokumentdata_avslag_ESFB_søknadsfrist_med_Fritekst_mappes_ok() {
         //Arrange
         var fagsak = opprettFagsak(RelasjonsRolleType.MORA);
-        var familieHendelse = new FamilieHendelse(1, 0, LocalDate.now(), null, null, null, false, true);
+        var familieHendelse = new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
         var vilkårFraBehandling = List.of(new Vilkår(VilkårType.SØKNADSFRISTVILKÅRET));
 
         var avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";
 
-        var avslagESFB = opprettBehandlingBuilder(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak).medVilkår(vilkårFraBehandling).build();
+        var avslagESFB = opprettBehandlingBuilder(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak).medFamilieHendelse(familieHendelse)
+            .medVilkår(vilkårFraBehandling)
+            .build();
 
-        when(domeneobjektProvider.hentFamiliehendelse(avslagESFB)).thenReturn(familieHendelse);
 
         //Act
         var avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
@@ -152,7 +152,11 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     }
 
     private FagsakBackend opprettFagsak(RelasjonsRolleType relasjonsRolleType) {
-        return FagsakBackend.ny().medAktørId(AKTØR_ID).medSaksnummer("123456").medBrukerRolle(relasjonsRolleType).medFagsakYtelseType(
-            FagsakYtelseType.ENGANGSTØNAD).build();
+        return FagsakBackend.ny()
+            .medAktørId(AKTØR_ID)
+            .medSaksnummer("123456")
+            .medBrukerRolle(relasjonsRolleType)
+            .medFagsakYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .build();
     }
 }

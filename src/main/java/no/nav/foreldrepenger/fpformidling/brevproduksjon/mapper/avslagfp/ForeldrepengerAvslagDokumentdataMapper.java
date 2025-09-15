@@ -72,7 +72,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
 
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var familiehendelse = behandling.getFamilieHendelse();
         var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);

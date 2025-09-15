@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.ArbeidsforholdInntektsmelding;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
@@ -30,7 +29,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoU
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.ArbeidsforholdInntektsmeldingDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.InntektsmeldingDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.KlageDtoMapper;
@@ -109,15 +107,6 @@ public class DomeneobjektProvider {
     public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseFPHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getFormidlingRessurser())
             .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
-    }
-
-    public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
-        return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
-    }
-
-    public Optional<FamilieHendelse> hentFamiliehendelseHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentFamiliehendelseHvisFinnes(behandling.getResourceLinker())
-            .map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
     }
 
     public Inntektsmeldinger hentInntektsmeldinger(Behandling behandling) {

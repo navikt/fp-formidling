@@ -96,7 +96,6 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(opprettMottattDokument());
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         lenient().when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
@@ -129,7 +128,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
         assertThat(dokumentdata.getGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getBarnErFødt()).isFalse();
-        assertThat(dokumentdata.getAntallBarn()).isEqualTo(2);
+        assertThat(dokumentdata.getAntallBarn()).isEqualTo(behandling.getFamilieHendelse().antallBarn());
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getGjelderMor()).isTrue();
@@ -169,10 +168,6 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
 
     private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
-    }
-
-    private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(2, 0, null, LocalDate.now(), null, null, false, true);
     }
 
     private Optional<TilkjentYtelseForeldrepenger> opprettTilkjentYtelseFP() {
@@ -243,6 +238,11 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode3), List.of()));
     }
 
+
+    private FamilieHendelse opprettFamiliehendelse() {
+        return new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
+    }
+
     private Behandling opprettBehandling() {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
@@ -253,6 +253,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
                 .build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medSpråkkode(Språkkode.NB)
+            .medFamilieHendelse(opprettFamiliehendelse())
             .build();
     }
 }

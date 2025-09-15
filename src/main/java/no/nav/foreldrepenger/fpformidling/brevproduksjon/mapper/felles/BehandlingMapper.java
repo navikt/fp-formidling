@@ -16,10 +16,7 @@ public final class BehandlingMapper {
     public static final String ENDRING_BEREGNING_OG_UTTAK = "ENDRING_BEREGNING_OG_UTTAK";
 
     public static boolean erTermindatoEndret(FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
-        if (originalFamiliehendelse.isEmpty()) {
-            return false;
-        }
-        return !originalFamiliehendelse.get().termindato().equals(familieHendelse.termindato());
+        return originalFamiliehendelse.filter(hendelse -> !hendelse.termindato().equals(familieHendelse.termindato())).isPresent();
     }
 
     public static Boolean erEndretFraAvslått(Optional<Behandling> orginalBehandling) {

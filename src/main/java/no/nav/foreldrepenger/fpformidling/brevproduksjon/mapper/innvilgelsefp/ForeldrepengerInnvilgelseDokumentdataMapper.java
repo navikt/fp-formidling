@@ -374,7 +374,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
             return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
         } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)
-            && behandlingÅrsaker.stream().anyMatch(ba -> ba.getBehandlingÅrsakType().equals(BehandlingÅrsakType.FEIL_PRAKSIS_BEREGNING_AAP_KOMBINASJON))) {
+            && behandlingÅrsaker.stream().anyMatch(ba -> ba.getBehandlingÅrsakType().equals(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI))) {
             return KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name();
         }
         else {

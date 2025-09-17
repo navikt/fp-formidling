@@ -300,7 +300,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     void revurdering_med_aap_praksis_endring() {
         var behandlingAap = opprettBehandling(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
                 BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI).build()),
-            of(KonsekvensForYtelsen.ENDRING_I_BEREGNING));
+            of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK));
 
         var konsekvensForYtelseAAPPraksisendring = dokumentdataMapper.mapKonsekvensForInnvilgetYtelse(
             behandlingAap.getBehandlingsresultat().getKonsekvenserForYtelsen(), behandlingAap.getBehandlingÅrsaker());

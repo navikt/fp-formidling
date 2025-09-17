@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentY
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
@@ -103,7 +104,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttak,
             beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
-        var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
+        var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen(),
+            behandling.getBehandlingÅrsaker());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         var dagsats = TilkjentYtelseMapper.finnDagsats(tilkjentYtelseForeldrepenger);
         var antallBarn = familieHendelse.antallBarn();
@@ -369,15 +371,18 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             fh -> !fh.barnErFødt()).orElse(false);
     }
 
-    private String mapKonsekvensForInnvilgetYtelse(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
+    String mapKonsekvensForInnvilgetYtelse(List<KonsekvensForYtelsen> konsekvenserForYtelsen, List<BehandlingÅrsak> behandlingÅrsaker) {
         if (konsekvenserForYtelsen.isEmpty()) {
             return KonsekvensForYtelsen.INGEN_ENDRING.name();
         } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(
             KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
             return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
-        } else {
-            return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.
-            // kombinasjoner)
+        } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)
+            && behandlingÅrsaker.stream().anyMatch(ba -> ba.getBehandlingÅrsakType().equals(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI))) {
+            return KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name();
+        }
+        else {
+            return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.kombinasjoner)
         }
     }
 

@@ -85,7 +85,6 @@ import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
-    private static final LocalDate SØKNADSDATO = LocalDate.now().minusDays(1);
     private static final int DEKNINGSGRAD = 100;
     private static final int DISPONIBLE_DAGER = 5;
     private static final int DISPONIBLE_DAGER_FELLES = 10;
@@ -113,7 +112,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         var dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INNVILGELSE);
         dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, domeneobjektProvider);
 
-        behandling = opprettBehandling();
+        behandling = opprettBehandling(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
+            BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_HENDELSE_FØDSEL).build()),of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK) );
         dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         dokumentHendelse = lagStandardHendelseBuilder().build();
     }
@@ -296,6 +296,17 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(andelsListe.getFirst().getÅrsinntekt()).isEqualTo(BRUTTO_BEREGNINGSGRUNNLAG);
     }
 
+    @Test
+    void revurdering_med_aap_praksis_endring() {
+        var behandlingAap = opprettBehandling(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
+                BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI).build()),
+            of(KonsekvensForYtelsen.ENDRING_I_BEREGNING));
+
+        var konsekvensForYtelseAAPPraksisendring = dokumentdataMapper.mapKonsekvensForInnvilgetYtelse(
+            behandlingAap.getBehandlingsresultat().getKonsekvenserForYtelsen(), behandlingAap.getBehandlingÅrsaker());
+        assertThat(konsekvensForYtelseAAPPraksisendring).isEqualTo(KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name());
+    }
+
     private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
     }
@@ -464,15 +475,14 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         return new Saldoer(stønadskontoer, TAPTE_DAGER_FPFF);
     }
 
-    private Behandling opprettBehandling() {
+    private Behandling opprettBehandling(List<BehandlingÅrsak> behandlingÅrsaker, List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.REVURDERING)
-            .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
-                BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_HENDELSE_FØDSEL).build()))
+            .medBehandlingÅrsaker(behandlingÅrsaker)
             .medBehandlingsresultat(Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
+                .medKonsekvenserForYtelsen(konsekvenserForYtelsen)
                 .build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medRettigheter(new Rettigheter(Rettigheter.Rettighetstype.BEGGE_RETT, Rettigheter.Rettighetstype.BEGGE_RETT, null))

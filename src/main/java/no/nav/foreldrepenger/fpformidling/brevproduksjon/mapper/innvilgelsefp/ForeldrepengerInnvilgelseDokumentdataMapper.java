@@ -374,12 +374,12 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     String mapKonsekvensForInnvilgetYtelse(List<KonsekvensForYtelsen> konsekvenserForYtelsen, List<BehandlingÅrsak> behandlingÅrsaker) {
         if (konsekvenserForYtelsen.isEmpty()) {
             return KonsekvensForYtelsen.INGEN_ENDRING.name();
-        } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(
-            KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
-            return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
         } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)
             && behandlingÅrsaker.stream().anyMatch(ba -> ba.getBehandlingÅrsakType().equals(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI))) {
             return KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name();
+        } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(
+            KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
+            return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
         }
         else {
             return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.kombinasjoner)

@@ -43,7 +43,6 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
             .medVariantType(mapVariantType(behandling.getBehandlingType(), hendelse.getDokumentMal()))
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medBehandlingsfristUker(behandling.getBehandlingType().getBehandlingstidFristUker())
-            .medAntallBarn(behandling.getFamilieHendelse().antallBarn())
             .build();
     }
 

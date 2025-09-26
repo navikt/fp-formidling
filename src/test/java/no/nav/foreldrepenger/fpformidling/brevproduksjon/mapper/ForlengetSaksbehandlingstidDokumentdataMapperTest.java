@@ -56,6 +56,5 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
         assertThat(dokumentdata.getVariantType()).isEqualTo(ForlengetSaksbehandlingstidDokumentdata.VariantType.MEDLEM);
         assertThat(dokumentdata.getDød()).isFalse();
         assertThat(dokumentdata.getBehandlingsfristUker()).isEqualTo(6);
-        assertThat(dokumentdata.getAntallBarn()).isEqualTo(behandling.getFamilieHendelse().antallBarn());
     }
 }

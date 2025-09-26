@@ -12,7 +12,6 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
     private VariantType variantType;
     private boolean død;
     private int behandlingsfristUker;
-    private int antallBarn;
 
     public VariantType getVariantType() {
         return variantType;
@@ -26,10 +25,6 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
         return behandlingsfristUker;
     }
 
-    public int getAntallBarn() {
-        return antallBarn;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -40,12 +35,12 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
         }
         var that = (ForlengetSaksbehandlingstidDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(variantType, that.variantType) && Objects.equals(død, that.død)
-            && Objects.equals(behandlingsfristUker, that.behandlingsfristUker) && Objects.equals(antallBarn, that.antallBarn);
+            && Objects.equals(behandlingsfristUker, that.behandlingsfristUker);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, variantType, død, behandlingsfristUker, antallBarn);
+        return Objects.hash(felles, variantType, død, behandlingsfristUker);
     }
 
     public enum VariantType {
@@ -61,7 +56,7 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private ForlengetSaksbehandlingstidDokumentdata kladd;
+        private final ForlengetSaksbehandlingstidDokumentdata kladd;
 
         private Builder() {
             this.kladd = new ForlengetSaksbehandlingstidDokumentdata();
@@ -84,11 +79,6 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
 
         public Builder medBehandlingsfristUker(int behandlingsfristUker) {
             this.kladd.behandlingsfristUker = behandlingsfristUker;
-            return this;
-        }
-
-        public Builder medAntallBarn(int antallBarn) {
-            this.kladd.antallBarn = antallBarn;
             return this;
         }
 

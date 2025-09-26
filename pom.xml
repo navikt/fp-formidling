@@ -22,7 +22,7 @@
         <!-- Felles artefakter -->
         <felles.version>7.6.3</felles.version>
         <prosesstask.version>5.2.0</prosesstask.version>
-        <kontrakter.version>9.4.1</kontrakter.version>
+        <kontrakter.version>9.4.3</kontrakter.version>
     </properties>
 
     <!-- NB: Unngå å put scope (test, provided) i dependency management. Det har uheldige virkninger ved bruk av import og dependency (bruk composition

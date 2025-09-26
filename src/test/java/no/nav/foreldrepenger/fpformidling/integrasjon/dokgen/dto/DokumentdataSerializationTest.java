@@ -247,6 +247,7 @@ class DokumentdataSerializationTest {
             .medVariantType(ForlengetSaksbehandlingstidDokumentdata.VariantType.FORLENGET)
             .medDød(true)
             .medBehandlingsfristUker(6)
+            .medAntallBarn(2)
             .build();
 
         // Act + Assert

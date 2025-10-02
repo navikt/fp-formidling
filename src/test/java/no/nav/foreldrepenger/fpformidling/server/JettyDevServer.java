@@ -32,9 +32,5 @@ public class JettyDevServer extends JettyServer {
         System.setProperty("javax.net.ssl.trustStorePassword", keystoreTruststorePassword);
         System.setProperty("javax.net.ssl.keyStorePassword", keystoreTruststorePassword);
         System.setProperty("javax.net.ssl.password", keystoreTruststorePassword);
-        // KAFKA spesifikke properties
-        System.setProperty("KAFKA_TRUSTSTORE_PATH", absolutePathHome + truststoreRelativPath);
-        System.setProperty("KAFKA_KEYSTORE_PATH", absolutePathHome + keystoreRelativPath);
-        System.setProperty("KAFKA_CREDSTORE_PASSWORD", keystoreTruststorePassword);
     }
 }

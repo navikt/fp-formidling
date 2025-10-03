@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Br
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
@@ -38,8 +37,6 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetSta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
@@ -56,7 +53,6 @@ import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
@@ -72,14 +68,11 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private DokumentData dokumentData;
-
     private SvangerskapspengerOpphørDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR);
         dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
@@ -92,7 +85,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         // Arrange
         var opphørsdato = PERIODE1_TOM.plusDays(1);
         var behandling = opprettBehandling(opphørsdato);
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles();
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
@@ -104,8 +97,8 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();

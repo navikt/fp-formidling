@@ -11,22 +11,17 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Datamappe
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 class HenleggeDokumentdataMapperTest {
-
-    private DokumentData dokumentData;
 
     private HenleggeDokumentdataMapper mapper;
 
     @BeforeEach
     void setUp() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.INFO_OM_HENLEGGELSE);
         mapper = new HenleggeDokumentdataMapper();
     }
 
@@ -34,7 +29,7 @@ class HenleggeDokumentdataMapperTest {
     void henlegg_mapper_vanligBehandling() {
         //Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, FagsakYtelseType.FORELDREPENGER);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, null, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = lagDokumentHendelse();
 
         //Act
@@ -52,7 +47,7 @@ class HenleggeDokumentdataMapperTest {
     void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
         var behandling = opprettBehandling(BehandlingType.ANKE, FagsakYtelseType.SVANGERSKAPSPENGER);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, null, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = lagDokumentHendelse();
 
         //Act

@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
@@ -44,8 +43,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
-            DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER));
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medFritekst(null).build();
 
         foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);

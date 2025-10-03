@@ -36,7 +36,6 @@ import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
@@ -58,8 +57,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
-            DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).medDokumentMal(DokumentMal.ENGANGSSTØNAD_AVSLAG).build();
 
         var personinfo = Personinfo.getbuilder(AKTØR_ID)

@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoEngelsk;
@@ -21,9 +20,6 @@ import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,17 +33,17 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class InnhenteOpplysningerDokumentdataMapperTest {
@@ -60,15 +56,12 @@ class InnhenteOpplysningerDokumentdataMapperTest {
 
     private BrevMapperUtil brevMapperUtil;
 
-    private DokumentData dokumentData;
-
     private InnhenteOpplysningerDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
-        dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new InnhenteOpplysningerDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
         var mottattDokumenter = List.of(
@@ -81,7 +74,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.NB);
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles();
         var dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -93,8 +86,8 @@ class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
@@ -113,7 +106,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.NB);
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
         var dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -132,7 +125,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     void skal_mappe_datoer_med_engelsk_format() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.EN);
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles();
         var dokumentHendelse = lagDokumentHendelse();
 
         // Act

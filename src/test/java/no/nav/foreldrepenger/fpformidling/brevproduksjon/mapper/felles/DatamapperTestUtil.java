@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFel
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +12,6 @@ import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
@@ -21,7 +19,6 @@ import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
@@ -53,12 +50,12 @@ public class DatamapperTestUtil {
         return dokumentFelles;
     }
 
-    public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata) {
-        return lagStandardDokumentFelles(dokumentdata, null, false);
+    public static DokumentFelles lagStandardDokumentFelles() {
+        return lagStandardDokumentFelles(null, false);
     }
 
-    public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata, Kopi kopi, boolean tilVerge) {
-        return DokumentFelles.builder(dokumentdata)
+    public static DokumentFelles lagStandardDokumentFelles(Kopi kopi, boolean tilVerge) {
+        return DokumentFelles.builder()
             .medAutomatiskBehandlet(Boolean.TRUE)
             .medDokumentDato(LocalDate.now())
             .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
@@ -70,15 +67,6 @@ public class DatamapperTestUtil {
             .medMottakerType(DokumentFelles.MottakerType.PERSON)
             .medSpråkkode(Språkkode.NB)
             .medSakspartPersonStatus(ANNET)
-            .build();
-    }
-
-    public static DokumentData lagStandardDokumentData(DokumentMalType dokumentMalType) {
-        return DokumentData.builder()
-            .medDokumentMalType(dokumentMalType)
-            .medBehandlingUuid(UUID.randomUUID())
-            .medBestillingType("B")
-            .medBestiltTid(LocalDateTime.now())
             .build();
     }
 

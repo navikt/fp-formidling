@@ -14,11 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.ArbeidsforholdInntektsmelding;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class EtterlysInntektsmeldingDokumentdataMapperTest {
@@ -26,20 +23,17 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider;
 
-    private DokumentData dokumentData;
-
     private EtterlysInntektsmeldingDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void setup() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ETTERLYS_INNTEKTSMELDING);
         dokumentdataMapper = new EtterlysInntektsmeldingDokumentdataMapper(domeneobjektProvider);
     }
 
     @Test
     void test_map_fagtype_foreldrepenger() {
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 
         var inntektsmeldingerStatus = List.of(new ArbeidsforholdInntektsmelding("12345679", "ArbeidsgiverNavn", BigDecimal.valueOf(100), false));
@@ -55,7 +49,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     @Test
     void test_map_fagtype_svangerskapspenger() {
         var behandling = DatamapperTestUtil.standardSvangerskapspengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         var inntektsmeldingerStatus = List.of(new ArbeidsforholdInntektsmelding("12345679", "ArbeidsgiverNavn", BigDecimal.valueOf(100), false));
         when(domeneobjektProvider.hentArbeidsforholdInntektsmeldingerStatus(behandling)).thenReturn(inntektsmeldingerStatus);

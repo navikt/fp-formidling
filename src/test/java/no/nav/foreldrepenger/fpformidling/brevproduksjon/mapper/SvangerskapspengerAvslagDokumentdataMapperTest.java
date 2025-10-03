@@ -28,8 +28,6 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetSta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
@@ -46,7 +44,6 @@ import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
@@ -61,14 +58,11 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private DokumentData dokumentData;
-
     private SvangerskapspengerAvslagDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_AVSLAG);
         dokumentdataMapper = new SvangerskapspengerAvslagDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         var mottattDokument = new MottattDokument(LocalDate.now(), DokumentTypeId.SØKNAD_SVANGERSKAPSPENGER, DokumentKategori.SØKNAD);
@@ -83,7 +77,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_med_årsak_fra_behandling() {
         // Arrange
         var behandling = opprettBehandling(Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
 
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -93,8 +87,8 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerNavn()).isEqualTo(DatamapperTestUtil.SØKERS_NAVN);
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(DatamapperTestUtil.SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
-        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
@@ -113,7 +107,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_med_årsak_fra_uttaket() {
         // Arrange
         var behandling = opprettBehandling(Avslagsårsak.UDEFINERT);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
 
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -123,8 +117,8 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerNavn()).isEqualTo(DatamapperTestUtil.SØKERS_NAVN);
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(DatamapperTestUtil.SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
-        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();

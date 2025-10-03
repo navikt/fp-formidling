@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.standardForeldrepengerBehandling;
@@ -24,13 +23,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class IkkeSøktDokumentdataMapperTest {
@@ -41,13 +38,10 @@ class IkkeSøktDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private DokumentData dokumentData;
-
     private IkkeSøktDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
-        dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new IkkeSøktDokumentdataMapper(domeneobjektProvider);
 
         var inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "", INNSENDINGSTIDSPUNKT);
@@ -59,7 +53,7 @@ class IkkeSøktDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = standardForeldrepengerBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
@@ -85,7 +79,7 @@ class IkkeSøktDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = standardForeldrepengerBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act

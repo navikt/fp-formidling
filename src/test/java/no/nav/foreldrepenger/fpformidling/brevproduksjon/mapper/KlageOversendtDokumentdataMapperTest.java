@@ -18,13 +18,10 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Datamappe
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class KlageOversendtDokumentdataMapperTest {
@@ -35,13 +32,10 @@ class KlageOversendtDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider;
 
-    private DokumentData dokumentData;
-
     private KlageOversendtDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.KLAGE_OVERSENDT);
         when(domeneobjektProvider.hentKlageDokument(any(Behandling.class))).thenReturn(new KlageDokument(MOTTATT_DATO));
         dokumentdataMapper = new KlageOversendtDokumentdataMapper(domeneobjektProvider);
     }
@@ -50,7 +44,7 @@ class KlageOversendtDokumentdataMapperTest {
     void skal_mappe_felter_for_brevet() {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling);
 
@@ -63,8 +57,8 @@ class KlageOversendtDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(DatamapperTestUtil.SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();

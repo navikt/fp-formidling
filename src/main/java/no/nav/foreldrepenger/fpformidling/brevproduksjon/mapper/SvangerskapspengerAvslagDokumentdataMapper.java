@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.SvangerskapspengerAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
@@ -86,7 +88,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
             .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        mapÅrsakOgLovhjemmel(behandlingsresultat.getAvslagsårsak(), uttaksperioder, dokumentdataBuilder, behandling.getUuid());
+        mapÅrsakOgLovhjemmel(behandling.getVilkårTyper(), behandlingsresultat.getAvslagsårsak(), uttaksperioder, dokumentdataBuilder, behandling.getUuid());
 
         SvpMapperUtil.finnFørsteAvslåtteUttakDato(uttaksperioder, behandling.getBehandlingsresultat())
             .ifPresent(d -> dokumentdataBuilder.medStønadsdatoFom(formaterDato(d, språkkode)));
@@ -95,7 +97,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         return dokumentdataBuilder.build();
     }
 
-    private void mapÅrsakOgLovhjemmel(Avslagsårsak årsak,
+    private void mapÅrsakOgLovhjemmel(Collection<VilkårType> vilkår, Avslagsårsak årsak,
                                       List<SvpUttakResultatPeriode> perioder,
                                       SvangerskapspengerAvslagDokumentdata.Builder dokumentdataBuilder,
                                       UUID uuid) {
@@ -109,11 +111,11 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
                     String.format("Kan ikke generere avslagsbrev uten avslagsårsak for behandling UUID %s", uuid)));
 
             dokumentdataBuilder.medÅrsak(Årsak.of(periodeÅrsak.getKode()));
-            lovreferanse.add(periodeÅrsak.getLovHjemmelData());
+            periodeÅrsak.getLovHjemmelData().ifPresent(lovreferanse::add);
 
         } else {
             dokumentdataBuilder.medÅrsak(Årsak.of(årsak.getKode()));
-            lovreferanse.add(SvpMapperUtil.leggTilLovreferanse(årsak));
+            lovreferanse.add(SvpMapperUtil.leggTilLovreferanse(vilkår, årsak));
         }
         dokumentdataBuilder.medLovhjemmel(FellesMapper.formaterLovhjemlerUttak(lovreferanse));
     }

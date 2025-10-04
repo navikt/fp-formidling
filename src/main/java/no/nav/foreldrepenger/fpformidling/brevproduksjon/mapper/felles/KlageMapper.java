@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import static no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak.KLAGET_FOR_SENT;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.klage.KlageFormkravResultat;
 
 public class KlageMapper {
 
@@ -18,12 +19,7 @@ public class KlageMapper {
     }
 
     public static List<KlageAvvistÅrsak> listeAvAvvisteÅrsaker(Klage klage) {
-        if (klage.getFormkravKA() != null) {
-            return klage.getFormkravKA().avvistÅrsaker();
-        } else if (klage.getFormkravNFP() != null) {
-            return klage.getFormkravNFP().avvistÅrsaker();
-        }
-        return Collections.emptyList();
+        return Optional.ofNullable(klage.getFormkravNFP()).map(KlageFormkravResultat::avvistÅrsaker).orElseGet(List::of);
     }
 
     public static Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage, Språkkode språkkode) {
@@ -33,10 +29,13 @@ public class KlageMapper {
     }
 
     static Set<String> hentKlageHjemler(Klage klage) {
-        Set<String> klageHjemler = new TreeSet<>();
-        var klageVurdertAv = klage.getFormkravKA() != null ? "KA" : "NFP";
-        listeAvAvvisteÅrsaker(klage).forEach(årsak -> klageHjemler.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsak, klageVurdertAv)));
-        return klageHjemler;
+        var mengde = new TreeSet<>(new LovhjemmelComparator());
+        var hjemler = listeAvAvvisteÅrsaker(klage).stream()
+            .map(KlageAvvistÅrsak::getLovHjemmel)
+            .flatMap(Collection::stream)
+            .toList();
+        mengde.addAll(hjemler);
+        return mengde;
     }
 
     static Optional<String> formaterLovhjemlerForAvvistKlage(Set<String> hjemler, boolean klagetEtterKlagefrist, Språkkode språkkode) {

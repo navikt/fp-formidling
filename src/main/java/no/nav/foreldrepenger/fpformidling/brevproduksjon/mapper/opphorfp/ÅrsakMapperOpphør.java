@@ -1,59 +1,54 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.TreeSet;
+
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.ÅrsakMedLovReferanse;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-
-import java.util.*;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 
 public final class ÅrsakMapperOpphør {
 
     private ÅrsakMapperOpphør() {
     }
 
-    public static Tuple<List<String>, String> mapÅrsakslisteOgLovhjemmelFra(Behandlingsresultat behandlingsresultat,
+    public static Tuple<List<String>, String> mapÅrsakslisteOgLovhjemmelFra(Collection<VilkårType> vilkårTyper,
+                                                                            Behandlingsresultat behandlingsresultat,
                                                                             ForeldrepengerUttak foreldrepengerUttak) {
         var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
-        List<String> årsaksliste = new ArrayList<>();
-        årsaksliste.addAll(årsakerFra(behandlingsresultat, foreldrepengerUttak, lovReferanser));
+        var årsaksliste = new ArrayList<>(årsakerFra(vilkårTyper, behandlingsresultat, foreldrepengerUttak, lovReferanser));
 
         return new Tuple<>(årsaksliste, FellesMapper.formaterLovhjemlerUttak(lovReferanser));
     }
 
-    private static Collection<String> årsakerFra(Behandlingsresultat behandlingsresultat,
+    private static Collection<String> årsakerFra(Collection<VilkårType> vilkårTyper,
+                                                 Behandlingsresultat behandlingsresultat,
                                                  ForeldrepengerUttak foreldrepengerUttak,
                                                  TreeSet<String> lovReferanser) {
-        Map<String, String> avslagårsaker = new HashMap<>();
+        var avslagårsaker = new HashSet<String>();
 
         var avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
-            var avslagKode = avslagsårsak.getKode();
-            avslagårsaker.put(avslagKode, årsaktypeFra(avslagsårsak, lovReferanser));
+            avslagårsaker.add(avslagsårsak.getKode());
+            var referanser = FellesMapper.lovhjemmelFraAvslagsårsak(FagsakYtelseType.FORELDREPENGER, vilkårTyper, avslagsårsak);
+            lovReferanser.addAll(referanser);
         }
         for (var periode : foreldrepengerUttak.perioder()) {
             var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
-                var avslagKode = periodeResultatÅrsak.getKode();
-                avslagårsaker.put(avslagKode, årsaktypeFra(periodeResultatÅrsak, lovReferanser));
+                avslagårsaker.add(periodeResultatÅrsak.getKode());
+                lovReferanser.addAll(periodeResultatÅrsak.hentLovhjemlerFraJson());
             }
         }
-        return avslagårsaker.values();
-    }
-
-    private static String årsaktypeFra(PeriodeResultatÅrsak periodeResultatÅrsak, TreeSet<String> lovReferanser) {
-        lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(periodeResultatÅrsak, "FP"));
-        return periodeResultatÅrsak.getKode();
-    }
-
-    private static String årsaktypeFra(ÅrsakMedLovReferanse årsakKode, TreeSet<String> lovReferanser) {
-        lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsakKode, "FP"));
-        return årsakKode.getKode();
+        return avslagårsaker;
     }
 
 }

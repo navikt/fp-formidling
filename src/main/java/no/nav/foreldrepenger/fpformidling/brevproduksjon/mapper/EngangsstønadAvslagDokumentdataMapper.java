@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
@@ -24,7 +25,6 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
@@ -36,7 +36,6 @@ import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 @DokumentMalTypeRef(DokumentMalType.ENGANGSSTØNAD_AVSLAG)
 public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
     private PersonAdapter personAdapter;
 
     EngangsstønadAvslagDokumentdataMapper() {
@@ -45,10 +44,8 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
 
     @Inject
     public EngangsstønadAvslagDokumentdataMapper(BrevParametere brevParametere,
-                                                 DomeneobjektProvider domeneobjektProvider,
                                                  PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
         this.personAdapter = personAdapter;
     }
 
@@ -77,12 +74,12 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             .medFørstegangsbehandling(behandling.erFørstegangssøknad())
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
             .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
-            .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkår(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
+            .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkårTyper(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
             .medAntallBarn(familieHendelse.antallBarn())
             .medMedlemskapFom(formaterDato(behandling.getMedlemskapFom(), dokumentFelles.getSpråkkode()))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        utledAvslagsgrunnHvisMedlVilkår(behandling.getVilkår(), behandling.getBehandlingsresultat().getAvslagsårsak(),
+        utledAvslagsgrunnHvisMedlVilkår(behandling.getVilkårTyper(), behandling.getBehandlingsresultat().getAvslagsårsak(),
             isSkjæringstidspunktPassert(familieHendelse), familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
         return dokumentdataBuilder.build();
@@ -107,12 +104,9 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         return NavBrukerKjønn.MANN.equals(kjønn) ? RelasjonsRolleType.FARA.getKode() : RelasjonsRolleType.MEDMOR.getKode();
     }
 
-    List<String> utledVilkårTilBrev(List<Vilkår> vilkårFraBehandling, Avslagsårsak avslagsÅrsakKode, Behandling behandling) {
-        var vilkårTyper = VilkårType.getVilkårTyper(avslagsÅrsakKode);
+    List<String> utledVilkårTilBrev(Collection<VilkårType> vilkårFraBehandling, Avslagsårsak avslagsÅrsakKode, Behandling behandling) {
         List<String> vilkårTilBrev = new ArrayList<>();
-        vilkårFraBehandling.stream()
-            .filter(v -> vilkårTyper.contains(v.vilkårType()))
-            .map(Vilkår::vilkårType)
+        FellesMapper.vilkårFraAvslagsårsak(FagsakYtelseType.ENGANGSTØNAD, vilkårFraBehandling, avslagsÅrsakKode)
             .forEach(vt -> vilkårTilBrev.add(mapVilkårBrev(vt, behandling)));
         if (vilkårTilBrev.isEmpty()) {
             throw new IllegalArgumentException("Utviklerfeil: Brev mangler vilkår for avslagskode " + avslagsÅrsakKode);
@@ -158,12 +152,12 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         }
     }
 
-    private Optional<String> utledAvslagsgrunnHvisMedlVilkår(List<Vilkår> vilkår,
+    private Optional<String> utledAvslagsgrunnHvisMedlVilkår(Collection<VilkårType> vilkår,
                                                              Avslagsårsak årsak,
                                                              boolean skjæringstispunktPassert,
                                                              boolean gjelderFødsel) {
         if (vilkår.stream()
-            .anyMatch(v -> v.vilkårType().equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE)
+            .anyMatch(v -> v.equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE)
                 && VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak))) {
             return Optional.of("IKKE_MEDL_FORUTGÅENDE");
         }

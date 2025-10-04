@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolle
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerOpphørDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.Dato;
@@ -96,7 +98,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
             .medEndretDekningsgrad(behandlingsresultat.isEndretDekningsgrad())
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        var årsakListe = mapAvslagårsaker(behandlingsresultat, foreldrepengerUttak, dokumentdataBuilder);
+        var årsakListe = mapAvslagårsaker(behandling.getVilkårTyper(), behandlingsresultat, foreldrepengerUttak, dokumentdataBuilder);
 
         finnDødsdatoHvisFinnes(familiehendelse, årsakListe).map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medBarnDødsdato);
 
@@ -116,10 +118,11 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         return dokumentdataBuilder.build();
     }
 
-    private List<String> mapAvslagårsaker(Behandlingsresultat behandlingsresultat,
+    private List<String> mapAvslagårsaker(Collection<VilkårType> vilkårTyper,
+                                          Behandlingsresultat behandlingsresultat,
                                           ForeldrepengerUttak foreldrepengerUttak,
                                           ForeldrepengerOpphørDokumentdata.Builder builder) {
-        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(behandlingsresultat, foreldrepengerUttak);
+        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(vilkårTyper, behandlingsresultat, foreldrepengerUttak);
         var årsakListe = aarsakListeOgLovhjemmel.getElement1();
 
         builder.medAvslagÅrsaker(årsakListe);

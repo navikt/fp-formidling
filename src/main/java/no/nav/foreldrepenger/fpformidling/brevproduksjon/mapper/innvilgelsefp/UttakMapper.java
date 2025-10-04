@@ -5,11 +5,9 @@ import java.util.TreeSet;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelUtil;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 
 public class UttakMapper {
 
@@ -23,10 +21,10 @@ public class UttakMapper {
             if (årsak.erUkjent()) {
                 continue;
             }
-            if (årsak.erGraderingAvslagÅrsak()) {
-                LovhjemmelUtil.hentLovhjemlerFraJson(FagsakYtelseType.FORELDREPENGER, periode.getPeriodeResultatÅrsak());
+            if (årsak.erGraderingAvslagÅrsak() && periode.getPeriodeResultatÅrsak() != null)  {
+                lovhjemler.addAll(periode.getPeriodeResultatÅrsak().hentLovhjemlerFraJson());
             }
-            lovhjemler.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(FagsakYtelseType.FORELDREPENGER, årsak));
+            lovhjemler.addAll(årsak.hentLovhjemlerFraJson());
         }
         return FellesMapper.formaterLovhjemlerUttak(lovhjemler, konsekvensForYtelse, innvilgetRevurdering);
     }

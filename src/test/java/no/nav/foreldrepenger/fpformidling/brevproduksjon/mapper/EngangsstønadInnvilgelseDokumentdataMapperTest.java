@@ -8,8 +8,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -172,6 +174,6 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     }
 
     private String formaterBeløp(long beløp) {
-        return String.format("%,d", beløp);
+        return NumberFormat.getIntegerInstance(Locale.forLanguageTag("nb-NO")).format(beløp);
     }
 }

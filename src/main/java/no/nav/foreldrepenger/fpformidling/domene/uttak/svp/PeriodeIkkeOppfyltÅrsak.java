@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -11,13 +12,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 @SuppressWarnings("java:S115")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
+public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi {
 
     INGEN("-", null),
     BRUKER_ER_DØD("8304", "14-4"),
@@ -59,9 +59,8 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
         return kode;
     }
 
-    @Override
-    public String getLovHjemmelData() {
-        return lovHjemmel;
+    public Optional<String> getLovHjemmelData() {
+        return Optional.ofNullable(lovHjemmel);
     }
 
     public static Set<PeriodeIkkeOppfyltÅrsak> opphørsAvslagÅrsaker() {

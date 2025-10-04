@@ -1,8 +1,18 @@
 package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.ÅrsakMedLovReferanse;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
+import com.fasterxml.jackson.databind.JsonNode;
+
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
+
+public class PeriodeResultatÅrsak {
 
     // Her kommer Lovhjemler fra UttakResultatPeriodeDto - søk på bruk av CTOR - lar derfor være å lage full enum her inntil uttak i fpsak enda mer stabilt.
     public static final String GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR = "GRADERING_AVSLAG_AARSAK";
@@ -49,9 +59,9 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
 
     public static final PeriodeResultatÅrsak SØKNADSFRIST = new PeriodeResultatÅrsak("4020", PERIODE_ÅRSAK_DISCRIMINATOR, null);
 
-    private String kodeverk;
-    private String kode;
-    private String ekstraData;
+    private final String kodeverk;
+    private final String kode;
+    private final String ekstraData;
 
     public PeriodeResultatÅrsak(String kode, String kodeverk, String ekstraData) {
         this.kodeverk = kodeverk;
@@ -71,17 +81,30 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
         return ekstraData;
     }
 
-    @Override
-    public String getLovHjemmelData() {
-        return getEkstraData();
-    }
-
     public boolean erUkjent() {
         return PeriodeResultatÅrsak.UKJENT.getKode().equals(kode);
     }
 
     public boolean erGraderingAvslagÅrsak() {
         return GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR.equalsIgnoreCase(kodeverk);
+    }
+
+    public Set<String> hentLovhjemlerFraJson() {
+        var jsonData = Optional.ofNullable(ekstraData).map(DefaultJsonMapper::treeFromJson).orElse(null);
+        if (jsonData != null) {
+            var hjemmelNode = jsonData.findValue("FP");
+            if (hjemmelNode != null) {
+                var hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ? hjemmelNode.findValues(
+                    "lovreferanse") : hjemmelNode.findValues("lovreferanser");
+                return hjemmelListe.stream()
+                    .flatMap(node -> node.isContainerNode() ? StreamSupport.stream(node.spliterator(), false).map(JsonNode::asText) : Arrays.stream(
+                        node.asText().split(",")))
+                    .map(String::trim)
+                    .filter(str -> !str.isEmpty())
+                    .collect(Collectors.toCollection(() -> new TreeSet<>(new LovhjemmelComparator())));
+            }
+        }
+        return Set.of();
     }
 
 }

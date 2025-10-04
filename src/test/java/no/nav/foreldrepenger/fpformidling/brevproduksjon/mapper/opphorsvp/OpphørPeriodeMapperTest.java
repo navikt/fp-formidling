@@ -27,6 +27,8 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅr
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
@@ -48,8 +50,10 @@ class OpphørPeriodeMapperTest {
         var svpUttakResultatArbeidsforholdList = List.of(
             opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1, Collections.emptyList()));
 
-        var behandling = standardBehandlingBuilder().medBehandlingsresultat(
-            Behandlingsresultat.builder().medAvslagsårsak(Avslagsårsak.SØKER_SKULLE_IKKE_SØKT_SVP).build()).build();
+        var behandling = standardBehandlingBuilder()
+            .medBehandlingsresultat(Behandlingsresultat.builder().medAvslagsårsak(Avslagsårsak.SØKER_SKULLE_IKKE_SØKT_SVP).build())
+            .medVilkår(List.of(new Vilkår(VilkårType.SVANGERSKAPSPENGERVILKÅR)))
+            .build();
 
         //Act
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, svpUttakResultatArbeidsforholdList,
@@ -98,8 +102,10 @@ class OpphørPeriodeMapperTest {
     @Test
     void en_opphørt_periode_med_2_arbeidsgivere_fra_uttak_innvilget() {
         //Arrange
-        var behandling = standardBehandlingBuilder().medBehandlingsresultat(
-            Behandlingsresultat.builder().medAvslagsårsak(Avslagsårsak.SØKER_ER_IKKE_BOSATT).build()).build();
+        var behandling = standardBehandlingBuilder()
+            .medBehandlingsresultat(Behandlingsresultat.builder().medAvslagsårsak(Avslagsårsak.SØKER_ER_IKKE_BOSATT).build())
+            .medVilkår(List.of(new Vilkår(VilkårType.SVANGERSKAPSPENGERVILKÅR), new Vilkår(VilkårType.MEDLEMSKAPSVILKÅRET)))
+            .build();
 
         var uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1, List.of(
                 opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM)),

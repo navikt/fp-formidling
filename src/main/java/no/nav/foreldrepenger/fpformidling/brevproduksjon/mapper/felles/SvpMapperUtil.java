@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
@@ -30,10 +30,9 @@ public final class SvpMapperUtil {
             .toList();
     }
 
-    public static String leggTilLovreferanse(Avslagsårsak avslagsårsak) {
-        var vilkårTyper = VilkårType.getVilkårTyper(avslagsårsak);
-        var lovReferanse = vilkårTyper.stream().map(vt -> vt.getLovReferanse(FagsakYtelseType.SVANGERSKAPSPENGER)).filter(Objects::nonNull).findFirst();
-        return lovReferanse.orElse("");
+    public static String leggTilLovreferanse(Collection<VilkårType> vilkårFraBehandling, Avslagsårsak avslagsårsak) {
+        return FellesMapper.lovhjemmelFraAvslagsårsak(FagsakYtelseType.SVANGERSKAPSPENGER, vilkårFraBehandling, avslagsårsak).stream()
+            .findFirst().orElse("");
     }
 
     public static Optional<LocalDate> finnFørsteAvslåtteUttakDato(List<SvpUttakResultatPeriode> uttaksperioder, Behandlingsresultat behandlingsresultat) {

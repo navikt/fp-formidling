@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
@@ -13,6 +15,7 @@ import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public class Behandling {
@@ -71,8 +74,8 @@ public class Behandling {
         return uuid;
     }
 
-    public List<Vilkår> getVilkår() {
-        return vilkår == null ? List.of() : vilkår;
+    public Set<VilkårType> getVilkårTyper() {
+        return vilkår == null ? Set.of() : vilkår.stream().map(Vilkår::vilkårType).collect(Collectors.toSet());
     }
 
     public List<BehandlingResourceLink> getResourceLinker() {

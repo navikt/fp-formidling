@@ -86,7 +86,7 @@ class FritekstTest {
         "'Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4', 'Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4'",
         "'Tekst 1.', 'Tekst 1.'",
         "'Dette er en setning\nmed et linjeskift midt i.\nNy setning.' , 'Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.'",
-        "'Dette er en setning.\n\nNy setning som skal ha 'luft'.', 'Dette er en setning.\n\n\nNy setning som skal ha 'luft'.'",
+        "'Dette er en setning.\n\nNy setning som skal ha ''luft''.', 'Dette er en setning.\n\n\nNy setning som skal ha ''luft''.'",
         "'- Vedlegg1', '- Vedlegg1'"
     })
     void testFritekstFormatering(String fritekst, String forventetTekst) {

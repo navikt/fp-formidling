@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -36,7 +38,7 @@ public class BrevMapperUtil {
     }
 
     public static String formaterBeløp(Long beløp) {
-        return String.format("%,d", beløp);
+        return NumberFormat.getIntegerInstance(Locale.forLanguageTag("nb-NO")).format(beløp);
     }
 
     public static boolean erKopi(DokumentFelles.Kopi kopi) {

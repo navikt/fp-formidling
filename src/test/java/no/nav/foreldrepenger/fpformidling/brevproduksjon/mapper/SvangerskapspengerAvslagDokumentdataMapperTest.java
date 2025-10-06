@@ -41,6 +41,8 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUtt
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
@@ -178,6 +180,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .medFamilieHendelse(opprettFamiliehendelse())
+            .medVilkår(List.of(new Vilkår(VilkårType.SVANGERSKAPSPENGERVILKÅR)))
             .build();
     }
 }

@@ -54,7 +54,7 @@ public class Dato implements ChronoLocalDate {
         if (dato == null) {
             return null;
         }
-        return dato.format(ofPattern("d. MMMM yyyy", Locale.forLanguageTag("NO")));
+        return dato.format(ofPattern("d. MMMM yyyy", Locale.forLanguageTag("nb-NO")));
     }
 
     public static String formaterDatoEngelsk(LocalDate dato) {

@@ -67,8 +67,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
             .build();
         lenient().when(personAdapter.hentBrukerForAktør(any(), any())).thenReturn(Optional.of(personinfo));
 
-        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere(),
-            domeneobjektProvider, personAdapter);
+        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), personAdapter);
     }
 
     @Test
@@ -108,7 +107,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @Test
     void mapVilkårTIlBrev_skal_mappe_riktig_vilkår_string() {
-        var vilkårFraBehandling = List.of(new Vilkår(VilkårType.FØDSELSVILKÅRET_MOR));
+        var vilkårFraBehandling = List.of(VilkårType.FØDSELSVILKÅRET_MOR);
         var fbbehandling = opprettBehandling(Avslagsårsak.SØKER_ER_MEDMOR, null, null);
 
         var vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);

@@ -1,6 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,12 +12,36 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 
 public class FellesMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(FellesMapper.class);
 
     private FellesMapper() {
+    }
+
+    public static List<VilkårType> vilkårFraAvslagsårsak(FagsakYtelseType ytelseType,
+                                                         Collection<VilkårType> vilkårFraBehandling,
+                                                         Avslagsårsak avslagsårsak) {
+        var vilkårTyperMedAvslagsårsak = VilkårType.getVilkårTyper(avslagsårsak);
+        return vilkårFraBehandling.stream()
+            .filter(vilkårTyperMedAvslagsårsak::contains)
+            .filter(vt -> vt.getLovReferanse(ytelseType) != null)
+            .toList();
+    }
+
+    public static Collection<String> lovhjemmelFraAvslagsårsak(FagsakYtelseType ytelseType,
+                                                             Collection<VilkårType> vilkårFraBehandling,
+                                                             Avslagsårsak avslagsårsak) {
+        var vilkårTyperMedAvslagsårsak = VilkårType.getVilkårTyper(avslagsårsak);
+        return vilkårFraBehandling.stream()
+            .filter(vilkårTyperMedAvslagsårsak::contains)
+            .map(vt -> vt.getLovReferanse(ytelseType))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
     }
 
     public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning,

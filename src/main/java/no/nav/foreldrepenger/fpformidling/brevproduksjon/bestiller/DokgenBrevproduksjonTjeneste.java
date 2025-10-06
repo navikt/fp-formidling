@@ -102,9 +102,7 @@ public class DokgenBrevproduksjonTjeneste {
 
             var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom,
-                behandling.getFagsakBackend().getYtelseType()) // NoSonar
-                ;
+                !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom);
 
             var journalpostId = new JournalpostId(response.journalpostId());
 
@@ -132,7 +130,7 @@ public class DokgenBrevproduksjonTjeneste {
 
         String brev;
         try {
-            brev = dokgenKlient.genererHtml(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+            brev = dokgenKlient.genererHtml(dokumentdataMapper.getTemplateNavn(), dokumentFelles.getSpråkkode(), dokumentdata);
             LOG.info("Dokument av type {} i behandling id {} ble generert for overstyring (HTML).", dokumentMalType.getKode(), behandling.getUuid());
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
@@ -156,7 +154,7 @@ public class DokgenBrevproduksjonTjeneste {
 
         byte[] brev;
         try {
-            brev = dokgenKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+            brev = dokgenKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), dokumentFelles.getSpråkkode(), dokumentdata);
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOG.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));

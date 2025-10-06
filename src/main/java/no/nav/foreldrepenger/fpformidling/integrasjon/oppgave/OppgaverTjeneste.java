@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgave;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgaver;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgavetype;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.OpprettOppgave;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class OppgaverTjeneste {
@@ -33,8 +32,8 @@ public class OppgaverTjeneste {
 
         var request = OpprettOppgave.getBuilderTemaFOR(Oppgavetype.VURDER_KONSEKVENS_YTELSE,
                 no.nav.vedtak.felles.integrasjon.oppgave.v1.Prioritet.NORM, 1)
-            .medAktoerId(behandling.getFagsakBackend().getAktørId().getId())
-            .medSaksreferanse(behandling.getFagsakBackend().getSaksnummer().getVerdi())
+            .medAktoerId(behandling.getFagsak().getAktørId().getId())
+            .medSaksreferanse(behandling.getFagsak().getSaksnummer().getVerdi())
             .medTildeltEnhetsnr(behandling.getBehandlendeEnhetId())
             .medJournalpostId(journalpostId.getVerdi())
             .medBeskrivelse(oppgaveBeskrivelse)

@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgr
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -79,7 +79,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_med_årsak_fra_behandling() {
         // Arrange
         var behandling = opprettBehandling(Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
 
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -109,7 +109,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_med_årsak_fra_uttaket() {
         // Arrange
         var behandling = opprettBehandling(Avslagsårsak.UDEFINERT);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
 
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -177,7 +177,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(
                 Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).medAvslagsårsak(årsak).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .medFamilieHendelse(opprettFamiliehendelse())
             .medVilkår(List.of(new Vilkår(VilkårType.SVANGERSKAPSPENGERVILKÅR)))

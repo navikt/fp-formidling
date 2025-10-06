@@ -49,9 +49,9 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
                                                                    boolean erUtkast) {
         var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
         var dokumentdataBuilder = EngangsstønadInnvilgelseDokumentdata.ny()

@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolle
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 
-public class FagsakBackend {
+public class Fagsak {
 
     private AktørId aktørId;
     private Saksnummer saksnummer;
@@ -12,7 +12,7 @@ public class FagsakBackend {
     private RelasjonsRolleType brukerRolle;
     private Integer dekningsgrad;
 
-    private FagsakBackend() {
+    private Fagsak() {
     }
 
     public static Builder ny() {
@@ -40,10 +40,10 @@ public class FagsakBackend {
     }
 
     public static final class Builder {
-        private FagsakBackend kladd;
+        private Fagsak kladd;
 
         private Builder() {
-            this.kladd = new FagsakBackend();
+            this.kladd = new Fagsak();
         }
 
         public Builder medBrukerRolle(RelasjonsRolleType brukerRolle) {
@@ -56,7 +56,7 @@ public class FagsakBackend {
             return this;
         }
 
-        public Builder medFagsakYtelseType(FagsakYtelseType ytelseType) {
+        public Builder medYtelseType(FagsakYtelseType ytelseType) {
             this.kladd.ytelseType = ytelseType;
             return this;
         }
@@ -71,7 +71,7 @@ public class FagsakBackend {
             return this;
         }
 
-        public FagsakBackend build() {
+        public Fagsak build() {
             return this.kladd;
         }
     }

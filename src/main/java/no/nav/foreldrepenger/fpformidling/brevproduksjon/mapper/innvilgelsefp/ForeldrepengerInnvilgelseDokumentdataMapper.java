@@ -37,7 +37,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -86,18 +86,17 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var uttak = domeneobjektProvider.hentForeldrepengerUttak(behandling);
         var familieHendelse = behandling.getFamilieHendelse();
-        var originalFamiliehendelse = Optional.ofNullable(behandling.getOriginalBehandlingUuid())
-            .map(originalBehandlingUuid -> domeneobjektProvider.hentBehandling(originalBehandlingUuid).getFamilieHendelse());
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).map(Behandling::getFamilieHendelse);
+        var fagsak = behandling.getFagsak();
         var saldoer = domeneobjektProvider.hentSaldoer(behandling);
         if (uttak.perioder().isEmpty() || saldoer.stønadskontoer().isEmpty()) {
             throw new IllegalStateException("Ikke støttet å generere innvilgelsesbrev uten uttak");
         }
-        var språkkode = behandling.getSpråkkode();
+        var språkkode = dokumentFelles.getSpråkkode();
         var utenMinsterett = behandling.utenMinsterett();
         var ytelseFordeling = domeneobjektProvider.ytelseFordeling(behandling);
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
@@ -360,7 +359,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .max(LocalDate::compareTo);
     }
 
-    private static boolean gjelderMor(FagsakBackend fagsak) {
+    private static boolean gjelderMor(Fagsak fagsak) {
         return RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
     }
 

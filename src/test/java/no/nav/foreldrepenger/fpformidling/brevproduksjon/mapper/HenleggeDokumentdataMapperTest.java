@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Datamappe
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
@@ -29,7 +29,7 @@ class HenleggeDokumentdataMapperTest {
     void henlegg_mapper_vanligBehandling() {
         //Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, FagsakYtelseType.FORELDREPENGER);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
         //Act
@@ -47,7 +47,7 @@ class HenleggeDokumentdataMapperTest {
     void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
         var behandling = opprettBehandling(BehandlingType.ANKE, FagsakYtelseType.SVANGERSKAPSPENGER);
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
         //Act
@@ -66,7 +66,7 @@ class HenleggeDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(behType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
             .build();
     }
 

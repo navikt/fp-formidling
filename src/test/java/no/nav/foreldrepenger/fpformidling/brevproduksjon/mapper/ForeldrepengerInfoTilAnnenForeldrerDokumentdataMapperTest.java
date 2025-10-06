@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -43,7 +43,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medFritekst(null).build();
 
         foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);
@@ -63,7 +63,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_BEHANDLING.getKode());
-        assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isEqualTo(formaterDato(LocalDate.now().plusDays(40), behandling.getSpråkkode()));
+        assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isEqualTo(formaterDato(LocalDate.now().plusDays(40), dokumentFelles.getSpråkkode()));
     }
 
     @Test
@@ -94,7 +94,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(behandlingresultat.build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .medBehandlingÅrsaker(List.of(behÅrsak));
 

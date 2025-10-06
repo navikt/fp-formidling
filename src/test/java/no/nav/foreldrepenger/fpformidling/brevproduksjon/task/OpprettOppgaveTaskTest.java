@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.OppgaverTjeneste;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -37,7 +36,6 @@ class OpprettOppgaveTaskTest {
 
         var behandling = Behandling.builder().medBehandlendeEnhetId("1233").build();
         when(provider.hentBehandling(behandlingUuId)).thenReturn(behandling);
-        when(provider.hentFagsakBackend(behandling)).thenReturn(FagsakBackend.ny().medSaksnummer(saksnummer).build());
 
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
         prosessTaskData.setSaksnummer(saksnummer);
@@ -48,6 +46,5 @@ class OpprettOppgaveTaskTest {
 
         verify(tjeneste).opprettOppgave(eq(behandling), eq(journalpostId), any(String.class));
         verify(provider, times(1)).hentBehandling(behandlingUuId);
-        verify(provider, times(1)).hentFagsakBackend(behandling);
     }
 }

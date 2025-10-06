@@ -60,9 +60,9 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
             .map(TilkjentYtelseForeldrepenger::getPerioder)
             .orElse(Collections.emptyList());
 
-        var språkkode = behandling.getSpråkkode();
+        var språkkode = dokumentFelles.getSpråkkode();
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 

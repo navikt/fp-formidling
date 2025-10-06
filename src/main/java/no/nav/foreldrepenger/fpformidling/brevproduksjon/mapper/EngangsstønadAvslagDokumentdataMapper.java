@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -60,9 +60,9 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
                                                               Behandling behandling,
                                                               boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
@@ -73,7 +73,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             .medFelles(fellesBuilder.build())
             .medFørstegangsbehandling(behandling.erFørstegangssøknad())
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
-            .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
+            .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsak()))
             .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkårTyper(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
             .medAntallBarn(familieHendelse.antallBarn())
             .medMedlemskapFom(formaterDato(behandling.getMedlemskapFom(), dokumentFelles.getSpråkkode()))
@@ -91,7 +91,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         return stp.isBefore(LocalDate.now());
     }
 
-    String utledRelasjonsRolle(FagsakBackend fagsak) {
+    String utledRelasjonsRolle(Fagsak fagsak) {
         if (!RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
             return hentKjønnOgMapRelasjonsrolle(fagsak.getYtelseType(), fagsak.getAktørId());
         } else {

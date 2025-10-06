@@ -38,7 +38,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetSta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -83,7 +83,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
     }
@@ -94,7 +93,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         var dødsdato = LocalDate.now();
         var behandling = opprettBehandling(PERIODE2_FOM,
             new FamilieHendelse(List.of(new FamilieHendelse.Barn(LocalDate.now(), dødsdato)), LocalDate.now(), ANTALL_BARN, null));
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
         // Act
@@ -105,7 +104,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
-        assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDato(LocalDate.now(), behandling.getSpråkkode()));
+        assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDato(LocalDate.now(), dokumentFelles.getSpråkkode()));
         assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
         assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
@@ -122,10 +121,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(dokumentdata.isEndretDekningsgrad()).isTrue();
-    }
-
-    private FagsakBackend opprettFagsakBackend() {
-        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
@@ -184,7 +179,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .medOpphørsdato(opphørsdato)
                 .build())
             .medSpråkkode(Språkkode.NB)
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(Fagsak.ny().medBrukerRolle(RelasjonsRolleType.MORA).medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medFamilieHendelse(familieHendelse)
             .build();
     }

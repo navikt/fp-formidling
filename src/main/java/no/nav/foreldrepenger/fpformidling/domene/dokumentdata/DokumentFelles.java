@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
@@ -24,6 +25,7 @@ public class DokumentFelles {
         PERSON,
         ORGANISASJON
     }
+
     private Språkkode språkkode;
     private Saksnummer saksnummer;
     private Boolean automatiskBehandlet;
@@ -35,6 +37,7 @@ public class DokumentFelles {
     private PersonStatus sakspartPersonStatus;
     private Kopi erKopi;
     private MottakerType mottakerType;
+    private FagsakYtelseType ytelseType;
 
     public static Builder builder() {
         return new Builder();
@@ -84,6 +87,10 @@ public class DokumentFelles {
         return mottakerType;
     }
 
+    public FagsakYtelseType getYtelseType() {
+        return ytelseType;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object == this) {
@@ -92,15 +99,17 @@ public class DokumentFelles {
         if (!(object instanceof DokumentFelles dokFelles)) {
             return false;
         }
-        return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode()) && Objects.equals(saksnummer, dokFelles.getSaksnummer()) && Objects.equals(automatiskBehandlet,
-            dokFelles.getAutomatiskBehandlet()) && Objects.equals(sakspartId, dokFelles.getSakspartId()) && Objects.equals(sakspartNavn,
-            dokFelles.getSakspartNavn())  && Objects.equals(mottakerId, dokFelles.getMottakerId()) && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn()) && Objects.equals(dokumentDato,
-            dokFelles.getDokumentDato()) && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
+        return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode()) && Objects.equals(saksnummer, dokFelles.getSaksnummer()) && Objects.equals(
+            automatiskBehandlet, dokFelles.getAutomatiskBehandlet()) && Objects.equals(sakspartId, dokFelles.getSakspartId()) && Objects.equals(
+            sakspartNavn, dokFelles.getSakspartNavn()) && Objects.equals(mottakerId, dokFelles.getMottakerId()) && Objects.equals(mottakerNavn,
+            dokFelles.getMottakerNavn()) && Objects.equals(dokumentDato, dokFelles.getDokumentDato()) && Objects.equals(sakspartPersonStatus,
+            dokFelles.getSakspartPersonStatus()) && Objects.equals(ytelseType, dokFelles.getYtelseType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSpråkkode(), saksnummer, automatiskBehandlet, sakspartId, sakspartNavn, mottakerId, mottakerNavn, dokumentDato, sakspartPersonStatus);
+        return Objects.hash(getSpråkkode(), saksnummer, automatiskBehandlet, sakspartId, sakspartNavn, mottakerId, mottakerNavn, dokumentDato,
+            sakspartPersonStatus, ytelseType);
     }
 
     @Override
@@ -173,6 +182,11 @@ public class DokumentFelles {
 
         public Builder medMottakerType(MottakerType mottakerType) {
             this.dokumentFelles.mottakerType = mottakerType;
+            return this;
+        }
+
+        public Builder medYtelseType(FagsakYtelseType ytelseType) {
+            this.dokumentFelles.ytelseType = ytelseType;
             return this;
         }
 

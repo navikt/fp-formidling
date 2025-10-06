@@ -33,7 +33,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     @Test
     void test_map_fagtype_foreldrepenger() {
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 
         var inntektsmeldingerStatus = List.of(new ArbeidsforholdInntektsmelding("12345679", "ArbeidsgiverNavn", BigDecimal.valueOf(100), false));
@@ -49,7 +49,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     @Test
     void test_map_fagtype_svangerskapspenger() {
         var behandling = DatamapperTestUtil.standardSvangerskapspengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         var inntektsmeldingerStatus = List.of(new ArbeidsforholdInntektsmelding("12345679", "ArbeidsgiverNavn", BigDecimal.valueOf(100), false));
         when(domeneobjektProvider.hentArbeidsforholdInntektsmeldingerStatus(behandling)).thenReturn(inntektsmeldingerStatus);

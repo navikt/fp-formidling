@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
-import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
@@ -39,9 +38,8 @@ public class DokumentMottakereUtleder {
 
     DokumentMottakere utledDokumentMottakereForBehandling(Behandling behandling) {
 
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        var søkersAktørId = fagsak.getAktørId();
-        var ytelseType = fagsak.getYtelseType();
+        var søkersAktørId = behandling.getFagsak().getAktørId();
+        var ytelseType = behandling.getFagsak().getYtelseType();
 
         var brevDato = LocalDate.now();
 
@@ -115,15 +113,12 @@ public class DokumentMottakereUtleder {
                                                          Virksomhet virksomhet,
                                                          String vergeNavn,
                                                          DokumentFelles.Kopi erKopi) {
-
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-
         var builder = DokumentFelles.builder()
             .medAutomatiskBehandlet(Boolean.TRUE)
             .medDokumentDato(LocalDate.now())
             .medMottakerId(virksomhet.getOrgnr())
             .medMottakerNavn(virksomhet.getNavn() + (vergeNavn == null || "".equals(vergeNavn) ? "" : " c/o " + vergeNavn))
-            .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
+            .medSaksnummer(behandling.getFagsak().getSaksnummer())
             .medSakspartId(personinfoBruker.getPersonIdent())
             .medSakspartNavn(personinfoBruker.getNavn())
             .medErKopi(erKopi)
@@ -141,20 +136,18 @@ public class DokumentMottakereUtleder {
                                                      Personinfo personinfoBruker,
                                                      Personinfo personinfoMottaker,
                                                      DokumentFelles.Kopi erKopi) {
-
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-
         var builder = DokumentFelles.builder()
             .medAutomatiskBehandlet(Boolean.TRUE)
             .medDokumentDato(LocalDate.now())
             .medMottakerId(personinfoMottaker.getPersonIdent())
             .medMottakerNavn(personinfoMottaker.getNavn())
-            .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
+            .medSaksnummer(behandling.getFagsak().getSaksnummer())
             .medSakspartId(personinfoBruker.getPersonIdent())
             .medSakspartNavn(personinfoBruker.getNavn())
             .medErKopi(erKopi)
             .medMottakerType(DokumentFelles.MottakerType.PERSON)
             .medSpråkkode(behandling.getSpråkkode())
+            .medYtelseType(behandling.getFagsak().getYtelseType())
             .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {

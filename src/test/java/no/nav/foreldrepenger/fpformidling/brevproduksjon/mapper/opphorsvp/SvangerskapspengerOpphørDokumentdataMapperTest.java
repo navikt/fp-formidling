@@ -37,7 +37,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetSta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -85,7 +85,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         // Arrange
         var opphørsdato = PERIODE1_TOM.plusDays(1);
         var behandling = opprettBehandling(opphørsdato);
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
@@ -176,7 +176,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .medAvslagsårsak(Avslagsårsak.UDEFINERT)
                 .medOpphørsdato(opphørsdato)
                 .build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .medFamilieHendelse(opprettFamiliehendelse())
             .build();

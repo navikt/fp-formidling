@@ -27,9 +27,9 @@ public class FritekstbrevDokumentdataMapper implements DokumentdataMapper {
                                                        DokumentHendelse hendelse,
                                                        Behandling behandling,
                                                        boolean erUtkast) {
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
 
         return FritekstbrevDokumentdata.ny()
             .medFelles(fellesBuilder.build())

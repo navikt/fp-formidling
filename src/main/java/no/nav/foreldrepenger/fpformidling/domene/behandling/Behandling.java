@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
@@ -32,7 +32,7 @@ public class Behandling {
     private boolean toTrinnsBehandling;
 
     private String behandlendeEnhetId;
-    private FagsakBackend fagsakBackend;
+    private Fagsak fagsak;
     private BehandlingStatus status;
     private Språkkode språkkode;
     private List<Vilkår> vilkår;
@@ -114,8 +114,8 @@ public class Behandling {
         return BehandlingType.INNSYN.equals(getBehandlingType());
     }
 
-    public FagsakBackend getFagsakBackend() {
-        return fagsakBackend;
+    public Fagsak getFagsak() {
+        return fagsak;
     }
 
     public String getBehandlendeEnhetId() {
@@ -130,18 +130,8 @@ public class Behandling {
         return originalBehandlingUuid;
     }
 
-    public void leggtilFagsakBackend(FagsakBackend fagsak) {
-        if (this.fagsakBackend == null) {
-            this.fagsakBackend = fagsak;
-        }
-    }
-
     public List<BehandlingResourceLink> getFormidlingRessurser() {
         return formidlingRessurser;
-    }
-
-    public boolean harFagsakBackend() {
-        return fagsakBackend != null;
     }
 
     public Avslagsårsak getMedlemskapOpphørsårsak() {
@@ -229,8 +219,8 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medFagsakBackend(FagsakBackend fagsak) {
-            this.kladd.fagsakBackend = fagsak;
+        public Behandling.Builder medFagsak(Fagsak fagsak) {
+            this.kladd.fagsak = fagsak;
             return this;
         }
 

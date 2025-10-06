@@ -62,14 +62,14 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
                                                                         DokumentHendelse hendelse,
                                                                         Behandling behandling,
                                                                         boolean erUtkast) {
-        var språkkode = behandling.getSpråkkode();
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var uttaksresultatSvp = domeneobjektProvider.hentSvangerskapspengerUttak(behandling);
         var mottattDatoSøknad = domeneobjektProvider.hentMottattDatoSøknad(behandling);
 
 
-        var fellesBuilder = opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var språkkode = dokumentFelles.getSpråkkode();
+        var fellesBuilder = opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 

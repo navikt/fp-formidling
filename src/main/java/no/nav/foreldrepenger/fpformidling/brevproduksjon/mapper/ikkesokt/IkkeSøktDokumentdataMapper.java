@@ -40,7 +40,7 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
                                                    Behandling behandling,
                                                    boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);

@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -50,11 +50,20 @@ public class DatamapperTestUtil {
         return dokumentFelles;
     }
 
-    public static DokumentFelles lagStandardDokumentFelles() {
-        return lagStandardDokumentFelles(null, false);
+    public static DokumentFelles lagStandardDokumentFelles(FagsakYtelseType fagsakYtelseType) {
+        return lagStandardDokumentFelles(null, false, fagsakYtelseType);
     }
 
-    public static DokumentFelles lagStandardDokumentFelles(Kopi kopi, boolean tilVerge) {
+    public static DokumentFelles lagStandardDokumentFelles(Kopi kopi, boolean tilVerge, FagsakYtelseType fagsakYtelseType) {
+        return standardDokumentFellesBuilder(kopi, tilVerge, fagsakYtelseType)
+            .build();
+    }
+
+    public static DokumentFelles.Builder lagStandardDokumentFellesBuilder(FagsakYtelseType fagsakYtelseType) {
+        return standardDokumentFellesBuilder(null, false, fagsakYtelseType);
+    }
+
+    public static DokumentFelles.Builder standardDokumentFellesBuilder(Kopi kopi, boolean tilVerge, FagsakYtelseType fagsakYtelseType) {
         return DokumentFelles.builder()
             .medAutomatiskBehandlet(Boolean.TRUE)
             .medDokumentDato(LocalDate.now())
@@ -67,7 +76,7 @@ public class DatamapperTestUtil {
             .medMottakerType(DokumentFelles.MottakerType.PERSON)
             .medSpråkkode(Språkkode.NB)
             .medSakspartPersonStatus(ANNET)
-            .build();
+            .medYtelseType(fagsakYtelseType);
     }
 
     public static DokumentHendelse.Builder lagStandardHendelseBuilder() {
@@ -86,7 +95,7 @@ public class DatamapperTestUtil {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
             .medFamilieHendelse(new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null))
             .medSpråkkode(Språkkode.NB);
     }

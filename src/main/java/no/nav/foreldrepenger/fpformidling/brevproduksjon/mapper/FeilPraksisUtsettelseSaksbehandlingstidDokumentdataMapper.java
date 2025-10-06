@@ -23,12 +23,12 @@ public class FeilPraksisUtsettelseSaksbehandlingstidDokumentdataMapper implement
 
     @Override
     public FeilPraksisUtsettelseInfobrevDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast) {
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
-        fellesBuilder.medBrevDato(getBrevDato(dokumentFelles, behandling));
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
+        fellesBuilder.medBrevDato(getBrevDato(dokumentFelles));
         return new FeilPraksisUtsettelseInfobrevDokumentdata(fellesBuilder.build());
     }
 
-    private static String getBrevDato(DokumentFelles dokumentFelles, Behandling behandling) {
-        return dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null;
+    private static String getBrevDato(DokumentFelles dokumentFelles) {
+        return dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null;
     }
 }

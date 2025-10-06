@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -57,7 +57,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).medDokumentMal(DokumentMal.ENGANGSSTØNAD_AVSLAG).build();
 
         var personinfo = Personinfo.getbuilder(AKTØR_ID)
@@ -124,7 +124,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(rolle).isEqualTo(RelasjonsRolleType.MEDMOR.getKode());
     }
 
-    private Behandling.Builder opprettBehandlingBuilder(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
+    private Behandling.Builder opprettBehandlingBuilder(Avslagsårsak avslagsårsak, String avslagsfritekst, Fagsak fagsak) {
         var behandlingresultat = Behandlingsresultat.builder()
             .medAvslagsårsak(avslagsårsak)
             .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT);
@@ -136,24 +136,24 @@ class EngangsstønadAvslagDokumentdataMapperTest {
             .medUuid(EngangsstønadAvslagDokumentdataMapperTest.ID)
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(behandlingresultat.build())
-            .medFagsakBackend(fagsak);
+            .medFagsak(fagsak);
 
         if (fagsak != null) {
-            behandlingBuilder.medFagsakBackend(fagsak);
+            behandlingBuilder.medFagsak(fagsak);
         }
         return behandlingBuilder;
     }
 
-    private Behandling opprettBehandling(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
+    private Behandling opprettBehandling(Avslagsårsak avslagsårsak, String avslagsfritekst, Fagsak fagsak) {
         return opprettBehandlingBuilder(avslagsårsak, avslagsfritekst, fagsak).build();
     }
 
-    private FagsakBackend opprettFagsak(RelasjonsRolleType relasjonsRolleType) {
-        return FagsakBackend.ny()
+    private Fagsak opprettFagsak(RelasjonsRolleType relasjonsRolleType) {
+        return Fagsak.ny()
             .medAktørId(AKTØR_ID)
             .medSaksnummer("123456")
             .medBrukerRolle(relasjonsRolleType)
-            .medFagsakYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
             .build();
     }
 }

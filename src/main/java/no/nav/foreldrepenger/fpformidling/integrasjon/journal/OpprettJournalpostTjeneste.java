@@ -44,14 +44,12 @@ public class OpprettJournalpostTjeneste {
                                                            DokumentMalType dokumentMalType,
                                                            DokumentFelles dokumentFelles,
                                                            DokumentHendelse dokumentHendelse,
-                                                           Saksnummer saksnummer,
                                                            boolean ferdigstill, String unikReferanse,
-                                                           DokumentMalType journalførSomDokument,
-                                                           FagsakYtelseType ytelseType) {
+                                                           DokumentMalType journalførSomDokument) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
-            var requestBuilder = lagRequestBuilder(brev, dokumentFelles, saksnummer, ferdigstill, unikReferanse, journalførSomDokument, ytelseType);
+            var requestBuilder = lagRequestBuilder(brev, dokumentFelles, ferdigstill, unikReferanse, journalførSomDokument);
             var response = dokArkivKlient.opprettJournalpost(requestBuilder.build(), ferdigstill);
 
             if (LOG.isWarnEnabled() && ferdigstill && !response.journalpostferdigstilt()) {
@@ -73,11 +71,9 @@ public class OpprettJournalpostTjeneste {
 
     private OpprettJournalpostRequest.OpprettJournalpostRequestBuilder lagRequestBuilder(byte[] brev,
                                                                                          DokumentFelles dokumentFelles,
-                                                                                         Saksnummer saksnummer,
                                                                                          boolean ferdigstill,
                                                                                          String bestillingsUidMedUnikReferanse,
-                                                                                         DokumentMalType journalførSomDokument,
-                                                                                         FagsakYtelseType ytelseType) {
+                                                                                         DokumentMalType journalførSomDokument) {
         var tittel = journalførSomDokument.getNavn();
 
         var dokument = DokumentInfoOpprett.builder()
@@ -88,9 +84,9 @@ public class OpprettJournalpostTjeneste {
 
         return OpprettJournalpostRequest.nyUtgående()
             .medTittel(tittel)
-            .medSak(sak(saksnummer))
+            .medSak(sak(dokumentFelles.getSaksnummer()))
             .medTema(DokArkivKlient.TEMA_FORELDREPENGER)
-            .medBehandlingstema(mapBehandlingsTema(ytelseType))
+            .medBehandlingstema(mapBehandlingsTema(dokumentFelles.getYtelseType()))
             .medJournalfoerendeEnhet(ferdigstill ? DokArkivKlient.AUTOMATISK_JOURNALFØRENDE_ENHET : null)
             .medEksternReferanseId(bestillingsUidMedUnikReferanse)
             .medBruker(bruker(dokumentFelles))

@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -128,13 +128,13 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
+            eq(dokumentHendelse), eq(true), any(), eq(DOKUMENT_MAL_TYPE));
         verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
-        assertThat(taskCaptor.getAllValues().get(1).getTasks().get(0).task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(
+        assertThat(taskCaptor.getAllValues().get(1).getTasks().getFirst().task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(
             randomBestillingsUuid + "-" + 1);
     }
 
@@ -158,13 +158,13 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
+            eq(dokumentHendelse), eq(true), any(), eq(DOKUMENT_MAL_TYPE));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
-        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(String.valueOf(randomBestillingsUuid));
+        assertThat(taskCaptor.getAllValues().getFirst().getTasks().getFirst().task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(String.valueOf(randomBestillingsUuid));
     }
 
     @Test
@@ -183,7 +183,6 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE);
-        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -204,7 +203,6 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE);
-        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -225,7 +223,6 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling);
-        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -248,12 +245,12 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
+            eq(dokumentHendelse), eq(true), any(), eq(DOKUMENT_MAL_TYPE));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
-        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(
+        assertThat(taskCaptor.getAllValues().getFirst().getTasks().getFirst().task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(
             String.valueOf(randomBestillingsUuid));
     }
 
@@ -273,16 +270,18 @@ class BrevBestillerTjenesteTest {
     }
 
     private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harGyldigVerge) {
-        var fagsakBackend = FagsakBackend.ny().medSaksnummer(SAKSNUMMER.getVerdi()).medAktørId(personinfo.getAktørId()).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
-        var behandling = Behandling.builder()
-            .medUuid(BEHANDLING_UUID)
-            .medFagsakBackend(fagsakBackend)
+        var fagsak = Fagsak.ny()
+            .medSaksnummer(SAKSNUMMER.getVerdi())
+            .medAktørId(personinfo.getAktørId())
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+            .build();
+        var behandling = Behandling.builder().medUuid(BEHANDLING_UUID)
             .medSpråkkode(Språkkode.NB)
+            .medFagsak(fagsak)
             .medAvsluttet(LocalDateTime.now())
             .leggTilResourceLink(
                 harGyldigVerge ? BehandlingResourceLink.ny().medRel("verge-backend").build() : BehandlingResourceLink.ny().medRel("annet").build())
             .build();
-        when(domeneobjektProvider.hentFagsakBackend(behandling)).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling)).thenReturn(new TilkjentYtelseEngangsstønad(1L));
         return behandling;
@@ -303,6 +302,6 @@ class BrevBestillerTjenesteTest {
         var dokumentOpprettResponse = new OpprettJournalpostResponse.DokumentInfoResponse(DOKUMENT_INFO_ID);
         var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), true, List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
-            eq(SAKSNUMMER), eq(true), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER))).thenReturn(opprettJournalpostResponse);
+            eq(true), any(), eq(DOKUMENT_MAL_TYPE))).thenReturn(opprettJournalpostResponse);
     }
 }

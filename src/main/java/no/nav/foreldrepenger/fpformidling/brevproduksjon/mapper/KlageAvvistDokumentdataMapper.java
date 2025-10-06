@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
@@ -50,7 +51,7 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
                                                       Behandling behandling,
                                                       boolean erUtkast) {
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
         fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 
@@ -59,15 +60,15 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
         var dokumentdataBuilder = KlageAvvistDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
-            .medLovhjemler(getLovhjemler(behandling, klage))
+            .medLovhjemler(getLovhjemler(klage, dokumentFelles.getSpråkkode()))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medAvvistGrunner(avvistGrunner);
 
         return dokumentdataBuilder.build();
     }
 
-    private String getLovhjemler(Behandling behandling, Klage klage) {
-        var lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, behandling.getSpråkkode());
+    private String getLovhjemler(Klage klage, Språkkode språkkode) {
+        var lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, språkkode);
         return lovhjemler.map(String::toString).orElse(null);
     }
 

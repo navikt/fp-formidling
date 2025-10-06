@@ -18,7 +18,8 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
@@ -64,13 +65,14 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
+        var språkkode = dokumentFelles.getSpråkkode();
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = behandling.getFagsak();
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var familiehendelse = behandling.getFamilieHendelse();
         var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
@@ -80,7 +82,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         var dokumentdataBuilder = ForeldrepengerAvslagDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medRelasjonskode(finnRelasjonskode(fagsak))
-            .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
+            .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
             .medGjelderFødsel(familiehendelse.gjelderFødsel())
             .medBarnErFødt(familiehendelse.barnErFødt())
             .medAntallBarn(familiehendelse.antallBarn())
@@ -88,27 +90,27 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medGjelderMor(gjelderMor(fagsak));
 
-        mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder);
+        mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder, språkkode);
 
         return dokumentdataBuilder.build();
     }
 
-    private boolean gjelderMor(FagsakBackend fagsak) {
+    private boolean gjelderMor(Fagsak fagsak) {
         return RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
     }
 
     private void mapAvslåttePerioder(Behandling behandling,
                                      ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
-                                     Optional<ForeldrepengerUttak> uttakResultatPerioder) {
+                                     Optional<ForeldrepengerUttak> uttakResultatPerioder, Språkkode språkkode) {
         var tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling);
         var avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(behandling,
-            tilkjentYtelseFP.map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList()), uttakResultatPerioder);
+            tilkjentYtelseFP.map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList()), uttakResultatPerioder, språkkode);
 
         dokumentdataBuilder.medLovhjemmelForAvslag(avslåttePerioderOgLovhjemmel.element2());
         dokumentdataBuilder.medAvslåttePerioder(avslåttePerioderOgLovhjemmel.element1());
     }
 
-    private String finnRelasjonskode(FagsakBackend fagsak) {
+    private String finnRelasjonskode(Fagsak fagsak) {
         if (RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
             return relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType());
         }

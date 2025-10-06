@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -66,7 +66,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
@@ -96,7 +96,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = opprettBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
@@ -115,7 +115,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     void skal_gi_flere_opplysninger_når_ikke_JOBBFULLTID_er_årasak() {
         // Arrange
         var behandling = opprettBehandling();
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEID_I_UTLANDET);
 
         // Act
@@ -135,7 +135,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
             .medBehandlingType(BehandlingType.REVURDERING)
             .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medFamilieHendelse(opprettFamiliehendelse())
             .build();
     }

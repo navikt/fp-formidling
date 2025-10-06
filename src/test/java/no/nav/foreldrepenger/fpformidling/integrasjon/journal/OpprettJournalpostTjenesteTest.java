@@ -5,10 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
-import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,9 +19,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.AvsenderMottaker;
@@ -61,11 +63,9 @@ class OpprettJournalpostTjenesteTest {
 
         var unikBestillingsId = dokumentHendelse.getBestillingUuid().toString() + "-" + 1;
 
-        var saksnummer = new Saksnummer("153456789");
-
         // Act
         var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.FRITEKSTBREV, dokumentFelles,
-            dokumentHendelse, saksnummer, true, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, FagsakYtelseType.ENGANGSTØNAD);
+            dokumentHendelse, true, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
 
         // Assert
         Mockito.verify(dokArkivKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
@@ -74,7 +74,7 @@ class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.tema()).isEqualTo("FOR");
         assertThat(genRequest.behandlingstema()).isEqualTo(BehandlingTema.ENGANGSSTØNAD.getOffisiellKode());
         assertThat(genRequest.sak().sakstype().name()).isEqualTo("FAGSAK");
-        assertThat(genRequest.sak().fagsakId()).isEqualTo(saksnummer.getVerdi());
+        assertThat(genRequest.sak().fagsakId()).isEqualTo(dokumentFelles.getSaksnummer().getVerdi());
         assertThat(genRequest.sak().fagsaksystem()).isEqualTo("FS36");
         assertThat(genRequest.avsenderMottaker().id()).isEqualTo(MOTTAKER_ID);
         assertThat(genRequest.avsenderMottaker().navn()).isEqualTo(MOTTAKER_NAVN);
@@ -95,12 +95,18 @@ class OpprettJournalpostTjenesteTest {
     }
 
     private DokumentFelles getDokumentFelles() {
-        var dokumentFelles = Mockito.mock(DokumentFelles.class);
-        when(dokumentFelles.getMottakerNavn()).thenReturn(MOTTAKER_NAVN);
-        when(dokumentFelles.getSakspartId()).thenReturn(FNR);
-        when(dokumentFelles.getMottakerId()).thenReturn(MOTTAKER_ID);
-        when(dokumentFelles.getMottakerType()).thenReturn(DokumentFelles.MottakerType.PERSON);
-        return dokumentFelles;
+        return new DokumentFelles.Builder()
+            .medMottakerNavn(MOTTAKER_NAVN)
+            .medMottakerId(MOTTAKER_ID)
+            .medSakspartId(new PersonIdent(FNR))
+            .medSakspartNavn("Hei")
+            .medMottakerType(DokumentFelles.MottakerType.PERSON)
+            .medSaksnummer(new Saksnummer(UUID.randomUUID().toString()))
+            .medSpråkkode(Språkkode.NB)
+            .medAutomatiskBehandlet(true)
+            .medDokumentDato(LocalDate.now())
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .build();
     }
 
     private DokumentHendelse.Builder lagStandardHendelseBuilder() {

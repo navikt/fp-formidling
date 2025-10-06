@@ -48,7 +48,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgr
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -110,14 +110,14 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         behandling = opprettBehandling(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
-            BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_HENDELSE_FØDSEL).build()),of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK) );
-        dokumentFelles = lagStandardDokumentFelles();
+                BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_HENDELSE_FØDSEL).build()),
+            of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK));
+        dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         dokumentHendelse = lagStandardHendelseBuilder().build();
     }
 
     @Test
     void skal_mappe_felter_for_brev() {
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
@@ -200,7 +200,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER));
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
@@ -217,12 +216,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void varierer_dagsats() {
-        var hundreKronerDagsatsPeriode = Vedtaksperiode.ny()
-            .medPeriodeDagsats(100)
-            .build();
-        var toHundreKronerDagsatsPeriode = Vedtaksperiode.ny()
-            .medPeriodeDagsats(200)
-            .build();
+        var hundreKronerDagsatsPeriode = Vedtaksperiode.ny().medPeriodeDagsats(100).build();
+        var toHundreKronerDagsatsPeriode = Vedtaksperiode.ny().medPeriodeDagsats(200).build();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, hundreKronerDagsatsPeriode, toHundreKronerDagsatsPeriode))).isTrue();
         assertThat(harVarierendeDagsats(List.of(hundreKronerDagsatsPeriode, toHundreKronerDagsatsPeriode))).isTrue();
         assertThat(harVarierendeDagsats(List.of(hundreKronerDagsatsPeriode, hundreKronerDagsatsPeriode))).isFalse();
@@ -231,14 +226,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void starter_med_fullutbetaling() {
-        var ingenUtbetaling = Vedtaksperiode.ny()
-            .medPrioritertUtbetalingsgrad(Prosent.NULL)
-            .medFullUtbetaling(false)
-            .build();
-        var fullUtbetaling = Vedtaksperiode.ny()
-            .medFullUtbetaling(true)
-            .medPrioritertUtbetalingsgrad(Prosent.HUNDRE)
-            .build();
+        var ingenUtbetaling = Vedtaksperiode.ny().medPrioritertUtbetalingsgrad(Prosent.NULL).medFullUtbetaling(false).build();
+        var fullUtbetaling = Vedtaksperiode.ny().medFullUtbetaling(true).medPrioritertUtbetalingsgrad(Prosent.HUNDRE).build();
         assertThat(starterMedFullUtbetaling(List.of(ingenUtbetaling))).isFalse();
         assertThat(starterMedFullUtbetaling(List.of(ingenUtbetaling, fullUtbetaling))).isFalse();
         assertThat(starterMedFullUtbetaling(List.of(fullUtbetaling))).isTrue();
@@ -247,20 +236,15 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void ikke_varierende_dagsats_hvis_starter_med_avslag() {
-        var avslåttPeriode = Vedtaksperiode.ny()
-            .medPeriodeDagsats(0)
-            .build();
-        var toHundreKronerDagsatsPeriode = Vedtaksperiode.ny()
-            .medPeriodeDagsats(200)
-            .build();
-        var hundreKronerDagsatsPeriode = Vedtaksperiode.ny()
-            .medPeriodeDagsats(100)
-            .build();
+        var avslåttPeriode = Vedtaksperiode.ny().medPeriodeDagsats(0).build();
+        var toHundreKronerDagsatsPeriode = Vedtaksperiode.ny().medPeriodeDagsats(200).build();
+        var hundreKronerDagsatsPeriode = Vedtaksperiode.ny().medPeriodeDagsats(100).build();
         assertThat(harVarierendeDagsats(List.of(avslåttPeriode, toHundreKronerDagsatsPeriode))).isFalse();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode))).isFalse();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode, toHundreKronerDagsatsPeriode))).isFalse();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode, hundreKronerDagsatsPeriode))).isTrue();
     }
+
     @Test
     void avslåtte_perioder_får_tidligstmottatt() {
         var tidligstMottatt = LocalDate.now();
@@ -295,7 +279,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void revurdering_med_aap_praksis_endring() {
-        var behandlingAap = opprettBehandling(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
+        var behandlingAap = opprettBehandling(
+            of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING).build(),
                 BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI).build()),
             of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK));
 
@@ -304,8 +289,12 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(konsekvensForYtelseAAPPraksisendring).isEqualTo(KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name());
     }
 
-    private FagsakBackend opprettFagsakBackend() {
-        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
+    private Fagsak opprettFagsak() {
+        return Fagsak.ny()
+            .medBrukerRolle(RelasjonsRolleType.MORA)
+            .medDekningsgrad(DEKNINGSGRAD)
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+            .build();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
@@ -481,7 +470,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                 .medKonsekvenserForYtelsen(konsekvenserForYtelsen)
                 .build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(opprettFagsak())
             .medRettigheter(new Rettigheter(Rettigheter.Rettighetstype.BEGGE_RETT, Rettigheter.Rettighetstype.BEGGE_RETT, null))
             .medFamilieHendelse(opprettFamiliehendelse())
             .build();

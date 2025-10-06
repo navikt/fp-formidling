@@ -5,7 +5,6 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -29,23 +28,23 @@ public class BrevBestillerTjeneste {
     }
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling);
     }
 
     public String genererBrevHtml(DokumentHendelse dokumentHendelse) {
-        var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.genererBrevHtml(dokumentHendelse, behandling);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         var journalførSom = utledDokumentType(dokumentHendelse);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, journalførSom);
     }
 
     public String genererJson(UUID behandlingUuid, DokumentMal dokumentMal){
-        var behandling = hentBehandling(behandlingUuid);
+        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
         var dokumentHendelse = DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(behandlingUuid)
@@ -94,12 +93,6 @@ public class BrevBestillerTjeneste {
             case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_FORLENGET_SAKSBEHANDLINGSTID -> DokumentMalType.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_FORLENGET_SAKSBEHANDLINGSTID;
             case null -> throw new NullPointerException("Ugyldig dokument mal type.");
         };
-    }
-
-    private Behandling hentBehandling(UUID behandlingUuid) {
-        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
-        domeneobjektProvider.hentFagsakBackend(behandling);
-        return behandling;
     }
 
 }

@@ -1,12 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.time.Period;
-
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerAnnullertDokumentdataMapperTest {
@@ -31,14 +28,11 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private DokumentData dokumentData;
-
     private ForeldrepengerAnnullertDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_ANNULLERT);
         dokumentdataMapper = new ForeldrepengerAnnullertDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
 
@@ -46,7 +40,7 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker_med_ny_startdato() {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         when(domeneobjektProvider.hentStartdatoUtsatt(behandling)).thenReturn(new StartdatoUtsattDto(true, NY_STARTDATO));
 
@@ -59,8 +53,8 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(DatamapperTestUtil.SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
@@ -75,7 +69,7 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker_uten_ny_startdato() {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         when(domeneobjektProvider.hentStartdatoUtsatt(behandling)).thenReturn(new StartdatoUtsattDto(true, null));
 

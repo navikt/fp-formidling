@@ -20,14 +20,11 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Datamappe
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -39,15 +36,12 @@ class KlageAvvistDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider;
 
-    private DokumentData dokumentData;
-
     private KlageAvvistDokumentdataMapper dokumentdataMapper;
 
     private static final String FRITEKST_TIL_BREV = "FRITEKST";
 
     @BeforeEach
     void before() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.KLAGE_AVVIST);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         dokumentdataMapper = new KlageAvvistDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
@@ -56,7 +50,7 @@ class KlageAvvistDokumentdataMapperTest {
     void skal_mappe_felter_for_vanlig_behandling() {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
 
@@ -69,8 +63,8 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(DatamapperTestUtil.SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
@@ -87,7 +81,7 @@ class KlageAvvistDokumentdataMapperTest {
     void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.TILBAKEKREVING,
             of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.KLAGER_IKKE_PART, KlageAvvistÅrsak.KLAGE_UGYLDIG, KlageAvvistÅrsak.IKKE_KONKRET,

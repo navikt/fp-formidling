@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.standardForeldrepengerBehandling;
@@ -19,20 +18,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class IngenEndringDokumentdataMapperTest {
-
-    private DokumentData dokumentData;
 
     private IngenEndringDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
-        dokumentData = lagStandardDokumentData(DokumentMalType.INGEN_ENDRING);
         dokumentdataMapper = new IngenEndringDokumentdataMapper();
     }
 
@@ -40,7 +34,7 @@ class IngenEndringDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = standardForeldrepengerBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
@@ -63,7 +57,7 @@ class IngenEndringDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = standardForeldrepengerBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act

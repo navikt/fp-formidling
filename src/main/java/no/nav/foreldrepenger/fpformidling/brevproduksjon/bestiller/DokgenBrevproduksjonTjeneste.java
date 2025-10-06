@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 import static io.micrometer.core.instrument.Metrics.counter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -19,7 +21,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
@@ -40,7 +41,7 @@ public class DokgenBrevproduksjonTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
-    private DokumentFellesDataMapper dokumentFellesDataMapper;
+    private DokumentMottakereUtleder dokumentMottakereUtleder;
     private DomeneobjektProvider domeneobjektProvider;
     private Dokgen dokgenKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
@@ -52,13 +53,13 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     @Inject
-    public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
+    public DokgenBrevproduksjonTjeneste(DokumentMottakereUtleder dokumentMottakereUtleder,
                                         DomeneobjektProvider domeneobjektProvider,
                                         Dokgen dokgenKlient,
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskTjeneste taskTjeneste) {
-        this.dokumentFellesDataMapper = dokumentFellesDataMapper;
+        this.dokumentMottakereUtleder = dokumentMottakereUtleder;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokgenKlient = dokgenKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
@@ -69,25 +70,28 @@ public class DokgenBrevproduksjonTjeneste {
     public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling) {
         var utkast = BestillingType.UTKAST;
         var dokumentMalType = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
-        var dokumentData = utledDokumentDataFor(behandling, dokumentMalType, utkast);
+        var dokumentMottakere = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
         // hvis verge finnes produseres det 2 brev. Vi forhåndsviser kun en av dem.
-        return genererDokument(dokumentHendelse, behandling, dokumentMalType, dokumentData.getFørsteDokumentFelles(), utkast);
+        return genererDokument(dokumentHendelse, behandling, dokumentMalType, dokumentMottakere.søker(), utkast);
     }
 
     public String genererBrevHtml(DokumentHendelse dokumentHendelse, Behandling behandling) {
         var utkast = BestillingType.BESTILL;
         var dokumentMalType = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
-        var dokumentData = utledDokumentDataFor(behandling, dokumentMalType, utkast);
+        var dokumentMottakere = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
         // hvis verge finnes produseres det 2 brev. Vi generer bare html for en av dem.
-        return genererDokumentHtml(dokumentHendelse, behandling, dokumentMalType, dokumentData.getFørsteDokumentFelles(), utkast);
+        return genererDokumentHtml(dokumentHendelse, behandling, dokumentMalType, dokumentMottakere.søker(), utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType journalførSom) {
         var bestillingType = BestillingType.BESTILL;
         var dokumentMal = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
-        var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
+        var dokumentMottakere = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
+        var dokumentFellesList = new ArrayList<DokumentFelles>();
+        dokumentFellesList.add(dokumentMottakere.søker());
+        Optional.ofNullable(dokumentMottakere.verge()).ifPresent(dokumentFellesList::add);
         var teller = 0;
-        for (var dokumentFelles : dokumentData.getDokumentFelles()) {
+        for (var dokumentFelles : dokumentFellesList) {
             var brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestillingType);
 
             var unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid().toString();
@@ -98,7 +102,8 @@ public class DokgenBrevproduksjonTjeneste {
 
             var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom, behandling.getFagsakBackend().getYtelseType()) // NoSonar
+                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom,
+                behandling.getFagsakBackend().getYtelseType()) // NoSonar
                 ;
 
             var journalpostId = new JournalpostId(response.journalpostId());
@@ -123,7 +128,7 @@ public class DokgenBrevproduksjonTjeneste {
                                        BestillingType bestillingType) {
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMalType);
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling,
-                BestillingType.UTKAST == bestillingType);
+            BestillingType.UTKAST == bestillingType);
 
         String brev;
         try {
@@ -133,8 +138,8 @@ public class DokgenBrevproduksjonTjeneste {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOG.warn("Klarte ikke å generere html av brev fra følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006",
-                    String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMalType.getKode(),
-                            behandling.getUuid(), bestillingType), e);
+                String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMalType.getKode(),
+                    behandling.getUuid(), bestillingType), e);
         }
         return brev;
     }
@@ -168,27 +173,12 @@ public class DokgenBrevproduksjonTjeneste {
     public String genererJson(DokumentHendelse dokumentHendelse, Behandling behandling, BestillingType bestillingType) {
         var dokumentMal = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
-        var dokumentfelles = dokumentData.getFørsteDokumentFelles();
+        var dokumentData = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
+        var dokumentfelles = dokumentData.søker();
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentfelles, dokumentHendelse, behandling,
             BestillingType.UTKAST == bestillingType);
         dokumentdata.getFelles().anonymiser();
         return DefaultJsonMapper.toJson(dokumentdata);
-    }
-
-    private DokumentData utledDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
-        var dokumentData = utledDokumentData(behandling, dokumentMal, bestillingType);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
-        return dokumentData;
-    }
-
-    private DokumentData utledDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
-        return DokumentData.builder()
-            .medDokumentMalType(dokumentMalType)
-            .medBehandlingUuid(behandling.getUuid())
-            .medBestiltTid(LocalDateTime.now())
-            .medBestillingType(bestillingType.name())
-            .build();
     }
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse,
@@ -203,10 +193,8 @@ public class DokgenBrevproduksjonTjeneste {
             DistribusjonstypeUtleder.utledFor(originalDokumentType), saksnummer, unikBestillingsId));
 
         taskGruppe.addNesteSekvensiell(
-            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), saksnummer,
-                dokumentHendelse.getBestillingUuid(),
-                response.journalpostId(),
-                response.dokumenter().getFirst().dokumentInfoId()));
+            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), saksnummer, dokumentHendelse.getBestillingUuid(),
+                response.journalpostId(), response.dokumenter().getFirst().dokumentInfoId()));
         taskTjeneste.lagre(taskGruppe);
     }
 
@@ -253,7 +241,11 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid, Saksnummer saksnummer, UUID bestillingUuid, String journalpostId, String dokumentId) {
+    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid,
+                                                         Saksnummer saksnummer,
+                                                         UUID bestillingUuid,
+                                                         String journalpostId,
+                                                         String dokumentId) {
         var prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
         prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setBehandlingUUid(behandlingUuid);

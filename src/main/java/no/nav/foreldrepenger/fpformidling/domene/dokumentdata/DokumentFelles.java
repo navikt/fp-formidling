@@ -12,17 +12,17 @@ public class DokumentFelles {
 
     public enum PersonStatus {
         DOD,
-        ANNET;
+        ANNET
     }
 
     public enum Kopi {
         JA,
-        NEI;
+        NEI
     }
 
     public enum MottakerType {
         PERSON,
-        ORGANISASJON;
+        ORGANISASJON
     }
     private Språkkode språkkode;
     private Saksnummer saksnummer;
@@ -31,24 +31,10 @@ public class DokumentFelles {
     private String sakspartNavn;
     private String mottakerId;
     private String mottakerNavn;
-    private DokumentData dokumentData;
     private LocalDate dokumentDato;
     private PersonStatus sakspartPersonStatus;
     private Kopi erKopi;
     private MottakerType mottakerType;
-
-    public DokumentFelles() {
-        // Cdi
-    }
-
-    public DokumentFelles(DokumentData dokumentData) {
-        this.dokumentData = dokumentData;
-        dokumentData.addDokumentFelles(this);
-    }
-
-    public static Builder builder(DokumentData dokumentData) {
-        return new DokumentFelles.Builder(dokumentData);
-    }
 
     public static Builder builder() {
         return new Builder();
@@ -80,10 +66,6 @@ public class DokumentFelles {
 
     public String getMottakerNavn() {
         return mottakerNavn;
-    }
-
-    public DokumentData getDokumentData() {
-        return dokumentData;
     }
 
     public LocalDate getDokumentDato() {
@@ -128,14 +110,10 @@ public class DokumentFelles {
 
     public static class Builder {
 
-        private DokumentFelles dokumentFelles;
+        private final DokumentFelles dokumentFelles;
 
         public Builder() {
             this.dokumentFelles = new DokumentFelles();
-        }
-
-        public Builder(DokumentData dokumentData) {
-            this.dokumentFelles = new DokumentFelles(dokumentData);
         }
 
         public Builder medSpråkkode(Språkkode språkkode) {
@@ -212,7 +190,6 @@ public class DokumentFelles {
             Objects.requireNonNull(dokumentFelles.mottakerId, "mottakerId");
             Objects.requireNonNull(dokumentFelles.mottakerNavn, "mottakerNavn");
             Objects.requireNonNull(dokumentFelles.dokumentDato, "dokumentDato");
-            Objects.requireNonNull(dokumentFelles.dokumentData, "dokumentData");
         }
     }
 }

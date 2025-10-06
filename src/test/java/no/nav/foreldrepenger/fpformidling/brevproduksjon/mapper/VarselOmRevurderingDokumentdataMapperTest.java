@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
@@ -33,8 +32,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
@@ -42,7 +40,6 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,15 +53,12 @@ class VarselOmRevurderingDokumentdataMapperTest {
 
     private BrevMapperUtil brevMapperUtil;
 
-    private DokumentData dokumentData;
-
     private VarselOmRevurderingDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
-        dokumentData = lagStandardDokumentData(DokumentMalType.VARSEL_OM_REVURDERING);
         dokumentdataMapper = new VarselOmRevurderingDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
     }
 
@@ -72,7 +66,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
@@ -102,7 +96,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = opprettBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
@@ -121,7 +115,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     void skal_gi_flere_opplysninger_når_ikke_JOBBFULLTID_er_årasak() {
         // Arrange
         var behandling = opprettBehandling();
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData);
+        var dokumentFelles = lagStandardDokumentFelles();
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEID_I_UTLANDET);
 
         // Act

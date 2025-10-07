@@ -64,7 +64,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
                                                                    boolean erUtkast) {
 
         // Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
-        var språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
+        var språkkode = Språkkode.EN.equals(dokumentFelles.getSpråkkode()) ? Språkkode.NB : dokumentFelles.getSpråkkode();
 
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
@@ -72,7 +72,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);

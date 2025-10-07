@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -9,8 +11,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.FritekstbrevHtmlDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FRITEKSTBREV_HTML)
@@ -26,9 +26,9 @@ public class FritekstbrevHtmlDokumentdataMapper implements DokumentdataMapper {
                                                            DokumentHendelse hendelse,
                                                            Behandling behandling,
                                                            boolean erUtkast) {
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
 
         return FritekstbrevHtmlDokumentdata.ny()
             .medFelles(fellesBuilder.build())

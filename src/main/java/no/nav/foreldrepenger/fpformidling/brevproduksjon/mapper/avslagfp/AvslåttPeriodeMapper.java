@@ -35,11 +35,12 @@ public final class AvslåttPeriodeMapper {
 
     public static Tuple<List<AvslåttPeriode>, String> mapAvslåttePerioderOgLovhjemmel(Behandling behandling,
                                                                                       List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                                                      Optional<ForeldrepengerUttak> uttakResultatPerioder) {
+                                                                                      Optional<ForeldrepengerUttak> uttakResultatPerioder,
+                                                                                      Språkkode språkkode) {
         var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         var behandlingsresultat = behandling.getBehandlingsresultat();
 
-        var avslåttePerioder = finnAvslåttePerioder(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode(), lovReferanser);
+        var avslåttePerioder = finnAvslåttePerioder(tilkjentYtelsePerioder, uttakResultatPerioder, språkkode, lovReferanser);
         var lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
             BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()), false);
 

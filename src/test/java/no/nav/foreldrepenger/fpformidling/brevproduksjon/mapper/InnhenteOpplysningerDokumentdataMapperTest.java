@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoEngelsk;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
@@ -36,7 +37,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -74,7 +75,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.NB);
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -106,7 +107,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.NB);
-        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -124,8 +125,9 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     void skal_mappe_datoer_med_engelsk_format() {
         // Arrange
-        var behandling = opprettBehandling(Språkkode.EN);
-        var dokumentFelles = lagStandardDokumentFelles();
+        var språkkode = Språkkode.EN;
+        var behandling = opprettBehandling(språkkode);
+        var dokumentFelles = lagStandardDokumentFellesBuilder(FagsakYtelseType.FORELDREPENGER).medSpråkkode(språkkode).build();
         var dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -144,7 +146,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
             .medBehandlingType(BehandlingType.REVURDERING)
             .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medSpråkkode(språkkode)
             .build();
     }

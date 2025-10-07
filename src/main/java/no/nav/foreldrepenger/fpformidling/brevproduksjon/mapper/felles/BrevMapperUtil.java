@@ -58,8 +58,7 @@ public class BrevMapperUtil {
         return !dokumentFelles.getMottakerId().equals(dokumentFelles.getSakspartId());
     }
 
-    public static FellesDokumentdata.Builder opprettFellesBuilder(DokumentFelles dokumentFelles, Behandling behandling,
-                                                                  boolean erUtkast) {
+    public static FellesDokumentdata.Builder opprettFellesBuilder(DokumentFelles dokumentFelles, boolean erUtkast) {
         var erKopi = dokumentFelles.getErKopi();
         var fellesBuilder = FellesDokumentdata.ny()
             .medSøkerNavn(dokumentFelles.getSakspartNavn())
@@ -67,7 +66,7 @@ public class BrevMapperUtil {
             .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
             .medHarVerge(erKopi.isPresent())
             .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-            .medYtelseType(behandling.getFagsakBackend().getYtelseType().getKode())
+            .medYtelseType(dokumentFelles.getYtelseType().getKode())
             .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {

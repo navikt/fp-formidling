@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
@@ -71,8 +71,8 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 
-        var språkkode = behandling.getSpråkkode();
-        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var språkkode = dokumentFelles.getSpråkkode();
+        var fagsak = behandling.getFagsak();
         var familiehendelse = behandling.getFamilieHendelse();
 
         var foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
@@ -82,9 +82,9 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
         var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         var erSøkerDød = BrevMapperUtil.erDød(dokumentFelles);
 
         var behandlingsresultat = behandling.getBehandlingsresultat();
@@ -131,7 +131,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         return årsakListe;
     }
 
-    private String finnRelasjonskode(FagsakBackend fagsak) {
+    private String finnRelasjonskode(Fagsak fagsak) {
         if (RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
             return relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType());
         }

@@ -1,16 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.OppgaverTjeneste;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
 
 @ApplicationScoped
 @ProsessTask(value = "formidling.opprettOppgave", prioritet = 2, maxFailedRuns = 2)
@@ -32,7 +31,6 @@ public class OpprettOppgaveTask implements ProsessTaskHandler {
         var behandlingUuid = prosessTaskData.getBehandlingUuid();
 
         var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
-        domeneobjektProvider.hentFagsakBackend(behandling);
 
         oppgaverTjeneste.opprettOppgave(behandling, journalpostId, OPPGAVEBESKRIVELSE);
     }

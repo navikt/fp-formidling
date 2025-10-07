@@ -49,9 +49,10 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
                                                               Behandling behandling,
                                                               boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
+        var språkkode = dokumentFelles.getSpråkkode();
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
         var familieHendelse = behandling.getFamilieHendelse();
@@ -59,11 +60,11 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         var advarselKode = utledAdvarselkode(hendelse);
         var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()).orElse(null))
-            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
+            .medTerminDato(finnTermindato(familieHendelse, språkkode).orElse(null))
+            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode))
             .medAntallBarn(familieHendelse.antallBarn())
             .medAdvarselKode(advarselKode)
-            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.getFagsakBackend().getYtelseType()));
+            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.getFagsak().getYtelseType()));
 
         return dokumentdataBuilder.build();
     }

@@ -45,9 +45,10 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
                                                                              Behandling behandling,
                                                                              boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
+        var språkkode = dokumentFelles.getSpråkkode();
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
         var aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;
 
@@ -67,7 +68,7 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
                     .anyMatch(upa -> upa.getTrekkdager().compareTo(BigDecimal.ZERO) > 0))
                 .map(UttakResultatPeriode::getTom)
                 .max(LocalDate::compareTo)
-                .map(d -> formaterDato(d, behandling.getSpråkkode()))
+                .map(d -> formaterDato(d, språkkode))
                 .orElse(null);
         }
 

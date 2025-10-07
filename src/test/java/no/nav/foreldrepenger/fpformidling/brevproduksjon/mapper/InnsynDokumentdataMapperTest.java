@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
@@ -56,7 +56,7 @@ class InnsynDokumentdataMapperTest {
         var innsynsBehandling = new Innsyn(InnsynResultatType.INNVILGET, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
         var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -72,7 +72,7 @@ class InnsynDokumentdataMapperTest {
         var innsynsBehandling = new Innsyn(InnsynResultatType.AVVIST, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.ENGANGSTØNAD);
         var dokumentHendelse = lagDokumentHendelse();
 
         var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -87,7 +87,7 @@ class InnsynDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.INNSYN)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
             .build();
     }
 

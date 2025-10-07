@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgave;
@@ -36,7 +36,7 @@ class OppgaverTjenesteTest {
         var aktørId = "12345678";
         var saksnummer = "98766544";
         var behandling = new Behandling.Builder().medBehandlendeEnhetId(behandlendeEnhetId)
-            .medFagsakBackend(FagsakBackend.ny().medAktørId(new AktørId(aktørId)).medSaksnummer(saksnummer).build())
+            .medFagsak(Fagsak.ny().medAktørId(new AktørId(aktørId)).medSaksnummer(saksnummer).build())
             .build();
 
         var id = 1234L;

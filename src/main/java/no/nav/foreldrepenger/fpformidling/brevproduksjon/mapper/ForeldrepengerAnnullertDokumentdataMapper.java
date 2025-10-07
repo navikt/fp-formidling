@@ -43,9 +43,10 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
                                                                   Behandling behandling,
                                                                   boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
+        var språkkode = dokumentFelles.getSpråkkode();
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
         var startdatoUtsatt = domeneobjektProvider.hentStartdatoUtsatt(behandling);
         var harSøktOmNyPeriode = startdatoUtsatt.nyStartdato() != null;
@@ -56,8 +57,8 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
         if (harSøktOmNyPeriode) {
-            dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt.nyStartdato(), behandling.getSpråkkode()));
-            dokumentdataBuilder.medKanBehandlesDato(formaterDato(startdatoUtsatt.nyStartdato().minusWeeks(4), behandling.getSpråkkode()));
+            dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt.nyStartdato(), språkkode));
+            dokumentdataBuilder.medKanBehandlesDato(formaterDato(startdatoUtsatt.nyStartdato().minusWeeks(4), språkkode));
         }
 
         return dokumentdataBuilder.build();

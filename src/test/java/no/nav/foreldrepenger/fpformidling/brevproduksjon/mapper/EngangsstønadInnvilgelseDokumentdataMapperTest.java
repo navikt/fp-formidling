@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -58,7 +58,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID, orgfamilieHendelse);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV, familieHendelse);
 
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
 
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
@@ -84,7 +84,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         //Arrange
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID, lagFamHendelse(1));
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV, lagFamHendelse(1));
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(innvilgetES)).thenReturn(Optional.of(orgBehES));
@@ -101,7 +101,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_sende_original_til_verge() {
         //Arrange
-        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true, FagsakYtelseType.FORELDREPENGER);
         var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV, lagFamHendelse(1));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
@@ -119,7 +119,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_sende_kopi_til_søker() {
         //Arrange
-        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false);
+        var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false, FagsakYtelseType.FORELDREPENGER);
         var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV, lagFamHendelse(1));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
@@ -141,7 +141,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         var orgfamilieHendelse = lagFamHendelse(1);
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID, orgfamilieHendelse);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV, familieHendelse);
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(innvilgetES)).thenReturn(Optional.of(orgBehES));
@@ -160,7 +160,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
             .medUuid(id)
             .medBehandlingType(behType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.ENGANGSTØNAD).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.ENGANGSTØNAD).build())
             .medFamilieHendelse(familieHendelse)
             .build();
     }

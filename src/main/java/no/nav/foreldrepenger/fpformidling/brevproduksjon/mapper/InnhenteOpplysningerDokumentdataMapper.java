@@ -48,9 +48,10 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
+        var språkkode = dokumentFelles.getSpråkkode();
         fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
         var dokumentdataBuilder = InnhenteOpplysningerDokumentdata.ny()
@@ -60,13 +61,13 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
             .medEndringssøknad(BrevMapperUtil.erEndringssøknad(behandling))
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medKlage(behandling.erKlage())
-            .medSøknadDato(finnSøknadDato(behandling))
-            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()));
+            .medSøknadDato(finnSøknadDato(behandling, dokumentFelles))
+            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode));
 
         return dokumentdataBuilder.build();
     }
 
-    private String finnSøknadDato(Behandling behandling) {
+    private String finnSøknadDato(Behandling behandling, DokumentFelles dokumentFelles) {
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
 
         Optional<KlageDokument> klageDokument = Optional.empty();
@@ -76,7 +77,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
 
         var mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
             .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
-        return formaterDato(mottattDato, behandling.getSpråkkode());
+        return formaterDato(mottattDato, dokumentFelles.getSpråkkode());
     }
 
     private LocalDate hentMottattDatoFraKlage(KlageDokument klageDokument, Behandling behandling) {

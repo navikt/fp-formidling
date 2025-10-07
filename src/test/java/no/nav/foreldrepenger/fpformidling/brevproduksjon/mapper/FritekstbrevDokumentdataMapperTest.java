@@ -34,7 +34,7 @@ class FritekstbrevDokumentdataMapperTest {
     void skal_mappe_felter_for_fritekstbrev_til_bruker_fra_hendelsen() {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medTittel(OVERSKRIFT).medFritekst(BRØDTEKST_INN).medDokumentMal(
             DokumentMal.FRITEKSTBREV).build();
 
@@ -62,7 +62,7 @@ class FritekstbrevDokumentdataMapperTest {
         // Arrange
         var behandlingsresultat = Behandlingsresultat.builder().medOverskrift(OVERSKRIFT).medFritekstbrev(BRØDTEKST_INN).build();
         var behandling = DatamapperTestUtil.standardBehandlingBuilder(FagsakYtelseType.FORELDREPENGER).medBehandlingsresultat(behandlingsresultat).build();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles();
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medTittel(null).medFritekst(null).medDokumentMal(DokumentMal.FRITEKSTBREV).build();
 
         // Act

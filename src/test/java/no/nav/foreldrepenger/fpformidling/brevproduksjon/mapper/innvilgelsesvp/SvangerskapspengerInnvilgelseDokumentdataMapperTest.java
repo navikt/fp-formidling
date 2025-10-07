@@ -43,7 +43,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -121,7 +121,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     void skal_mappe_felter_for_førstegangsbehandling() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
@@ -224,7 +224,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING))
                 .build())
             .build();
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
@@ -249,7 +249,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     void skal_mappe_selvstendig_næringsdrivende_når_det_er_i_første_periode() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlagMedSNIFørstePeriode());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseMedSNIFørstePeriode());
@@ -271,7 +271,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     void skal_mappe_frilanser_når_det_er_i_første_periode() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
-        var dokumentFelles = lagStandardDokumentFelles();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlagMedFLIFørstePeriode());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseMedFLIFørstePeriode());
@@ -289,7 +289,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(behandlingType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
+            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB);
     }
 

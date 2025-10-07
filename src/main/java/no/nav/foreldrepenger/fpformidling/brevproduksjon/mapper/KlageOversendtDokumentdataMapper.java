@@ -46,7 +46,7 @@ public class KlageOversendtDokumentdataMapper implements DokumentdataMapper {
         var klageDokument = domeneobjektProvider.hentKlageDokument(behandling);
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
 
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
         fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);

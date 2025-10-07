@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper.mapLinks;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.ArbeidsforholdInntektsmelding;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
@@ -37,7 +38,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.Stønadskonto
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
-import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -55,22 +55,6 @@ public class DomeneobjektProvider {
         // CDI
     }
 
-    public FagsakBackend hentFagsakBackend(Behandling behandling) {
-        if (behandling.harFagsakBackend()) {
-            return behandling.getFagsakBackend();
-        }
-        var fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
-        var fagsak = FagsakBackend.ny()
-            .medSaksnummer(fagsakDto.saksnummer())
-            .medFagsakYtelseType(fagsakDto.fagsakYtelseType())
-            .medBrukerRolle(fagsakDto.relasjonsRolleType())
-            .medAktørId(new AktørId(fagsakDto.aktørId()))
-            .medDekningsgrad(fagsakDto.dekningsgrad())
-            .build();
-        behandling.leggtilFagsakBackend(fagsak);
-        return fagsak;
-    }
-
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
         return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()),
             arbeidsgiverTjeneste::hentArbeidsgiverNavn);
@@ -82,7 +66,9 @@ public class DomeneobjektProvider {
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {
-        return BehandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(behandlingUuid)));
+        var behandlingDto = behandlingRestKlient.hentBehandling(behandlingUuid);
+        var fagsakDto = behandlingRestKlient.hentFagsak(mapLinks(behandlingDto.getLinks()));
+        return BehandlingDtoMapper.mapBehandlingFraDto(behandlingDto, fagsakDto);
     }
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {

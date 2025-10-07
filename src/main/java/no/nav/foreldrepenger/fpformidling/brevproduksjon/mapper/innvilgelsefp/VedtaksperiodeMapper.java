@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,6 +20,13 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgr
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
@@ -26,37 +34,34 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.A
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.ForeldrepengerUttak.Aktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.ForeldrepengerUttak.Periode;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public final class VedtaksperiodeMapper {
 
     private VedtaksperiodeMapper() {
     }
 
-    public static List<Vedtaksperiode> mapVedtaksperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                          ForeldrepengerUttak foreldrepengerUttak,
-                                                          List<BeregningsgrunnlagPeriode> beregningingsgrunnlagPerioder,
+    public static List<Vedtaksperiode> mapVedtaksperioder(List<TilkjentYtelsePeriodeDto> tilkjentYtelsePerioder,
+                                                          BrevGrunnlag.ForeldrepengerUttak foreldrepengerUttak,
+                                                          List<BeregningsgrunnlagPeriodeDto> beregningingsgrunnlagPerioder,
                                                           Språkkode språkkode) {
         List<Vedtaksperiode> periodelisteFørSammenslåing = new ArrayList<>();
-        var uttaksperioder = foreldrepengerUttak.perioder();
+        var uttaksperioder = foreldrepengerUttak.perioderSøker();
         // er avhengig av at listen er sortert med tidligste periode først
         var tilkjentYtelsePerioderSortert = tilkjentYtelsePerioder.stream()
-            .sorted(Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom))
+            .sorted(Comparator.comparing(TilkjentYtelsePeriodeDto::fom))
             .toList();
 
-        List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
+        List<BrevGrunnlag.ForeldrepengerUttak.Periode> uttaksperioderMedÅrsak = new ArrayList<>(uttaksperioder);
 
         for (var i = 0; i < tilkjentYtelsePerioderSortert.size(); i++) {
             var tilkjentYtelsePeriode = tilkjentYtelsePerioderSortert.get(i);
             var matchetUttaksperiode = PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttaksperioder);
-            if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent() || avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
+            if (avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
                 continue;
             }
             uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
@@ -135,57 +140,53 @@ public final class VedtaksperiodeMapper {
             .medTidligstMottattDato(uttakperiode.getTidligstMottattDato(), språkkode).build();
     }
 
-    private static Vedtaksperiode mapPerioderEtterFørste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                         List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
-                                                         UttakResultatPeriode matchetUttaksperiode,
-                                                         BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+    private static Vedtaksperiode mapPerioderEtterFørste(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
+                                                         List<TilkjentYtelsePeriodeDto> tilkjentPeriodeListe,
+                                                         Periode matchetUttaksperiode,
+                                                         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                                          Språkkode språkkode) {
         return mapEnkelPeriode(tilkjentYtelsePeriode, tilkjentPeriodeListe, matchetUttaksperiode, beregningsgrunnlagPeriode,
-            tilkjentYtelsePeriode.getPeriodeFom(), språkkode);
+            tilkjentYtelsePeriode.fom(), språkkode);
     }
 
-    private static List<UttakResultatPeriode> filtrerBortUkjentÅrsak(List<UttakResultatPeriode> uttaksperioder) {
-        return uttaksperioder.stream().filter(Predicate.not(up -> up.getPeriodeResultatÅrsak().erUkjent())).toList();
-    }
-
-    private static boolean avslåttManglendeSøktUtenTrekkdager(UttakResultatPeriode uttakperiode) {
+    private static boolean avslåttManglendeSøktUtenTrekkdager(Periode uttakperiode) {
         return avslåttManglendeSøktPeriode(uttakperiode) && ingenTrekkdager(uttakperiode);
     }
 
-    private static boolean avslåttManglendeSøktPeriode(UttakResultatPeriode matchetUttaksperiode) {
-        return PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode().equals(matchetUttaksperiode.getPeriodeResultatÅrsak().getKode());
+    private static boolean avslåttManglendeSøktPeriode(Periode matchetUttaksperiode) {
+        return PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode().equals(matchetUttaksperiode.periodeResultatÅrsak());
     }
 
-    private static boolean ingenTrekkdager(UttakResultatPeriode p) {
-        return mapAntallTapteDagerFra(p.getAktiviteter()) == 0;
+    private static boolean ingenTrekkdager(Periode p) {
+        return mapAntallTapteDagerFra(p.aktiviteter()) == 0;
     }
 
-    private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
+    private static int mapAntallTapteDagerFra(List<Aktivitet> uttakAktiviteter) {
         return PeriodeBeregner.alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ? uttakAktiviteter.stream()
-            .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+            .map(Aktivitet::trekkdager)
             .filter(Objects::nonNull)
             .max(BigDecimal::compareTo)
             .map(bd -> bd.setScale(1, RoundingMode.DOWN).intValue())
             .orElse(0) : 0;
     }
 
-    private static Vedtaksperiode mapFørstePeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                   List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
-                                                   UttakResultatPeriode uttakResultatPeriode,
-                                                   BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+    private static Vedtaksperiode mapFørstePeriode(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
+                                                   List<TilkjentYtelsePeriodeDto> tilkjentPeriodeListe,
+                                                   Periode uttakResultatPeriode,
+                                                   BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                                    Språkkode språkkode) {
-        if (uttakResultatPeriode.getFom().isBefore(tilkjentYtelsePeriode.getPeriodeFom())) {
+        if (uttakResultatPeriode.fom().isBefore(tilkjentYtelsePeriode.fom())) {
             return mapEnkelPeriode(tilkjentYtelsePeriode, tilkjentPeriodeListe, uttakResultatPeriode, beregningsgrunnlagPeriode,
-                uttakResultatPeriode.getFom(), språkkode);
+                uttakResultatPeriode.fom(), språkkode);
         }
         return mapEnkelPeriode(tilkjentYtelsePeriode, tilkjentPeriodeListe, uttakResultatPeriode, beregningsgrunnlagPeriode,
-            tilkjentYtelsePeriode.getPeriodeFom(), språkkode);
+            tilkjentYtelsePeriode.fom(), språkkode);
     }
 
-    private static Vedtaksperiode mapEnkelPeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                  List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
-                                                  UttakResultatPeriode uttakResultatPeriode,
-                                                  BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+    private static Vedtaksperiode mapEnkelPeriode(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
+                                                  List<TilkjentYtelsePeriodeDto> tilkjentPeriodeListe,
+                                                  Periode uttakResultatPeriode,
+                                                  BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                                   LocalDate fomDate,
                                                   Språkkode språkkode) {
         var periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
@@ -236,7 +237,7 @@ public final class VedtaksperiodeMapper {
             .orElse(StønadskontoType.UDEFINERT);
     }
 
-    private static PeriodeResultatÅrsak utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
+    private static PeriodeResultatÅrsak utledÅrsakskode(Periode uttakPeriode) {
         if (erGraderingAvslått(uttakPeriode) && uttakPeriode.isInnvilget()) {
             return uttakPeriode.getGraderingAvslagÅrsak();
         } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
@@ -245,7 +246,7 @@ public final class VedtaksperiodeMapper {
         return PeriodeResultatÅrsak.UKJENT;
     }
 
-    private static boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
+    private static boolean erGraderingAvslått(Periode uttakPeriode) {
         return !uttakPeriode.erGraderingInnvilget() && !uttakPeriode.getGraderingAvslagÅrsak().erUkjent();
     }
 
@@ -280,10 +281,10 @@ public final class VedtaksperiodeMapper {
             .map(andel -> matchTilkjentYtelseAndelMedUttaksaktivitet(andel, uttakPeriode));
     }
 
-    private static BeregningsresOgUttaksAndel matchTilkjentYtelseAndelMedUttaksaktivitet(TilkjentYtelseAndel tilkjentYtelseAndel,
-                                                                                         UttakResultatPeriode uttakPeriode) {
+    private static BeregningsresOgUttaksAndel matchTilkjentYtelseAndelMedUttaksaktivitet(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto tilkjentYtelseAndel,
+                                                                                         Periode uttakPeriode) {
         return new BeregningsresOgUttaksAndel(tilkjentYtelseAndel,
-            PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.getAktiviteter(), tilkjentYtelseAndel));
+            PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.aktiviteter(), tilkjentYtelseAndel));
     }
 
     private record BeregningsresOgUttaksAndel(TilkjentYtelseAndel andel, Optional<UttakResultatPeriodeAktivitet> UttakAktivitet) {
@@ -324,14 +325,14 @@ public final class VedtaksperiodeMapper {
             .toList();
     }
 
-    private static List<Arbeidsforhold> mapArbeidsforholdliste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                               UttakResultatPeriode uttakResultatPeriode,
-                                                               BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+    private static List<Arbeidsforhold> mapArbeidsforholdliste(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
+                                                               Periode uttakResultatPeriode,
+                                                               BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                                                Språkkode språkkode) {
         List<Arbeidsforhold> arbeidsforholdListe = new ArrayList<>();
         for (var andel : finnArbeidsandeler(tilkjentYtelsePeriode)) {
             arbeidsforholdListe.add(mapArbeidsforholdAndel(tilkjentYtelsePeriode, andel,
-                PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel),
+                PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.aktiviteter(), andel),
                 PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel),
                 beregningsgrunnlagPeriode, språkkode));
         }
@@ -341,8 +342,11 @@ public final class VedtaksperiodeMapper {
         return arbeidsforholdListe;
     }
 
-    private static List<TilkjentYtelseAndel> finnArbeidsandeler(TilkjentYtelsePeriode tilkjentYtelsePeriode) {
-        return tilkjentYtelsePeriode.getAndeler().stream().filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())).toList();
+    private static List<TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto> finnArbeidsandeler(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode) {
+        return tilkjentYtelsePeriode.andeler()
+            .stream()
+            .filter(andel -> TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER.equals(andel.aktivitetstatus()))
+            .toList();
     }
 
     private static Arbeidsforhold mapArbeidsforholdAndel(TilkjentYtelsePeriode tilkjentYtelsePeriode,

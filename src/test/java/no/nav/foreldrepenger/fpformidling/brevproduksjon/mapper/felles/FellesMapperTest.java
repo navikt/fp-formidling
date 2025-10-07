@@ -88,7 +88,7 @@ class FellesMapperTest {
 
     private void assertLovformateringBeregning(String input, String konsekvensForYtelse, boolean innvilgetRevurdering, String forventetOutput) {
         var lovhjemler = FellesMapper.formaterLovhjemlerForBeregning(input, konsekvensForYtelse, innvilgetRevurdering,
-            Behandling.builder().medUuid(UUID.randomUUID()).build());
+                Behandling.builder().medUuid(UUID.randomUUID()).build().uuid());
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
 }

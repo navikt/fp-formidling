@@ -28,23 +28,23 @@ public class BrevBestillerTjeneste {
     }
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBrevGrunnlag(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling);
     }
 
     public String genererBrevHtml(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBrevGrunnlag(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.genererBrevHtml(dokumentHendelse, behandling);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBrevGrunnlag(dokumentHendelse.getBehandlingUuid());
         var journalførSom = utledDokumentType(dokumentHendelse);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, journalførSom);
     }
 
     public String genererJson(UUID behandlingUuid, DokumentMal dokumentMal){
-        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
+        var behandling = domeneobjektProvider.hentBrevGrunnlag(behandlingUuid);
         var dokumentHendelse = DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(behandlingUuid)

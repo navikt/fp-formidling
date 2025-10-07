@@ -35,7 +35,7 @@ class OpprettOppgaveTaskTest {
         var saksnummer = "23424354353";
 
         var behandling = Behandling.builder().medBehandlendeEnhetId("1233").build();
-        when(provider.hentBehandling(behandlingUuId)).thenReturn(behandling);
+        when(provider.hentBrevGrunnlag(behandlingUuId)).thenReturn(behandling);
 
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
         prosessTaskData.setSaksnummer(saksnummer);
@@ -45,6 +45,6 @@ class OpprettOppgaveTaskTest {
         new OpprettOppgaveTask(tjeneste, provider).doTask(prosessTaskData);
 
         verify(tjeneste).opprettOppgave(eq(behandling), eq(journalpostId), any(String.class));
-        verify(provider, times(1)).hentBehandling(behandlingUuId);
+        verify(provider, times(1)).hentBrevGrunnlag(behandlingUuId);
     }
 }

@@ -9,52 +9,61 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.felles.DatoIntervallEntitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Avslagsperiode;
-import no.nav.foreldrepenger.fpformidling.felles.DatoIntervallEntitet;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 
 public final class AvslagsperiodeMapper {
 
-    private static final List<PeriodeIkkeOppfyltÅrsak> RELEVANTE_PERIODE_ÅRSAKER = List.of(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT,
-        PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE, PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER);
+    private static final List<String> RELEVANTE_PERIODE_ÅRSAKER = List.of(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode(),
+            PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode(), PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER.getKode());
 
     private AvslagsperiodeMapper() {
     }
 
-    public static List<Avslagsperiode> mapAvslagsperioder(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode) {
+    public static List<Avslagsperiode> mapAvslagsperioder(List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakResultatArbeidsforhold,
+                                                          Språkkode språkkode,
+                                                          ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         List<Avslagsperiode> avslagPerioderMedArbinformasjon = new ArrayList<>();
         uttakResultatArbeidsforhold.forEach(ura -> {
-            var arbeidsforholdInformasjon = mapArbeidsforholdInformasjon(ura);
-            avslagPerioderMedArbinformasjon.addAll(ura.getPerioder().stream()
-                .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
-                .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
+            var arbeidsforholdInformasjon = mapArbeidsforholdInformasjon(ura, arbeidsgiverTjeneste);
+            avslagPerioderMedArbinformasjon.addAll(ura.perioder()
+                    .stream()
+                .filter(Predicate.not(periode -> periode.periodeResultatType() == BrevGrunnlag.PeriodeResultatType.INNVILGET))
+                    .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.periodeIkkeOppfyltÅrsak()))
                 .map(p -> opprettAvslagsperiode(p, språkkode, arbeidsforholdInformasjon))
                 .toList());
         });
         return slåSammenPerioder(avslagPerioderMedArbinformasjon);
     }
 
-    private static Avslagsperiode.ArbeidsforholdInformasjon mapArbeidsforholdInformasjon(SvpUttakResultatArbeidsforhold urArbeidsforhold) {
-        if (urArbeidsforhold.getArbeidsgiver() != null && urArbeidsforhold.getArbeidsgiver().arbeidsgiverReferanse() != null) {
-            return  new Avslagsperiode.ArbeidsforholdInformasjon(urArbeidsforhold.getArbeidsgiver().navn(),
-                urArbeidsforhold.getUttakArbeidType().getKode());
-        } else if (urArbeidsforhold.getArbeidsgiver() != null && urArbeidsforhold.getArbeidsgiver().arbeidsgiverReferanse() == null) {
-            return new Avslagsperiode.ArbeidsforholdInformasjon(urArbeidsforhold.getArbeidsgiver().navn(),
-                urArbeidsforhold.getUttakArbeidType().getKode());
-        } else {
-            return  new Avslagsperiode.ArbeidsforholdInformasjon(null, urArbeidsforhold.getUttakArbeidType().getKode());
+    private static Avslagsperiode.ArbeidsforholdInformasjon mapArbeidsforholdInformasjon(BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold urArbeidsforhold,
+                                                                                         ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+        if (urArbeidsforhold.arbeidsgiverReferanse() != null) {
+            var arbeidsgivernavn = arbeidsgiverTjeneste.hentArbeidsgiverNavn(urArbeidsforhold.arbeidsgiverReferanse());
+            return new Avslagsperiode.ArbeidsforholdInformasjon(arbeidsgivernavn, tilString(urArbeidsforhold.arbeidType()));
         }
+        return  new Avslagsperiode.ArbeidsforholdInformasjon(null, tilString(urArbeidsforhold.arbeidType()));
     }
 
-    private static Avslagsperiode opprettAvslagsperiode(SvpUttakResultatPeriode p, Språkkode språkkode, Avslagsperiode.ArbeidsforholdInformasjon arbeidsforholdInformasjon) {
+    private static String tilString(BrevGrunnlag.UttakArbeidType uttakArbeidType) {
+        return switch (uttakArbeidType) {
+            case ORDINÆRT_ARBEID -> "ORDINÆRT_ARBEID";
+            case SELVSTENDIG_NÆRINGSDRIVENDE -> "SELVSTENDIG_NÆRINGSDRIVENDE";
+            case FRILANS -> "FRILANS";
+            case ANNET -> "ANNET";
+        };
+    }
+
+    private static Avslagsperiode opprettAvslagsperiode(BrevGrunnlag.SvangerskapspengerUttak.Periode p, Språkkode språkkode, Avslagsperiode.ArbeidsforholdInformasjon arbeidsforholdInformasjon) {
         return  Avslagsperiode.ny()
-            .medÅrsak(Årsak.of(p.getPeriodeIkkeOppfyltÅrsak().getKode()))
-            .medPeriodeFom(p.getFom().toLocalDate(), språkkode)
-            .medPeriodeTom(p.getTom().toLocalDate(), språkkode)
+            .medÅrsak(Årsak.of(p.periodeIkkeOppfyltÅrsak()))
+            .medPeriodeFom(p.fom(), språkkode)
+            .medPeriodeTom(p.tom(), språkkode)
             .medArbeidsforholdInformasjon(arbeidsforholdInformasjon, språkkode)
             .build();
     }
@@ -68,7 +77,7 @@ public final class AvslagsperiodeMapper {
 
         for (var årsak : RELEVANTE_PERIODE_ÅRSAKER) {
             var sortertePerioder = filtrertePerioder.stream()
-                .filter(p -> årsak.getKode().equals(String.valueOf(p.getÅrsak().getKode())))
+                .filter(p -> årsak.equals(String.valueOf(p.getÅrsak().getKode())))
                 .sorted(Comparator.comparing(Avslagsperiode::getPeriodeFom))
                 .toList();
 
@@ -97,12 +106,12 @@ public final class AvslagsperiodeMapper {
         return sammenslåttePerioder;
     }
 
-    private static boolean skalSlåSammenPerioder(Avslagsperiode forrigePeriode, Avslagsperiode nestePeriode, PeriodeIkkeOppfyltÅrsak årsak) {
+    private static boolean skalSlåSammenPerioder(Avslagsperiode forrigePeriode, Avslagsperiode nestePeriode, String årsak) {
         var forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(), forrigePeriode.getPeriodeTom());
         var forrigePeriodeArbeidsforholdInformasjon = forrigePeriode.getArbeidsforholdInformasjon();
         var nestePeriodeArbeidsforholdInformasjo = nestePeriode.getArbeidsforholdInformasjon();
 
-        if (PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.equals(årsak)) { //alle perioder gjelder for alle arbeidsforhold
+        if (PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode().equals(årsak)) { //alle perioder gjelder for alle arbeidsforhold
             return forrigePeriodeIntervall.inkluderer(nestePeriode.getPeriodeFom()) ||
                 erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriode.getPeriodeFom());
         } else { //dersom avslått pga ferie eller sykepenger skal de ikke slås sammen om ulike arbeidsforhold

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester;
 
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper.mapLinks;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +24,9 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.ArbeidsforholdInntektsmeldingDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BeregningsgrunnlagDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.InntektsmeldingDtoMapper;
@@ -65,14 +63,12 @@ public class DomeneobjektProvider {
             .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
-    public Behandling hentBehandling(UUID behandlingUuid) {
-        var behandlingDto = behandlingRestKlient.hentBehandling(behandlingUuid);
-        var fagsakDto = behandlingRestKlient.hentFagsak(mapLinks(behandlingDto.getLinks()));
-        return BehandlingDtoMapper.mapBehandlingFraDto(behandlingDto, fagsakDto);
+    public BrevGrunnlag hentBrevGrunnlag(UUID behandlingUuid) {
+        return behandlingRestKlient.hentBrevGrunnlag(behandlingUuid);
     }
 
-    public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
-        return Optional.ofNullable(behandling.getOriginalBehandlingUuid()).map(this::hentBehandling);
+    public Optional<BrevGrunnlag> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
+        return Optional.ofNullable(behandling.getOriginalBehandlingUuid()).map(this::hentBrevGrunnlag);
     }
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {

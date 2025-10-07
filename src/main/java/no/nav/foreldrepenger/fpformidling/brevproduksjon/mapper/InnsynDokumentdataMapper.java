@@ -7,25 +7,24 @@ import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.INNSYN_SVAR)
 public class InnsynDokumentdataMapper implements DokumentdataMapper {
-    private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
+
+    private final BrevParametere brevParametere;
 
     @Inject
-    public InnsynDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public InnsynDokumentdataMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -34,8 +33,8 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public InnsynDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast) {
-        var innsynsBehandling = domeneobjektProvider.hentInnsyn(behandling);
+    public InnsynDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, BrevGrunnlag behandling, boolean erUtkast) {
+        var innsynsBehandling = behandling.innsynBehandling();
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
@@ -45,7 +44,16 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
         return InnsynDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medKlagefrist(brevParametere.getKlagefristUker())
-            .medInnsynResultat(innsynsBehandling.getInnsynResultatType().getKode())
+            .medInnsynResultat(map(innsynsBehandling.innsynResultatType()).getKode())
             .build();
+    }
+
+    private InnsynResultatType map(BrevGrunnlag.InnsynBehandling.InnsynResultatType innsynResultatType) {
+        return switch (innsynResultatType) {
+            case INNVILGET -> InnsynResultatType.INNVILGET;
+            case DELVIS_INNVILGET -> InnsynResultatType.DELVIS_INNVILGET;
+            case AVVIST -> InnsynResultatType.AVVIST;
+            case UDEFINERT -> InnsynResultatType.UDEFINERT;
+        };
     }
 }

@@ -30,7 +30,7 @@ public class OpprettOppgaveTask implements ProsessTaskHandler {
         var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
         var behandlingUuid = prosessTaskData.getBehandlingUuid();
 
-        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
+        var behandling = domeneobjektProvider.hentBrevGrunnlag(behandlingUuid);
 
         oppgaverTjeneste.opprettOppgave(behandling, journalpostId, OPPGAVEBESKRIVELSE);
     }

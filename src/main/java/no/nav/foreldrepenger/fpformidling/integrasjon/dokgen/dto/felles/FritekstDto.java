@@ -5,9 +5,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 
 /**
  * Hjelpeklasse for håndtering av fritekst som sikrer at formatering blir riktig i Dokgen.
@@ -25,22 +24,35 @@ public class FritekstDto {
         return fritekst;
     }
 
-    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, BrevGrunnlag behandling) {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(fra(dokumentHendelse.getFritekst()));
-        } else if (behandling.getBehandlingsresultat() != null && behandling.getBehandlingsresultat().getAvslagarsakFritekst() != null) {
-            return Optional.of(fra(behandling.getBehandlingsresultat().getAvslagarsakFritekst()));
+        } else if (behandling.behandlingsresultat() != null && behandling.behandlingsresultat().fritekst() != null
+            && behandling.behandlingsresultat().fritekst().avslagsarsakFritekst() != null) {
+            return Optional.of(fra(behandling.behandlingsresultat().fritekst().avslagsarsakFritekst()));
         }
         return Optional.empty();
     }
 
-    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, Klage klage) {
+    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, BrevGrunnlag.KlageBehandling klage) {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(fra(dokumentHendelse.getFritekst()));
-        } else if (klage.getGjeldendeKlageVurderingsresultat() != null && klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev() != null) {
-            return Optional.of(fra(klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev()));
+        } else {
+            var gjeldendeKlageVurderingsresultat = getGjeldendeKlageVurderingsresultat(klage);
+            if (gjeldendeKlageVurderingsresultat != null && gjeldendeKlageVurderingsresultat.fritekstTilBrev() != null) {
+                return Optional.of(fra(gjeldendeKlageVurderingsresultat.fritekstTilBrev()));
+            }
         }
         return Optional.empty();
+    }
+
+    private static BrevGrunnlag.KlageBehandling.KlageVurderingResultat getGjeldendeKlageVurderingsresultat(BrevGrunnlag.KlageBehandling klage) {
+        if (klage.klageVurderingResultatNK() != null) {
+            return klage.klageVurderingResultatNK();
+        } else if (klage.klageVurderingResultatNFP() != null) {
+            return klage.klageVurderingResultatNFP();
+        }
+        return null;
     }
 
     public static FritekstDto fra(String fritekst) {

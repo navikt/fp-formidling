@@ -19,12 +19,12 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.FerdigstillForsend
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.TilknyttVedleggTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
@@ -67,7 +67,7 @@ public class DokgenBrevproduksjonTjeneste {
         this.taskTjeneste = taskTjeneste;
     }
 
-    public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, BrevGrunnlag behandling) {
         var utkast = BestillingType.UTKAST;
         var dokumentMalType = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentMottakere = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
@@ -75,7 +75,7 @@ public class DokgenBrevproduksjonTjeneste {
         return genererDokument(dokumentHendelse, behandling, dokumentMalType, dokumentMottakere.søker(), utkast);
     }
 
-    public String genererBrevHtml(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    public String genererBrevHtml(DokumentHendelse dokumentHendelse, BrevGrunnlag behandling) {
         var utkast = BestillingType.BESTILL;
         var dokumentMalType = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentMottakere = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
@@ -83,7 +83,7 @@ public class DokgenBrevproduksjonTjeneste {
         return genererDokumentHtml(dokumentHendelse, behandling, dokumentMalType, dokumentMottakere.søker(), utkast);
     }
 
-    public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType journalførSom) {
+    public void bestillBrev(DokumentHendelse dokumentHendelse, BrevGrunnlag behandling, DokumentMalType journalførSom) {
         var bestillingType = BestillingType.BESTILL;
         var dokumentMal = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentMottakere = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
@@ -120,7 +120,7 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private String genererDokumentHtml(DokumentHendelse dokumentHendelse,
-                                       Behandling behandling,
+                                       BrevGrunnlag behandling,
                                        DokumentMalType dokumentMalType,
                                        DokumentFelles dokumentFelles,
                                        BestillingType bestillingType) {
@@ -131,19 +131,19 @@ public class DokgenBrevproduksjonTjeneste {
         String brev;
         try {
             brev = dokgenKlient.genererHtml(dokumentdataMapper.getTemplateNavn(), dokumentFelles.getSpråkkode(), dokumentdata);
-            LOG.info("Dokument av type {} i behandling id {} ble generert for overstyring (HTML).", dokumentMalType.getKode(), behandling.getUuid());
+            LOG.info("Dokument av type {} i behandling id {} ble generert for overstyring (HTML).", dokumentMalType.getKode(), behandling.uuid());
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOG.warn("Klarte ikke å generere html av brev fra følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006",
                 String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMalType.getKode(),
-                    behandling.getUuid(), bestillingType), e);
+                    behandling.uuid(), bestillingType), e);
         }
         return brev;
     }
 
     private byte[] genererDokument(DokumentHendelse dokumentHendelse,
-                                   Behandling behandling,
+                                   BrevGrunnlag behandling,
                                    DokumentMalType dokumentMalType,
                                    DokumentFelles dokumentFelles,
                                    BestillingType bestillingType) {
@@ -160,15 +160,15 @@ public class DokgenBrevproduksjonTjeneste {
             SECURE_LOG.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006",
                 String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMalType.getKode(),
-                    behandling.getUuid(), bestillingType), e);
+                    behandling.uuid(), bestillingType), e);
         }
         if (LOG.isInfoEnabled()) {
-            LOG.info("Dokument av type {} i behandling id {} ble generert.", dokumentMalType.getKode(), behandling.getUuid());
+            LOG.info("Dokument av type {} i behandling id {} ble generert.", dokumentMalType.getKode(), behandling.uuid());
         }
         return brev;
     }
 
-    public String genererJson(DokumentHendelse dokumentHendelse, Behandling behandling, BestillingType bestillingType) {
+    public String genererJson(DokumentHendelse dokumentHendelse, BrevGrunnlag behandling, BestillingType bestillingType) {
         var dokumentMal = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         var dokumentData = dokumentMottakereUtleder.utledDokumentMottakereForBehandling(behandling);
@@ -253,10 +253,10 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private boolean erInnsynMedVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
+    private boolean erInnsynMedVedlegg(BrevGrunnlag behandling, DokumentMalType dokumentMal) {
         if (!DokumentMalType.INNSYN_SVAR.equals(dokumentMal)) {
             return false;
         }
-        return !domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter().isEmpty();
+        return Optional.ofNullable(behandling.innsynBehandling()).filter(ib -> !ib.dokumenter().isEmpty()).isPresent();
     }
 }

@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMap
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
@@ -20,9 +19,10 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 import no.nav.vedtak.exception.TekniskException;
 
 public final class OpphørPeriodeMapper {
@@ -30,28 +30,28 @@ public final class OpphørPeriodeMapper {
     private OpphørPeriodeMapper() {
     }
 
-    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling,
-                                                                               List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
+    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(BrevGrunnlag behandling,
+                                                                               List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                                                                Språkkode språkKode,
-                                                                               Inntektsmeldinger iay,
-                                                                               List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
+                                                                               Inntektsmeldinger inntektsmeldinger,
+                                                                               List<TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto> tilkjentYtelsePerioder) {
         var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
-        var behandlingsresultat = behandling.getBehandlingsresultat();
-        var avslagsårsak = behandlingsresultat.getAvslagsårsak();
+        var behandlingsresultat = behandling.behandlingsresultat();
+        var avslagsårsak = behandlingsresultat.avslagsårsak();
 
         //Sjekker om periodeIkkeOppfyltÅrsak finnes fra uttak - oppretter i såfall opphørt periode.
-        var opphørtPeriode = mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(uttakResultatArbeidsforhold, språkKode, tilkjentYtelsePerioder, iay,
+        var opphørtPeriode = mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(uttakResultatArbeidsforhold, språkKode, tilkjentYtelsePerioder, inntektsmeldinger,
             lovReferanser);
 
         //I en del tilfeller må vi hente opphørsårsak fra behandlingsresultatet (ingen uttak eller opphørt inngangsvilkår i en revurdering)
         if (opphørtPeriode == null) {
 
             if (avslagsårsak != null) {
-                opphørtPeriode = mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, avslagsårsak.getKode(), iay);
+                opphørtPeriode = mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, avslagsårsak.getKode(), inntektsmeldinger);
                 lovReferanser.add(SvpMapperUtil.leggTilLovreferanse(behandling.getVilkårTyper(), avslagsårsak));
             } else {
                 //kan skje i uttak, men ingen tilfeller i prod
-                opphørtPeriode = mapOpphørteArbeidsforhold(uttakResultatArbeidsforhold, iay);
+                opphørtPeriode = mapOpphørteArbeidsforhold(uttakResultatArbeidsforhold, inntektsmeldinger);
                 lovReferanser.add("§ 14-4");
             }
 
@@ -80,35 +80,35 @@ public final class OpphørPeriodeMapper {
         return OpphørPeriode.ny().medÅrsak(Årsak.of(avslagsÅrsak)).medAntallArbeidsgivere(antallArbeidsgivere).build();
     }
 
-    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
+    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                                                           Språkkode språkKode,
-                                                                          List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                                          Inntektsmeldinger iay,
+                                                                          List<TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto> tilkjentYtelsePerioder,
+                                                                          Inntektsmeldinger inntektsmeldinger,
                                                                           TreeSet<String> lovReferanser) {
         var opphørtePerioder = uttakResultatArbeidsforhold.stream()
-            .flatMap(ura -> ura.getPerioder().stream())
-            .filter(ur -> PeriodeResultatType.AVSLÅTT.equals(ur.getPeriodeResultatType()))
-            .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
+            .flatMap(ura -> ura.perioder().stream())
+            .filter(ur -> BrevGrunnlag.PeriodeResultatType.AVSLÅTT.equals(ur.periodeResultatType()))
+            .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().stream().anyMatch(å -> å.getKode().equals(ur.periodeIkkeOppfyltÅrsak())))
             .toList();
 
         if (!opphørtePerioder.isEmpty()) {
             var årsak = finnNyestePeriodeIkkeOppfyltÅrsak(opphørtePerioder);
-            if (PeriodeIkkeOppfyltÅrsak.opphørSvpInngangsvilkårMedUttak().contains(årsak)) {
+            if (PeriodeIkkeOppfyltÅrsak.opphørSvpInngangsvilkårMedUttak().stream().anyMatch(å -> å.getKode().equals(årsak))) {
                 //spesialhåndtering dersom opphør av inngangsvilkår i en revurdering - henter faktisk årsak fra behandlingsresultat
                 return null;
             }
             if (årsak != null) {
                 årsak.getLovHjemmelData().ifPresent(lovReferanser::add);
-                return mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, årsak.getKode(), iay);
+                return mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, årsak.getKode(), inntektsmeldinger);
             }
         }
         return null;
     }
 
-    private static PeriodeIkkeOppfyltÅrsak finnNyestePeriodeIkkeOppfyltÅrsak(List<SvpUttakResultatPeriode> opphørtePerioder) {
+    private static PeriodeIkkeOppfyltÅrsak finnNyestePeriodeIkkeOppfyltÅrsak(List<BrevGrunnlag.SvangerskapspengerUttak.Periode> opphørtePerioder) {
         return opphørtePerioder.stream()
-            .max(Comparator.comparing(SvpUttakResultatPeriode::getTidsperiode))
-            .map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak)
+            .max(Comparator.comparing(BrevGrunnlag.SvangerskapspengerUttak.Periode::tom))
+            .map(BrevGrunnlag.SvangerskapspengerUttak.Periode::periodeIkkeOppfyltÅrsak)
             .orElse(null);
     }
 

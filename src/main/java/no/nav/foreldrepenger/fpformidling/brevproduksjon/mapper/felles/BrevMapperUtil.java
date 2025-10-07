@@ -6,10 +6,8 @@ import java.util.Locale;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 @ApplicationScoped
 public class BrevMapperUtil {
@@ -43,10 +41,6 @@ public class BrevMapperUtil {
 
     public static boolean erKopi(DokumentFelles.Kopi kopi) {
         return DokumentFelles.Kopi.JA.equals(kopi);
-    }
-
-    public static boolean erEndringssøknad(Behandling behandling) {
-        return behandling.erRevurdering() && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
     }
 
     public static boolean erDød(DokumentFelles dokumentFelles) {

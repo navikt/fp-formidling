@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.TilknyttVedleggTjeneste;
@@ -33,7 +32,7 @@ public class TilknyttVedleggTask implements ProsessTaskHandler {
     public void doTask(ProsessTaskData prosessTaskData) {
         var behandlingUuid = prosessTaskData.getBehandlingUuid();
         var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
+        var behandling = domeneobjektProvider.hentBrevGrunnlag(behandlingUuid);
         var vedlegg = filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
 
         tilknyttVedleggTjeneste.knyttAlleVedleggTilDokument(vedlegg, journalpostId);

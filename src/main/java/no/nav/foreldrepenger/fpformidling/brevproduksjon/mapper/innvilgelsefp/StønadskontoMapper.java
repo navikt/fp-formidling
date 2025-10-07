@@ -1,58 +1,58 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.ForeldrepengerUttak;
+
+import java.util.List;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Saldoer;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 
 public final class StønadskontoMapper {
 
     private StønadskontoMapper() {
     }
 
-    public static int finnDisponibleDager(Saldoer saldoer, RelasjonsRolleType rolleType) {
-        var saldoForeldrepenger = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER);
+    public static int finnDisponibleDager(List<ForeldrepengerUttak.Stønadskonto> saldoer, BrevGrunnlag.RelasjonsRolleType rolleType) {
+        var saldoForeldrepenger = finnSaldo(saldoer, ForeldrepengerUttak.Stønadskonto.Type.FORELDREPENGER);
 
         if (saldoForeldrepenger != 0) {
             return saldoForeldrepenger;
         }
 
-        return RelasjonsRolleType.MORA.equals(rolleType) ? finnSaldo(saldoer, SaldoVisningStønadskontoType.MØDREKVOTE) : finnSaldo(saldoer,
-            SaldoVisningStønadskontoType.FEDREKVOTE);
+        return BrevGrunnlag.RelasjonsRolleType.MORA.equals(rolleType) ? finnSaldo(saldoer, ForeldrepengerUttak.Stønadskonto.Type.MØDREKVOTE) : finnSaldo(saldoer,
+            ForeldrepengerUttak.Stønadskonto.Type.FEDREKVOTE);
     }
 
-    public static int finnSaldo(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
-        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), stønadskontoType).map(sk -> Math.max(sk.saldo(), 0)).orElse(0);
+    public static int finnSaldo(List<ForeldrepengerUttak.Stønadskonto> saldoer, ForeldrepengerUttak.Stønadskonto.Type stønadskontoType) {
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer, stønadskontoType).map(sk -> Math.max(sk.saldo(), 0)).orElse(0);
     }
 
-    public static int finnMaksdager(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
-        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), stønadskontoType).map(Stønadskonto::maxDager).orElse(0);
+    public static int finnMaksdager(List<ForeldrepengerUttak.Stønadskonto> saldoer, ForeldrepengerUttak.Stønadskonto.Type stønadskontoType) {
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer, stønadskontoType).map(ForeldrepengerUttak.Stønadskonto::maxDager).orElse(0);
     }
 
-    public static int finnDisponibleFellesDager(Saldoer saldoer) {
-        return finnSaldo(saldoer, SaldoVisningStønadskontoType.FELLESPERIODE);
+    public static int finnDisponibleFellesDager(List<ForeldrepengerUttak.Stønadskonto> saldoer) {
+        return finnSaldo(saldoer, ForeldrepengerUttak.Stønadskonto.Type.FELLESPERIODE);
     }
 
-    public static boolean kontoEksisterer(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
-        return saldoer.stønadskontoer().stream().anyMatch(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType));
+    public static boolean kontoEksisterer(List<ForeldrepengerUttak.Stønadskonto> saldoer, ForeldrepengerUttak.Stønadskonto.Type stønadskontoType) {
+        return saldoer.stream().anyMatch(stønadskonto -> Objects.equals(stønadskonto.stønadskontotype(), stønadskontoType));
     }
 
-    public static int finnFlerbarnsdagerUtvidetUkerHvisFinnes(Saldoer saldoer) {
+    public static int finnFlerbarnsdagerUtvidetUkerHvisFinnes(List<ForeldrepengerUttak.Stønadskonto> saldoer) {
         return dagerFlerbarnsdager(saldoer) / 5;
     }
 
-    public static int finnFlerbarnsdagerUtvidetDagerHvisFinnes(Saldoer saldoer) {
+    public static int finnFlerbarnsdagerUtvidetDagerHvisFinnes(List<ForeldrepengerUttak.Stønadskonto> saldoer) {
         return dagerFlerbarnsdager(saldoer) % 5;
     }
 
-    private static int dagerFlerbarnsdager(Saldoer saldoer) {
-        return saldoer.stønadskontoer().stream().map(Stønadskonto::flerbarnsDager).filter(flerbarnsdager -> flerbarnsdager > 0).findFirst().orElse(0);
+    private static int dagerFlerbarnsdager(List<ForeldrepengerUttak.Stønadskonto> saldoer) {
+        return saldoer.stream().map(k -> k.kontoUtvidelser().flerbarnsdager()).filter(flerbarnsdager -> flerbarnsdager > 0).findFirst().orElse(0);
     }
 
-    public static Integer finnPrematurDagerHvisFinnes(Saldoer saldoer) {
-        return saldoer.stønadskontoer().stream().map(Stønadskonto::prematurDager).max(Integer::compareTo).orElse(null);
+    public static Integer finnPrematurDagerHvisFinnes(List<ForeldrepengerUttak.Stønadskonto> saldoer) {
+        return saldoer.stream().map(k -> k.kontoUtvidelser().prematurdager()).max(Integer::compareTo).orElse(null);
     }
 }

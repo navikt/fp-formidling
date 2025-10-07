@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatoVerktøy.erFomRettEtterTomDato;
+import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto;
+import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,24 +18,22 @@ import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AktiviteterOgUtbetalingsperioder;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
 
 public final class UtbetalingsperiodeMapper {
 
     private UtbetalingsperiodeMapper() {
     }
 
-    public static List<AktiviteterOgUtbetalingsperioder> mapUtbetalingsperioderPerAktivitet(List<TilkjentYtelsePeriode> tilkjentPerioder, Språkkode språkkode) {
+    public static List<AktiviteterOgUtbetalingsperioder> mapUtbetalingsperioderPerAktivitet(List<TilkjentYtelsePeriodeDto> tilkjentPerioder, Språkkode språkkode) {
         List<AktiviteterOgUtbetalingsperioder> aktiviteterOgUtbetalingsperioder = new ArrayList<>();
         List <Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         var gjeldendeTilkjentPerioder = fjernPerioderMedIngenDagsats(tilkjentPerioder);
 
-        Set<String> aktiviteterIPerioden = utledAktiviteterFraPerioder(gjeldendeTilkjentPerioder);
+        var aktiviteterIPerioden = utledAktiviteterFraPerioder(gjeldendeTilkjentPerioder);
 
         gjeldendeTilkjentPerioder
-            .forEach(tilkjentPeriode -> tilkjentPeriode.getAndeler().stream()
-                .filter(tilkjentYtelseAndel -> tilkjentYtelseAndel.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0)
+            .forEach(tilkjentPeriode -> tilkjentPeriode.andeler().stream()
+                .filter(tilkjentYtelseAndel -> tilkjentYtelseAndel.utbetalingsgrad().compareTo(BigDecimal.ZERO) > 0)
                 .forEach(andel -> utbetalingsperioder.add(opprettUtbetalingsperiode(tilkjentPeriode, andel, språkkode))));
 
         aktiviteterIPerioden.forEach(aktivitet -> {
@@ -44,16 +44,16 @@ public final class UtbetalingsperiodeMapper {
         return aktiviteterOgUtbetalingsperioder;
     }
 
-    private static Utbetalingsperiode opprettUtbetalingsperiode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                                TilkjentYtelseAndel andel,
+    private static Utbetalingsperiode opprettUtbetalingsperiode(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
+                                                                TilkjentYtelseAndelDto andel,
                                                                 Språkkode språkkode) {
         return Utbetalingsperiode.ny()
-            .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
-            .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
-            .medDagsats(andel.getDagsats())
-            .medUtbetaltTilSøker(andel.getUtbetalesTilBruker())
-            .medUtbetalingsgrad(Prosent.of(andel.getUtbetalingsgrad()))
-            .medAktivitetNavn(AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.getAktivitetStatus()))
+            .medPeriodeFom(tilkjentYtelsePeriode.fom(), språkkode)
+            .medPeriodeTom(tilkjentYtelsePeriode.tom(), språkkode)
+            .medDagsats(tilkjentYtelsePeriode.dagsats())
+            .medUtbetaltTilSøker(andel.tilSoker() != null ? andel.tilSoker() : 0)
+            .medUtbetalingsgrad(Prosent.of(andel.utbetalingsgrad()))
+            .medAktivitetNavn(AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus()))
             .build();
     }
 
@@ -105,17 +105,17 @@ public final class UtbetalingsperiodeMapper {
             .build();
     }
 
-    private static List<TilkjentYtelsePeriode> fjernPerioderMedIngenDagsats(List<TilkjentYtelsePeriode> tilkjentPerioder) {
+    private static List<TilkjentYtelsePeriodeDto> fjernPerioderMedIngenDagsats(List<TilkjentYtelsePeriodeDto> tilkjentPerioder) {
         return tilkjentPerioder.stream()
-            .filter(tilkjentPeriode -> tilkjentPeriode.getDagsats() > 0)
+            .filter(tilkjentPeriode -> tilkjentPeriode.dagsats() > 0)
             .toList();
     }
 
-    private static Set<String> utledAktiviteterFraPerioder(List<TilkjentYtelsePeriode> tilkjentPerioder) {
+    private static Set<String> utledAktiviteterFraPerioder(List<TilkjentYtelsePeriodeDto> tilkjentPerioder) {
         return tilkjentPerioder.stream()
-            .map(TilkjentYtelsePeriode::getAndeler)
+            .map(TilkjentYtelsePeriodeDto::andeler)
             .flatMap(Collection::stream)
-            .map(andel -> AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.getAktivitetStatus()))
+            .map(andel -> AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus()))
             .collect(Collectors.toSet());
     }
 

@@ -42,7 +42,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT), false);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isEmpty();
@@ -55,7 +55,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);
@@ -72,7 +72,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);
@@ -86,7 +86,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);
@@ -100,7 +100,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);
@@ -114,7 +114,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(500), of(), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);
@@ -128,7 +128,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);
@@ -142,7 +142,7 @@ class NaturalytelseMapperTest {
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(500), BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
+        var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB, arbeidsgiverTjeneste);
 
         // Assert
         assertThat(resultat).isNotNull().hasSize(1);

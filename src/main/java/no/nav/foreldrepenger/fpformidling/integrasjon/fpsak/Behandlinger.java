@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
@@ -45,7 +45,7 @@ public interface Behandlinger {
             .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
     }
 
-    BehandlingDto hentBehandling(UUID behandlingId);
+    BrevGrunnlag hentBrevGrunnlag(UUID behandlingId);
 
     default Optional<VergeDto> hentVergeHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()

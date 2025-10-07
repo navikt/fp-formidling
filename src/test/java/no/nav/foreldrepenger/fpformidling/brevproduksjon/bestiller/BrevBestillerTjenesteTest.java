@@ -172,7 +172,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID(), DokumentMal.FRITEKSTBREV, DokumentMal.FORELDREPENGER_INNVILGELSE);
         var behandling = mock(Behandling.class);
-        when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
+        when(domeneobjektProvider.hentBrevGrunnlag(any())).thenReturn(behandling);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
@@ -192,7 +192,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID(), DokumentMal.FORELDREPENGER_INNVILGELSE, null);
         var behandling = mock(Behandling.class);
-        when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
+        when(domeneobjektProvider.hentBrevGrunnlag(any())).thenReturn(behandling);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
@@ -212,7 +212,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID(), DokumentMal.FORELDREPENGER_ANNULLERT, null);
         var behandling = mock(Behandling.class);
-        when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
+        when(domeneobjektProvider.hentBrevGrunnlag(any())).thenReturn(behandling);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
@@ -282,7 +282,7 @@ class BrevBestillerTjenesteTest {
             .leggTilResourceLink(
                 harGyldigVerge ? BehandlingResourceLink.ny().medRel("verge-backend").build() : BehandlingResourceLink.ny().medRel("annet").build())
             .build();
-        when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
+        when(domeneobjektProvider.hentBrevGrunnlag(any(UUID.class))).thenReturn(behandling);
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling)).thenReturn(new TilkjentYtelseEngangsstønad(1L));
         return behandling;
     }

@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriBuilderException;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;
@@ -38,16 +38,16 @@ public class BehandlingRestKlient implements Behandlinger {
     }
 
     @Override
-    public BehandlingDto hentBehandling(UUID behandlingId) {
+    public BrevGrunnlag hentBrevGrunnlag(UUID behandlingId) {
 
-        var behandlingUri = UriBuilder.fromUri(restConfig.fpContextPath())
+        var behandlingUri2 = UriBuilder.fromUri(restConfig.fpContextPath())
             .path(FPSAK_API)
-            .path("/formidling/ressurser")
+            .path("/formidling/grunnlag")
             .queryParam("behandlingId", behandlingId.toString())
             .build();
-        var request = RestRequest.newGET(behandlingUri, restConfig);
-        return restClient.sendReturnOptional(request, BehandlingDto.class)
-            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingId));
+        var request2 = RestRequest.newGET(behandlingUri2, restConfig);
+        return restClient.sendReturnOptional(request2, BrevGrunnlag.class)
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente brevgrunnlag: " + behandlingId));
     }
 
     @Override

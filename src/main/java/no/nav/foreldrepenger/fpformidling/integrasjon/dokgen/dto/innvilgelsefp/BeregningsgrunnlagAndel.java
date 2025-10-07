@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagAndel {
@@ -59,6 +59,10 @@ public class BeregningsgrunnlagAndel {
 
     public static Builder ny() {
         return new Builder();
+    }
+
+    public void setDagsats(long dagsats) {
+        this.dagsats = dagsats;
     }
 
     public static class Builder {

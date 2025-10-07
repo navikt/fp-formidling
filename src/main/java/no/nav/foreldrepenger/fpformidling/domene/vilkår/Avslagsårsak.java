@@ -87,6 +87,10 @@ public enum Avslagsårsak implements Kodeverdi {
         this.kode = kode;
     }
 
+    public static Avslagsårsak fraKode(String kode) {
+        return Arrays.stream(values()).filter(a -> a.kode.equals(kode)).findFirst().orElseThrow();
+    }
+
     @Override
     public String getKode() {
         return kode;

@@ -124,6 +124,7 @@ public class DokumentMottakereUtleder {
             .medErKopi(erKopi)
             .medMottakerType(DokumentFelles.MottakerType.ORGANISASJON)
             .medSpråkkode(behandling.getSpråkkode())
+            .medYtelseType(behandling.getFagsak().getYtelseType())
             .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {

@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold;
 
 import java.util.List;
+import java.util.function.UnaryOperator;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AvslåttAktivitet;
@@ -21,19 +21,19 @@ public final class AvslåttAktivitetMapper {
     }
 
     public static List<AvslåttAktivitet> mapAvslåtteAktiviteter(List<UttakArbeidsforhold> uttakResultatArbeidsforhold,
-                                                                ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                                                UnaryOperator<String> hentNavn) {
         return uttakResultatArbeidsforhold.stream()
             .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.arbeidsforholdIkkeOppfyltÅrsak()))
-            .map(uttakArbeidsforhold -> opprettSvpAvslagArbeidsforhold(uttakArbeidsforhold, arbeidsgiverTjeneste))
+            .map(uttakArbeidsforhold -> opprettSvpAvslagArbeidsforhold(uttakArbeidsforhold, hentNavn))
             .toList();
     }
 
-    private static AvslåttAktivitet opprettSvpAvslagArbeidsforhold(UttakArbeidsforhold ura, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    private static AvslåttAktivitet opprettSvpAvslagArbeidsforhold(UttakArbeidsforhold ura, UnaryOperator<String> hentNavn) {
         var arbeidsforholdIkkeOppfyltÅrsak = ura.arbeidsforholdIkkeOppfyltÅrsak();
         var builder = AvslåttAktivitet.ny().medÅrsak(Årsak.of(arbeidsforholdIkkeOppfyltÅrsak));
 
         if (kanArbeidsgiverTilrettelegge(arbeidsforholdIkkeOppfyltÅrsak)) {
-            utledAtFlSn(ura, builder, arbeidsgiverTjeneste);
+            utledAtFlSn(ura, builder, hentNavn);
         }
 
         return builder.build();
@@ -45,9 +45,9 @@ public final class AvslåttAktivitetMapper {
             .equals(arbeidsforholdIkkeOppfyltÅrsak);
     }
 
-    private static void utledAtFlSn(UttakArbeidsforhold ura, AvslåttAktivitet.Builder builder, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    private static void utledAtFlSn(UttakArbeidsforhold ura, AvslåttAktivitet.Builder builder, UnaryOperator<String> hentNavn) {
         if (ura.arbeidsgiverReferanse() != null) {
-            builder.medArbeidsgiverNavn(arbeidsgiverTjeneste.hentArbeidsgiverNavn(ura.arbeidsgiverReferanse()));
+            builder.medArbeidsgiverNavn(hentNavn.apply(ura.arbeidsgiverReferanse()));
         } else if (BrevGrunnlag.UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.equals(ura.arbeidType())) {
             builder.medErSN(true);
         } else if (BrevGrunnlag.UttakArbeidType.FRILANS.equals(ura.arbeidType())) {

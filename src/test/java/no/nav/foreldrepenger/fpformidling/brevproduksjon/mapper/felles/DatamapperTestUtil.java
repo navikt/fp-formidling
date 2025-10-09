@@ -1,27 +1,34 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import static no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.PersonStatus.ANNET;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.FagsakStatus;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.FamilieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.InnsynBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.KlageBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.RelasjonsRolleType;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
 import org.mockito.Mockito;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsak.inntektsmeldinger.ArbeidsforholdInntektsmeldingerDto;
 
 public class DatamapperTestUtil {
 
@@ -91,21 +98,49 @@ public class DatamapperTestUtil {
         return lagStandardHendelseBuilder().build();
     }
 
-    public static Behandling.Builder standardBehandlingBuilder(FagsakYtelseType ytelseType) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
-            .medFamilieHendelse(new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null))
-            .medSpråkkode(Språkkode.NB);
+    public static BrevGrunnlag standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType ytelseType,
+                                                    Behandlingsresultat behandlingsresultat,
+                                                    KlageBehandling klageBehandling,
+                                                    InnsynBehandling innsynBehandling,
+                                                    ArbeidsforholdInntektsmeldingerDto imStatus) {
+        var behandlingType = klageBehandling != null ? BehandlingType.KLAGE : innsynBehandling != null ? BehandlingType.INNSYN : BehandlingType.FØRSTEGANGSSØKNAD;
+        return new BrevGrunnlag(UUID.randomUUID(), UUID.randomUUID().toString(), ytelseType, FagsakStatus.UNDER_BEHANDLING, RelasjonsRolleType.MORA,
+            UUID.randomUUID().toString(), null, behandlingType, LocalDateTime.now().minusDays(1), null, "enhet", BrevGrunnlag.Språkkode.BOKMÅL,
+            true, new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null), null, null, behandlingsresultat, List.of(), null, null,
+            imStatus, null, null, null, List.of(), null, null, klageBehandling, null, null, null);
     }
 
-    public static Behandling standardForeldrepengerBehandling() {
-        return standardBehandlingBuilder(FagsakYtelseType.FORELDREPENGER).build();
+    public static BrevGrunnlag standardForeldrepengerBrevGrunnlag() {
+        return standardForeldrepengerBrevGrunnlag(null);
     }
 
-    public static Behandling standardSvangerskapspengerBehandling() {
-        return standardBehandlingBuilder(FagsakYtelseType.SVANGERSKAPSPENGER).build();
+    public static BrevGrunnlag standardForeldrepengerBrevGrunnlag(ArbeidsforholdInntektsmeldingerDto imStatus) {
+        return standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER, null, null, null, imStatus);
     }
 
+    public static BrevGrunnlag klageForeldrepengerBrevGrunnlag(KlageBehandling klageBehandling) {
+        return standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER, null, klageBehandling, null, null);
+    }
+
+    public static BrevGrunnlag innsynBrevGrunnlag(InnsynBehandling innsynBehandling, BrevGrunnlag.FagsakYtelseType fagsakYtelseType) {
+        return standardBrevGrunnlag(fagsakYtelseType, null, null, innsynBehandling, null);
+    }
+
+    public static BrevGrunnlag standardSvangerskapspengerBrevGrunnlag(ArbeidsforholdInntektsmeldingerDto imStatus) {
+        return standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.SVANGERSKAPSPENGER, null, null, null, imStatus);
+    }
+
+    public static BrevGrunnlag avslåttBrevGrunnlag(BrevGrunnlag.FagsakYtelseType ytelseType,
+                                                   Avslagsårsak avslagsårsak,
+                                                   String avslagsfritekst,
+                                                   FamilieHendelse familieHendelse,
+                                                   Behandlingsresultat.VilkårType vilkårType) {
+        var behandlingsresultat = new Behandlingsresultat(null, null, Behandlingsresultat.BehandlingResultatType.AVSLÅTT, avslagsårsak.getKode(), new Behandlingsresultat.Fritekst("avslag", null, avslagsfritekst),
+            null, false, null, List.of(), List.of(vilkårType));
+        return new BrevGrunnlag(UUID.randomUUID(), UUID.randomUUID().toString(), ytelseType, FagsakStatus.UNDER_BEHANDLING, RelasjonsRolleType.MORA,
+            UUID.randomUUID().toString(), null, BehandlingType.FØRSTEGANGSSØKNAD, LocalDateTime.now().minusDays(1), null, "enhet", BrevGrunnlag.Språkkode.BOKMÅL,
+            true, familieHendelse, null, null, behandlingsresultat, List.of(), null, null,
+            null, null, null, null, List.of(), null, null, null, null, null, null);
+
+    }
 }

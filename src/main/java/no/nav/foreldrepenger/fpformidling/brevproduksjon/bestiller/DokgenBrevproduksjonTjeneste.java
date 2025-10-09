@@ -17,7 +17,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.FerdigstillForsendelseTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.TilknyttVedleggTask;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
@@ -42,7 +41,6 @@ public class DokgenBrevproduksjonTjeneste {
     private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
     private DokumentMottakereUtleder dokumentMottakereUtleder;
-    private DomeneobjektProvider domeneobjektProvider;
     private Dokgen dokgenKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
@@ -54,13 +52,11 @@ public class DokgenBrevproduksjonTjeneste {
 
     @Inject
     public DokgenBrevproduksjonTjeneste(DokumentMottakereUtleder dokumentMottakereUtleder,
-                                        DomeneobjektProvider domeneobjektProvider,
                                         Dokgen dokgenKlient,
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskTjeneste taskTjeneste) {
         this.dokumentMottakereUtleder = dokumentMottakereUtleder;
-        this.domeneobjektProvider = domeneobjektProvider;
         this.dokgenKlient = dokgenKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
@@ -101,8 +97,8 @@ public class DokgenBrevproduksjonTjeneste {
             teller++;
 
             var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
-            var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom);
+            var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, !innsynMedVedlegg,
+                unikBestillingsUuidPerDokFelles, journalførSom);
 
             var journalpostId = new JournalpostId(response.journalpostId());
 

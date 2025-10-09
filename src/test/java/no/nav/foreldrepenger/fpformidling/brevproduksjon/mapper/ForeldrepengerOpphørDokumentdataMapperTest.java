@@ -8,51 +8,30 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp.ForeldrepengerOpphørDokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakArbeidType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.HjemmelDto;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerOpphørDokumentdataMapperTest {
@@ -73,26 +52,20 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     private static final PeriodeResultatÅrsak BARN_DØD = PeriodeResultatÅrsak.BARNET_ER_DØD;
     private static final BigDecimal TREKKDAGER = BigDecimal.TEN;
 
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
-
     private ForeldrepengerOpphørDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
-
-        when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere);
     }
 
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var dødsdato = LocalDate.now();
-        var behandling = opprettBehandling(PERIODE2_FOM,
-            new FamilieHendelse(List.of(new FamilieHendelse.Barn(LocalDate.now(), dødsdato)), LocalDate.now(), ANTALL_BARN, null));
+        var barn = new BrevGrunnlag.Barn(LocalDate.now(), dødsdato);
+        var behandling = opprettBehandling(PERIODE2_FOM, new BrevGrunnlag.FamilieHendelse(List.of(barn), LocalDate.now(), ANTALL_BARN, null));
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
@@ -123,65 +96,36 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.isEndretDekningsgrad()).isTrue();
     }
 
-    private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
-        return Optional.of(Beregningsgrunnlag.ny()
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-            .medhHjemmel(Hjemmel.F_14_7)
-            .medBesteberegnet(true)
-            .medSeksAvDeTiBeste(true)
-            .build());
+    private BeregningsgrunnlagDto opprettBeregningsgrunnlag() {
+        return new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER), HjemmelDto.F_14_7, BigDecimal.valueOf(GRUNNBELØP), List.of(), true,
+            true);
     }
 
-    private Optional<ForeldrepengerUttak> opprettUttaksresultat() {
-        var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
-            .medTrekkdager(TREKKDAGER)
-            .medUtbetalingsprosent(BigDecimal.ZERO)
-            .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
-            .medArbeidsprosent(BigDecimal.valueOf(100))
-            .build();
-        var uttakResultatPeriode1 = UttakResultatPeriode.ny()
-            .medAktiviteter(of(uttakAktivitet))
-            .medTidsperiode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(AVSLAG_ÅRSAK_1)
-            .build();
-        var uttakResultatPeriode2 = UttakResultatPeriode.ny()
-            .medAktiviteter(of(uttakAktivitet))
-            .medTidsperiode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(OPPHØR_ÅRSAK_2_OG_3)
-            .build();
-        var uttakResultatPeriode3 = UttakResultatPeriode.ny()
-            .medAktiviteter(of(uttakAktivitet))
-            .medTidsperiode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(OPPHØR_ÅRSAK_2_OG_3)
-            .build();
-        var uttakResultatPeriode4 = UttakResultatPeriode.ny()
-            .medAktiviteter(of(uttakAktivitet))
-            .medTidsperiode(fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
-            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(BARN_DØD)
-            .build();
-        return Optional.of(
-            new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), List.of()));
+    private BrevGrunnlag.ForeldrepengerUttak opprettUttaksresultat() {
+        var uttakAktivitet = new BrevGrunnlag.ForeldrepengerUttak.Aktivitet(BrevGrunnlag.ForeldrepengerUttak.TrekkontoType.MØDREKVOTE, TREKKDAGER,
+            BigDecimal.valueOf(100), "123", null, BigDecimal.ZERO, BrevGrunnlag.UttakArbeidType.ORDINÆRT_ARBEID, false);
+
+        var uttakResultatPeriode1 = new BrevGrunnlag.ForeldrepengerUttak.Periode(PERIODE1_FOM, PERIODE1_TOM, of(uttakAktivitet),
+            BrevGrunnlag.PeriodeResultatType.AVSLÅTT, AVSLAG_ÅRSAK_1.getKode(), null, "14-10", null, null, false);
+        var uttakResultatPeriode2 = new BrevGrunnlag.ForeldrepengerUttak.Periode(PERIODE2_FOM, PERIODE2_TOM, of(uttakAktivitet),
+            BrevGrunnlag.PeriodeResultatType.AVSLÅTT, OPPHØR_ÅRSAK_2_OG_3.getKode(), null, "14-10", null, null, false);
+        var uttakResultatPeriode3 = new BrevGrunnlag.ForeldrepengerUttak.Periode(PERIODE3_FOM, PERIODE3_TOM, of(uttakAktivitet),
+            BrevGrunnlag.PeriodeResultatType.AVSLÅTT, OPPHØR_ÅRSAK_2_OG_3.getKode(), null, "14-10", null, null, false);
+        var uttakResultatPeriode4 = new BrevGrunnlag.ForeldrepengerUttak.Periode(PERIODE4_FOM, PERIODE4_TOM, of(uttakAktivitet),
+            BrevGrunnlag.PeriodeResultatType.AVSLÅTT, BARN_DØD.getKode(), null, "14-10", null, null, false);
+
+        return new BrevGrunnlag.ForeldrepengerUttak(of(), 0,
+            of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), of(), false);
     }
 
-    private Behandling opprettBehandling(LocalDate opphørsdato, FamilieHendelse familieHendelse) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.REVURDERING)
-            .medBehandlingsresultat(Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                .medEndretDekningsgrad(true)
-                .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
-                .medOpphørsdato(opphørsdato)
-                .build())
-            .medSpråkkode(Språkkode.NB)
-            .medFagsak(Fagsak.ny().medBrukerRolle(RelasjonsRolleType.MORA).medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
-            .medFamilieHendelse(familieHendelse)
-            .build();
+    private BrevGrunnlag opprettBehandling(LocalDate opphørsdato, BrevGrunnlag.FamilieHendelse familieHendelse) {
+        return new BrevGrunnlag(UUID.randomUUID(), UUID.randomUUID().toString(), BrevGrunnlag.FagsakYtelseType.FORELDREPENGER,
+            BrevGrunnlag.FagsakStatus.UNDER_BEHANDLING, BrevGrunnlag.RelasjonsRolleType.MORA, UUID.randomUUID().toString(), null,
+            BrevGrunnlag.BehandlingType.REVURDERING, LocalDateTime.now().minusDays(1), null, "enhet", BrevGrunnlag.Språkkode.BOKMÅL, true,
+            familieHendelse, null, null,
+            new BrevGrunnlag.Behandlingsresultat(null, null, BrevGrunnlag.Behandlingsresultat.BehandlingResultatType.AVSLÅTT, null, null, null, false,
+                opphørsdato, List.of(BrevGrunnlag.Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_BEREGNING,
+                BrevGrunnlag.Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_UTTAK), List.of()), List.of(), null, opprettBeregningsgrunnlag(),
+            null, null, null, null, List.of(), null, null, null, null, null, opprettUttaksresultat());
     }
-
 }

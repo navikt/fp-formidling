@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.felles.DatoIntervallEntitet;
@@ -27,10 +27,10 @@ public final class AvslagsperiodeMapper {
 
     public static List<Avslagsperiode> mapAvslagsperioder(List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                                           Språkkode språkkode,
-                                                          ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                                          UnaryOperator<String> hentNavn) {
         List<Avslagsperiode> avslagPerioderMedArbinformasjon = new ArrayList<>();
         uttakResultatArbeidsforhold.forEach(ura -> {
-            var arbeidsforholdInformasjon = mapArbeidsforholdInformasjon(ura, arbeidsgiverTjeneste);
+            var arbeidsforholdInformasjon = mapArbeidsforholdInformasjon(ura, hentNavn);
             avslagPerioderMedArbinformasjon.addAll(ura.perioder()
                     .stream()
                 .filter(Predicate.not(periode -> periode.periodeResultatType() == BrevGrunnlag.PeriodeResultatType.INNVILGET))
@@ -42,9 +42,9 @@ public final class AvslagsperiodeMapper {
     }
 
     private static Avslagsperiode.ArbeidsforholdInformasjon mapArbeidsforholdInformasjon(BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold urArbeidsforhold,
-                                                                                         ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                                                                         UnaryOperator<String> hentNavn) {
         if (urArbeidsforhold.arbeidsgiverReferanse() != null) {
-            var arbeidsgivernavn = arbeidsgiverTjeneste.hentArbeidsgiverNavn(urArbeidsforhold.arbeidsgiverReferanse());
+            var arbeidsgivernavn = hentNavn.apply(urArbeidsforhold.arbeidsgiverReferanse());
             return new Avslagsperiode.ArbeidsforholdInformasjon(arbeidsgivernavn, tilString(urArbeidsforhold.arbeidType()));
         }
         return  new Avslagsperiode.ArbeidsforholdInformasjon(null, tilString(urArbeidsforhold.arbeidType()));

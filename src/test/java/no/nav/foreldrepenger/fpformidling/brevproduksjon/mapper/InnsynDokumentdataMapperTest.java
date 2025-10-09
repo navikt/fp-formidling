@@ -2,39 +2,28 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.InnsynBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.InnsynBehandling.InnsynDokument;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.Innsyn;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynDokument;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 
 class InnsynDokumentdataMapperTest {
 
     private static final String FRITEKST = "Årsak til avvist er at det ikke mulig\ndet er fordi vi ikke har nok informasjon";
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
     private InnsynDokumentdataMapper innsynDokumentdataMapper;
 
@@ -43,18 +32,17 @@ class InnsynDokumentdataMapperTest {
     @BeforeEach
     void setUp() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
-        var dokument1 = new InnsynDokument(new JournalpostId(124L), "1");
-        var dokument2 = new InnsynDokument(new JournalpostId(125L), "2");
+        var dokument1 = new InnsynDokument(true, "124", "1");
+        var dokument2 = new InnsynDokument(true, "125", "2");
         innsynDokumentList = List.of(dokument1, dokument2);
 
-        innsynDokumentdataMapper = new InnsynDokumentdataMapper(brevParametere, domeneobjektProvider);
+        innsynDokumentdataMapper = new InnsynDokumentdataMapper(brevParametere);
     }
 
     @Test
     void mappingAvInnsynInnvilgetForeldrePenger() {
-        var behandling = opprettBehandling(FagsakYtelseType.FORELDREPENGER);
-        var innsynsBehandling = new Innsyn(InnsynResultatType.INNVILGET, innsynDokumentList);
-        when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
+        var innsynsBehandling = new InnsynBehandling(InnsynBehandling.InnsynResultatType.INNVILGET, innsynDokumentList);
+        var behandling = opprettBehandling(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER, innsynsBehandling);
 
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse();
@@ -68,9 +56,8 @@ class InnsynDokumentdataMapperTest {
 
     @Test
     void mappingAvInnsynAvvistEngangsstønadMedFritekst() {
-        var behandling = opprettBehandling(FagsakYtelseType.ENGANGSTØNAD);
-        var innsynsBehandling = new Innsyn(InnsynResultatType.AVVIST, innsynDokumentList);
-        when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
+        var innsynsBehandling = new InnsynBehandling(InnsynBehandling.InnsynResultatType.AVVIST, innsynDokumentList);
+        var behandling = opprettBehandling(BrevGrunnlag.FagsakYtelseType.ENGANGSTØNAD, innsynsBehandling);
 
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.ENGANGSTØNAD);
         var dokumentHendelse = lagDokumentHendelse();
@@ -82,13 +69,8 @@ class InnsynDokumentdataMapperTest {
         assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
     }
 
-    private Behandling opprettBehandling(FagsakYtelseType ytelseType) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.INNSYN)
-            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
-            .build();
+    private BrevGrunnlag opprettBehandling(BrevGrunnlag.FagsakYtelseType ytelseType, InnsynBehandling innsynsBehandling) {
+        return DatamapperTestUtil.innsynBrevGrunnlag(innsynsBehandling, ytelseType);
     }
 
     private DokumentHendelse lagDokumentHendelse() {

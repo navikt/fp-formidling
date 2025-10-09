@@ -19,9 +19,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Frilanser;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SelvstendigNæringsdrivende;
@@ -40,11 +40,11 @@ public final class BeregningMapper {
     private BeregningMapper() {
     }
 
-    public static List<Arbeidsforhold> mapArbeidsforhold(BeregningsgrunnlagDto beregningsgrunnlag, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public static List<Arbeidsforhold> mapArbeidsforhold(BeregningsgrunnlagDto beregningsgrunnlag, UnaryOperator<String> hentNavn) {
         List<Arbeidsforhold> resultat = new ArrayList<>();
         for (var andel : getAndeler(beregningsgrunnlag)) {
             if (AT_STATUSER.contains(andel.aktivitetStatus())) {
-                getArbeidsgiverNavn(andel, arbeidsgiverTjeneste).ifPresent(navn -> resultat.add(
+                getArbeidsgiverNavn(andel, hentNavn).ifPresent(navn -> resultat.add(
                     Arbeidsforhold.ny().medArbeidsgiverNavn(navn).medMånedsinntekt(getMånedsinntekt(andel).longValue()).build()));
             }
         }
@@ -133,8 +133,8 @@ public final class BeregningMapper {
         return andel.avkortetPrÅr() != null ? andel.avkortetPrÅr() : andel.bruttoPrÅr();
     }
 
-    private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagAndelDto andel, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        return Optional.ofNullable(andel.arbeidsforhold()).map(a -> arbeidsgiverTjeneste.hentArbeidsgiverNavn(a.arbeidsgiverIdent()));
+    private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {
+        return Optional.ofNullable(andel.arbeidsforhold()).map(a -> hentNavn.apply(a.arbeidsgiverIdent()));
     }
 
     private static BigDecimal getMånedsinntekt(BeregningsgrunnlagAndelDto andel) {

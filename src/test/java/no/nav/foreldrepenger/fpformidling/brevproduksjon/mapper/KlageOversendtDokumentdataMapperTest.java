@@ -44,7 +44,7 @@ class KlageOversendtDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brevet() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
+        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling);

@@ -40,7 +40,7 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_bruker_med_ny_startdato() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
+        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         when(domeneobjektProvider.hentStartdatoUtsatt(behandling)).thenReturn(new StartdatoUtsattDto(true, NY_STARTDATO));
@@ -69,7 +69,7 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_bruker_uten_ny_startdato() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
+        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         when(domeneobjektProvider.hentStartdatoUtsatt(behandling)).thenReturn(new StartdatoUtsattDto(true, null));

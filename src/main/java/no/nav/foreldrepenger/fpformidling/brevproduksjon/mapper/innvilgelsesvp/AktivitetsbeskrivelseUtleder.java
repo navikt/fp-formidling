@@ -9,23 +9,27 @@ import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtel
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public final class AktivitetsbeskrivelseUtleder {
 
-    private static final Set<TilkjentYtelseDagytelseDto.Aktivitetstatus> SN_STATUSER = Set.of(SELVSTENDIG_NÆRINGSDRIVENDE, KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
+    private static final Set<TilkjentYtelseDagytelseDto.Aktivitetstatus> SN_STATUSER = Set.of(SELVSTENDIG_NÆRINGSDRIVENDE, KOMBINERT_AT_FL_SN,
+        KOMBINERT_AT_SN, KOMBINERT_FL_SN);
 
-    private static final Set<TilkjentYtelseDagytelseDto.Aktivitetstatus> FL_STATUSER = Set.of(FRILANSER, KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_FL_SN);
+    private static final Set<TilkjentYtelseDagytelseDto.Aktivitetstatus> FL_STATUSER = Set.of(FRILANSER, KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL,
+        KOMBINERT_FL_SN);
 
     private AktivitetsbeskrivelseUtleder() {
     }
 
-    public static String utledAktivitetsbeskrivelse(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto andel, TilkjentYtelseDagytelseDto.Aktivitetstatus aktivitetStatus, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public static String utledAktivitetsbeskrivelse(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto andel,
+                                                    TilkjentYtelseDagytelseDto.Aktivitetstatus aktivitetStatus,
+                                                    UnaryOperator<String> hentNavn) {
         var arbeidsgiverOpt = Optional.ofNullable(andel.arbeidsgiverReferanse());
         if (arbeidsgiverOpt.isPresent()) {
-            return arbeidsgiverTjeneste.hentArbeidsgiverNavn(arbeidsgiverOpt.get());
+            return hentNavn.apply(arbeidsgiverOpt.get());
         }
         if (FL_STATUSER.contains(aktivitetStatus)) {
             return "Som frilanser";

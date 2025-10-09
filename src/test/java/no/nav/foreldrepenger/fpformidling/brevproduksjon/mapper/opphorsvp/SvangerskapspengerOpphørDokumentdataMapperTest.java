@@ -25,11 +25,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
@@ -65,15 +64,15 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     private static final String ARBEIDSGIVER_1_NAVN = "Arbeidsgiver_1";
     private static final Arbeidsgiver ARBEIDSGIVER_1 = new Arbeidsgiver("123456", ARBEIDSGIVER_1_NAVN);
 
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
     private SvangerskapspengerOpphørDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
+        var arbeidsgiverTjeneste = mock(ArbeidsgiverTjeneste.class);
+        when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(any())).thenReturn(ARBEIDSGIVER_1_NAVN);
+        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
 
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());

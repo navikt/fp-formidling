@@ -5,6 +5,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.HjemmelDto;
@@ -130,6 +131,17 @@ public final class KodeverkMapper {
             case F_14_7_8_47 -> Hjemmel.F_14_7_8_47;
             case F_14_7_8_49 -> Hjemmel.F_14_7_8_49;
             case null -> Hjemmel.UDEFINERT;
+        };
+    }
+
+    public static StønadskontoType mapStønadskontoType(BrevGrunnlag.ForeldrepengerUttak.TrekkontoType trekkontoType) {
+        return switch (trekkontoType) {
+            case FELLESPERIODE -> StønadskontoType.FELLESPERIODE;
+            case MØDREKVOTE -> StønadskontoType.MØDREKVOTE;
+            case FEDREKVOTE -> StønadskontoType.FEDREKVOTE;
+            case FORELDREPENGER -> StønadskontoType.FORELDREPENGER;
+            case FORELDREPENGER_FØR_FØDSEL -> StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
+            case UDEFINERT -> StønadskontoType.UDEFINERT;
         };
     }
 }

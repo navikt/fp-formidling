@@ -57,7 +57,7 @@ class OpphørPeriodeMapperTest {
 
         //Act
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, svpUttakResultatArbeidsforholdList,
-            Språkkode.NB, null, Collections.emptyList());
+            Språkkode.NB, null, Collections.emptyList(), arbeidsgiverTjeneste);
 
         //Assert
         var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -85,7 +85,7 @@ class OpphørPeriodeMapperTest {
 
         //Act
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null,
-            tilkjentYtelsePerioder);
+            tilkjentYtelsePerioder, arbeidsgiverTjeneste);
 
         //Assert
         var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -120,7 +120,7 @@ class OpphørPeriodeMapperTest {
 
         //Act
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null,
-            tilkjentYtelsePerioder);
+            tilkjentYtelsePerioder, arbeidsgiverTjeneste);
 
         //Assert
         var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -154,7 +154,7 @@ class OpphørPeriodeMapperTest {
 
         //Act
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null,
-            tilkjentYtelsePerioder);
+            tilkjentYtelsePerioder, arbeidsgiverTjeneste);
 
         //Assert
         var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -177,7 +177,7 @@ class OpphørPeriodeMapperTest {
         var behandling = standardBehandlingBuilder().medBehandlingsresultat(Behandlingsresultat.builder().build()).build();
         //Act
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null,
-            Collections.emptyList());
+            Collections.emptyList(), arbeidsgiverTjeneste);
 
         //Assert
         var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();

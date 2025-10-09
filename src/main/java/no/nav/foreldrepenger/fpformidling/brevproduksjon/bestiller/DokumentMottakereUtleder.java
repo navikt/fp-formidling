@@ -127,6 +127,7 @@ public class DokumentMottakereUtleder {
                                                      Personinfo personinfoBruker,
                                                      Personinfo personinfoMottaker,
                                                      DokumentFelles.Kopi erKopi) {
+        //TODO TFP-6069 slå sammen med metoden over? Felles basic builder?
         return DokumentFelles.builder()
             .medAutomatiskBehandlet(Boolean.TRUE)
             .medDokumentDato(LocalDate.now())

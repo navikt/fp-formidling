@@ -53,7 +53,7 @@ public record BrevGrunnlag(UUID uuid, String saksnummer, FagsakYtelseType fagsak
         SVANGERSKAPSPENGER,
     }
 
-    enum FagsakStatus {
+    public enum FagsakStatus {
         OPPRETTET,
         UNDER_BEHANDLING,
         LØPENDE,
@@ -204,7 +204,7 @@ public record BrevGrunnlag(UUID uuid, String saksnummer, FagsakYtelseType fagsak
         }
 
         public record Periode(LocalDate fom, LocalDate tom, BigDecimal utbetalingsgrad, PeriodeResultatType periodeResultatType,
-                              String periodeIkkeOppfyltÅrsak, String periodeIkkeOppfyltÅrsakHjemmel) {
+                              String periodeIkkeOppfyltÅrsak) {
         }
     }
 

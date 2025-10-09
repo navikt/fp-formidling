@@ -8,6 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,59 +17,63 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BgAndelArbeidsforholdDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.OpptjeningAktivitetDto;
 
 class BeregningMapperTest {
 
-    private static final String ARBEIDSGIVER_1 = "Arbeidsgiver1 AS";
-    private static final String ARBEIDSGIVER_2 = "Arbeidsgiver2 AS";
+    private static final String ARBEIDSGIVER1_NAVN = "Arbeidsgiver1 AS";
+    private static final String ARBEIDSGIVER1_ORGNR = "1";
+    private static final String ARBEIDSGIVER2_NAVN = "Arbeidsgiver2 AS";
+    private static final String ARBEIDSGIVER2_ORGNR = "2";
+    public static final UnaryOperator<String> HENT_NAVN = ref -> {
+        if (ARBEIDSGIVER1_ORGNR.equals(ref)) {
+            return ARBEIDSGIVER1_NAVN;
+        } else if (ARBEIDSGIVER2_ORGNR.equals(ref)) {
+            return ARBEIDSGIVER2_NAVN;
+        }
+        throw new IllegalStateException("Ukjent orgnr " + ref);
+    };
     private static final int BRUTTO_ÅR_ARBEIDSFORHOLD1 = 120000;
     private static final int BRUTTO_ÅR_ARBEIDSFORHOLD2 = 310100;
 
     @Test
     void skal_mappe_arbeidsforhold_med_høyest_inntekt_først() {
         // Arrange
-        var arbeidsgiver1 = new Arbeidsgiver("1", ARBEIDSGIVER_1);
-        var bgAndelArbeidsforhold1 = new BGAndelArbeidsforhold(arbeidsgiver1, ArbeidsforholdRef.ref("1"), BigDecimal.ZERO, BigDecimal.ZERO);
-        var arbeidsgiver2 = new Arbeidsgiver("1", ARBEIDSGIVER_2);
-        var bgAndelArbeidsforhold2 = new BGAndelArbeidsforhold(arbeidsgiver2, ArbeidsforholdRef.ref("1"), BigDecimal.ZERO, BigDecimal.ZERO);
-        var andel = of(BeregningsgrunnlagPrStatusOgAndel.ny()
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-            .medBgAndelArbeidsforhold(bgAndelArbeidsforhold1)
-            .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
-            .build(), BeregningsgrunnlagPrStatusOgAndel.ny() // Skal sorteres først
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-            .medBgAndelArbeidsforhold(bgAndelArbeidsforhold2)
-            .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2))
-            .build(), BeregningsgrunnlagPrStatusOgAndel.ny() // Ignoreres
-            .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE).build());
-        var beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
-            .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
-            .medBeregningsgrunnlagPrStatusOgAndelList(andel)
-            .build();
-        var beregningsgrunnlag = Beregningsgrunnlag.ny()
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
-            .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
-            .build();
+        var beregningsperiodeFom = LocalDate.now().minusDays(20);
+        var beregningsperiodeTom = LocalDate.now().plusDays(20);
+        var andel1 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false, OpptjeningAktivitetDto.ARBEID,
+            beregningsperiodeFom, beregningsperiodeTom, new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false);
+        var andel2 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null, false, OpptjeningAktivitetDto.ARBEID,
+            beregningsperiodeFom, beregningsperiodeTom, new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Skal sorteres først
+        var andel3 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, null, null, false, OpptjeningAktivitetDto.NÆRING,
+            beregningsperiodeFom, beregningsperiodeTom, new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Ignoreres
+
+        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(),
+            beregningsperiodeFom, beregningsperiodeTom, List.of(andel1, andel2, andel3));
+
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE), null, null,
+            List.of(beregningsgrunnlagPeriode), false, false);
 
         // Act
-        var resultat = BeregningMapper.mapArbeidsforhold(beregningsgrunnlag, arbeidsgiverTjeneste);
+        var resultat = BeregningMapper.mapArbeidsforhold(beregningsgrunnlag, HENT_NAVN);
 
         // Assert
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_2);
+        assertThat(resultat.get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER2_NAVN);
         assertThat(resultat.get(0).getMånedsinntekt()).isEqualTo(
             BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
-        assertThat(resultat.get(1).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_1);
+        assertThat(resultat.get(1).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER1_NAVN);
         assertThat(resultat.get(1).getMånedsinntekt()).isEqualTo(
             BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
     }

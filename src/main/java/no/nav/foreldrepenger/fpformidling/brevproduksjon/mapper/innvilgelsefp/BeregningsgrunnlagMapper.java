@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
@@ -47,7 +47,7 @@ public final class BeregningsgrunnlagMapper {
         return finnFørstePeriode(beregningsgrunnlag).bruttoPrÅr().compareTo(finnSeksG(beregningsgrunnlag)) > 0;
     }
 
-    public static List<BeregningsgrunnlagRegel> mapRegelListe(BeregningsgrunnlagDto beregningsgrunnlag, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public static List<BeregningsgrunnlagRegel> mapRegelListe(BeregningsgrunnlagDto beregningsgrunnlag, UnaryOperator<String> hentNavn) {
         List<BeregningsgrunnlagRegel> beregningsgrunnlagregler = new ArrayList<>();
         var bgpsaListe = finnFørstePeriode(beregningsgrunnlag).beregningsgrunnlagandeler();
 
@@ -55,10 +55,10 @@ public final class BeregningsgrunnlagMapper {
         //3G. I disse tilfellene skal andre statuser ignoreres (Beregning fjerner ikke andre statuser). Gjelder både FP og SVP.
         if (harMilitærStatusMedDagsatsOgAnnenStatus(bgpsaListe)) {
             beregningsgrunnlagregler.add(
-                opprettBeregningsregel(bgpsaListe, AktivitetStatusDto.MILITÆR_ELLER_SIVIL, arbeidsgiverTjeneste));
+                opprettBeregningsregel(bgpsaListe, AktivitetStatusDto.MILITÆR_ELLER_SIVIL, hentNavn));
         } else {
             for (var bgAktivitetStatus : beregningsgrunnlag.aktivitetstatusListe()) {
-                beregningsgrunnlagregler.add(opprettBeregningsregel(bgpsaListe, bgAktivitetStatus, arbeidsgiverTjeneste));
+                beregningsgrunnlagregler.add(opprettBeregningsregel(bgpsaListe, bgAktivitetStatus, hentNavn));
             }
         }
         return beregningsgrunnlagregler;
@@ -66,11 +66,11 @@ public final class BeregningsgrunnlagMapper {
 
     private static BeregningsgrunnlagRegel opprettBeregningsregel(List<BeregningsgrunnlagAndelDto> andeler,
                                                                   AktivitetStatusDto bgAktivitetStatus,
-                                                                  ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                                                  UnaryOperator<String> hentNavn) {
         var builder = BeregningsgrunnlagRegel.ny();
         var filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, andeler);
         builder.medAktivitetStatus(tilString(bgAktivitetStatus));
-        var mapped = filtrertListe.stream().map(a -> lagBeregningsgrunnlagAndel(a, arbeidsgiverTjeneste)).toList();
+        var mapped = filtrertListe.stream().map(a -> lagBeregningsgrunnlagAndel(a, hentNavn)).toList();
         builder.medAndelListe(mapped);
         builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
         builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
@@ -116,7 +116,7 @@ public final class BeregningsgrunnlagMapper {
         return beregningsgrunnlagregler.stream().anyMatch(regel -> AktivitetStatus.erKombinertStatus(regel.getRegelStatus()));
     }
 
-    public static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagAndelDto andel, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {
         var builder = BeregningsgrunnlagAndel.ny();
 
         builder.medAktivitetStatus(andel.aktivitetStatus().name());
@@ -136,7 +136,7 @@ public final class BeregningsgrunnlagMapper {
             builder.medSistLignedeÅr(andel.beregningsperiodeTom() == null ? 0 : andel.beregningsperiodeTom().getYear());
         }
         if (AktivitetStatusDto.ARBEIDSTAKER.equals(andel.aktivitetStatus())) {
-            getArbeidsgiverNavn(andel, arbeidsgiverTjeneste).ifPresent(builder::medArbeidsgiverNavn);
+            getArbeidsgiverNavn(andel, hentNavn).ifPresent(builder::medArbeidsgiverNavn);
         }
 
         return builder.build();
@@ -146,9 +146,8 @@ public final class BeregningsgrunnlagMapper {
         return andel.bruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
     }
 
-    private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagAndelDto andel, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        return Optional.ofNullable(andel.arbeidsforhold()).map(BgAndelArbeidsforholdDto::arbeidsgiverIdent).map(
-            arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+    private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {
+        return Optional.ofNullable(andel.arbeidsforhold()).map(BgAndelArbeidsforholdDto::arbeidsgiverIdent).map(hentNavn);
     }
 
     private static int tellAntallArbeidsforholdIBeregningUtenSluttpakke(List<BeregningsgrunnlagAndelDto> bgpsaListe) {
@@ -165,9 +164,5 @@ public final class BeregningsgrunnlagMapper {
             .filter(Objects::nonNull)
             .findFirst()
             .orElse(false);
-    }
-
-    private static List<BeregningsgrunnlagAndel> mapAndelListe(List<BeregningsgrunnlagAndelDto> andeler, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        return andeler.stream().map(a -> lagBeregningsgrunnlagAndel(a, arbeidsgiverTjeneste)).toList();
     }
 }

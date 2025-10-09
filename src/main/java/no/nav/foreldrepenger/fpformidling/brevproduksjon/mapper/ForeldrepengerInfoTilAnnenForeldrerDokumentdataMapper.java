@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.PeriodeResultatType;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.math.BigDecimal;
@@ -51,7 +52,7 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
             sisteUttaksdagMor = uttak.get()
                 .perioderAnnenpart()
                 .stream()
-                .filter(up -> ForeldrepengerUttak.PeriodeResultatType.INNVILGET.equals(up.periodeResultatType()) || up.aktiviteter()
+                .filter(up -> PeriodeResultatType.INNVILGET.equals(up.periodeResultatType()) || up.aktiviteter()
                     .stream()
                     .anyMatch(upa -> upa.trekkdager().compareTo(BigDecimal.ZERO) > 0))
                 .map(ForeldrepengerUttak.Periode::tom)

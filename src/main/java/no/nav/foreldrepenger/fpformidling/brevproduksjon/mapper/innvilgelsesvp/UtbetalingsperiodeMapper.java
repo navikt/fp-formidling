@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -24,17 +25,19 @@ public final class UtbetalingsperiodeMapper {
     private UtbetalingsperiodeMapper() {
     }
 
-    public static List<AktiviteterOgUtbetalingsperioder> mapUtbetalingsperioderPerAktivitet(List<TilkjentYtelsePeriodeDto> tilkjentPerioder, Språkkode språkkode) {
+    public static List<AktiviteterOgUtbetalingsperioder> mapUtbetalingsperioderPerAktivitet(List<TilkjentYtelsePeriodeDto> tilkjentPerioder,
+                                                                                            Språkkode språkkode,
+                                                                                            UnaryOperator<String> hentNavn) {
         List<AktiviteterOgUtbetalingsperioder> aktiviteterOgUtbetalingsperioder = new ArrayList<>();
         List <Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         var gjeldendeTilkjentPerioder = fjernPerioderMedIngenDagsats(tilkjentPerioder);
 
-        var aktiviteterIPerioden = utledAktiviteterFraPerioder(gjeldendeTilkjentPerioder);
+        var aktiviteterIPerioden = utledAktiviteterFraPerioder(gjeldendeTilkjentPerioder, hentNavn);
 
         gjeldendeTilkjentPerioder
             .forEach(tilkjentPeriode -> tilkjentPeriode.andeler().stream()
                 .filter(tilkjentYtelseAndel -> tilkjentYtelseAndel.utbetalingsgrad().compareTo(BigDecimal.ZERO) > 0)
-                .forEach(andel -> utbetalingsperioder.add(opprettUtbetalingsperiode(tilkjentPeriode, andel, språkkode))));
+                .forEach(andel -> utbetalingsperioder.add(opprettUtbetalingsperiode(tilkjentPeriode, andel, språkkode, hentNavn))));
 
         aktiviteterIPerioden.forEach(aktivitet -> {
             var perioderPerAktivitet = utbetalingsperioder.stream().filter(periode-> periode.getAktivitetNavn().equals(aktivitet)).toList();
@@ -46,14 +49,15 @@ public final class UtbetalingsperiodeMapper {
 
     private static Utbetalingsperiode opprettUtbetalingsperiode(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
                                                                 TilkjentYtelseAndelDto andel,
-                                                                Språkkode språkkode) {
+                                                                Språkkode språkkode,
+                                                                UnaryOperator<String> hentNavn) {
         return Utbetalingsperiode.ny()
             .medPeriodeFom(tilkjentYtelsePeriode.fom(), språkkode)
             .medPeriodeTom(tilkjentYtelsePeriode.tom(), språkkode)
             .medDagsats(tilkjentYtelsePeriode.dagsats())
             .medUtbetaltTilSøker(andel.tilSoker() != null ? andel.tilSoker() : 0)
             .medUtbetalingsgrad(Prosent.of(andel.utbetalingsgrad()))
-            .medAktivitetNavn(AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus()))
+            .medAktivitetNavn(AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus(), hentNavn))
             .build();
     }
 
@@ -111,11 +115,11 @@ public final class UtbetalingsperiodeMapper {
             .toList();
     }
 
-    private static Set<String> utledAktiviteterFraPerioder(List<TilkjentYtelsePeriodeDto> tilkjentPerioder) {
+    private static Set<String> utledAktiviteterFraPerioder(List<TilkjentYtelsePeriodeDto> tilkjentPerioder, UnaryOperator<String> hentNavn) {
         return tilkjentPerioder.stream()
             .map(TilkjentYtelsePeriodeDto::andeler)
             .flatMap(Collection::stream)
-            .map(andel -> AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus()))
+            .map(andel -> AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus(), hentNavn))
             .collect(Collectors.toSet());
     }
 

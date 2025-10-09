@@ -54,6 +54,10 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi {
         this.lovHjemmel = lovHjemmel;
     }
 
+    public static PeriodeIkkeOppfyltÅrsak fra(String kode) {
+        return Arrays.stream(PeriodeIkkeOppfyltÅrsak.values()).filter(å -> å.kode.equals(kode)).findFirst().orElseThrow();
+    }
+
     @Override
     public String getKode() {
         return kode;

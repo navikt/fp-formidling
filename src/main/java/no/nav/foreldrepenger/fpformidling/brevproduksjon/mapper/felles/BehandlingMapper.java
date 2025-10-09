@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import java.util.List;
-import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.KodeverkMapper;
@@ -18,10 +16,6 @@ public final class BehandlingMapper {
 
     public static boolean erTermindatoEndret(BrevGrunnlag.FamilieHendelse familieHendelse, BrevGrunnlag.FamilieHendelse originalFamiliehendelse) {
         return !originalFamiliehendelse.termindato().equals(familieHendelse.termindato());
-    }
-
-    public static Boolean erEndretFraAvslått(Optional<Behandling> orginalBehandling) {
-        return orginalBehandling.map(forrigeBehandling -> forrigeBehandling.getBehandlingsresultat().erAvslått()).orElse(false);
     }
 
     public static boolean erRevurderingPgaEndretBeregningsgrunnlag(BrevGrunnlag revurdering) {

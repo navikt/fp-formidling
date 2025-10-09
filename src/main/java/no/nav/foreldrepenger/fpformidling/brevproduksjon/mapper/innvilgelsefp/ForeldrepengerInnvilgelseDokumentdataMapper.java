@@ -96,7 +96,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.perioder(), uttak,
-            beregningsgrunnlag.beregningsgrunnlagperioder(), språkkode);
+            beregningsgrunnlag.beregningsgrunnlagperioder(), språkkode, arbeidsgiverTjeneste::hentArbeidsgiverNavn);
         var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.behandlingsresultat().konsekvenserForYtelsen(),
             behandling.behandlingÅrsakTyper());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
@@ -383,7 +383,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private void mapFelterRelatertTilBeregningsgrunnlag(BeregningsgrunnlagDto beregningsgrunnlag, Builder builder) {
-        var beregningsgrunnlagregler = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag, arbeidsgiverTjeneste);
+        var beregningsgrunnlagregler = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag, arbeidsgiverTjeneste::hentArbeidsgiverNavn);
         builder.medBeregningsgrunnlagregler(beregningsgrunnlagregler);
         builder.medBruttoBeregningsgrunnlag(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
         builder.medSekgG(BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).longValue());

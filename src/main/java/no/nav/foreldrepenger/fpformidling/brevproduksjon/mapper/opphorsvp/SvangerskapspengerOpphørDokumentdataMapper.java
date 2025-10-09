@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorsvp;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Beregning
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -26,10 +28,12 @@ import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagyt
 public class SvangerskapspengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
     private final BrevParametere brevParametere;
+    private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public SvangerskapspengerOpphørDokumentdataMapper(BrevParametere brevParametere) {
+    public SvangerskapspengerOpphørDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.brevParametere = brevParametere;
+        this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var svpUttaksresultat = Optional.ofNullable(behandling.svangerskapspengerUttak());
         var familieHendelse = behandling.familieHendelse();
         var inntektsmeldinger = behandling.inntektsmeldinger();
-        var tilkjentYtelsePerioder = Optional.ofNullable(behandling.tilkentYtelse()).map(BrevGrunnlag.TilkjentYtelse::dagytelse);
+        var tilkjentYtelse = Optional.ofNullable(behandling.tilkentYtelse()).map(BrevGrunnlag.TilkjentYtelse::dagytelse);
 
         var språkkode = dokumentFelles.getSpråkkode();
 
@@ -60,19 +64,27 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
             .medErSøkerDød(BrevMapperUtil.erDød(dokumentFelles))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
+        var tilkjentPerioder = tilkjentYtelse.map(TilkjentYtelseDagytelseDto::perioder).orElse(List.of());
         mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,
-            svpUttaksresultat.map(BrevGrunnlag.SvangerskapspengerUttak::uttakArbeidsforhold).orElse(Collections.emptyList()), språkkode, inntektsmeldinger,
-            tilkjentYtelsePerioder);
+            svpUttaksresultat.map(BrevGrunnlag.SvangerskapspengerUttak::uttakArbeidsforhold).orElse(Collections.emptyList()), språkkode, inntektsmeldinger, tilkjentPerioder);
 
-        var opphørsdato = behandling.getBehandlingsresultat().getOpphørsdato();
+        var opphørsdato = Optional.ofNullable(behandling.behandlingsresultat().opphørsdato());
 
         opphørsdato.ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
 
-        familieHendelse.tidligstDødsdato().ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
+        finnTidligstDødsdato(familieHendelse).ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
 
-        familieHendelse.tidligstFødselsdato().ifPresent(d -> dokumentdatabuilder.medFødselsdato(formaterDato(d, språkkode)));
+        finnTidligstFødselsdato(familieHendelse).ifPresent(d -> dokumentdatabuilder.medFødselsdato(formaterDato(d, språkkode)));
 
         return dokumentdatabuilder.build();
+    }
+
+    private Optional<LocalDate> finnTidligstFødselsdato(BrevGrunnlag.FamilieHendelse familieHendelse) {
+        return familieHendelse.barn().stream().map(BrevGrunnlag.Barn::fødselsdato).min(LocalDate::compareTo);
+    }
+
+    private static Optional<LocalDate> finnTidligstDødsdato(BrevGrunnlag.FamilieHendelse familieHendelse) {
+        return familieHendelse.barn().stream().map(BrevGrunnlag.Barn::dødsdato).min(LocalDate::compareTo);
     }
 
     private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder,
@@ -80,10 +92,10 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
                                                List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                                Språkkode språkKode,
                                                List<BrevGrunnlag.Inntektsmelding> inntektsmeldinger,
-                                               Optional<TilkjentYtelseDagytelseDto> tilkjentYtelsePerioder) {
+                                               List<TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto> tilkjentYtelsePerioder) {
 
         var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold, språkKode,
-            inntektsmeldinger, tilkjentYtelsePerioder);
+            inntektsmeldinger, tilkjentYtelsePerioder, arbeidsgiverTjeneste::hentArbeidsgiverNavn);
 
         dokumentdataBuilder.medLovhjemmel(opphørtePerioderOgLovhjemmel.element2());
         dokumentdataBuilder.medOpphørPerioder(opphørtePerioderOgLovhjemmel.element1());

@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.SvangerskapspengerAvslagDokumentdata;
@@ -110,8 +111,9 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
                 .orElseThrow(() -> new TekniskException("FPFORMIDLING-100003",
                     String.format("Kan ikke generere avslagsbrev uten avslagsårsak for behandling UUID %s", uuid)));
 
-            dokumentdataBuilder.medÅrsak(Årsak.of(avslåttPeriode.periodeIkkeOppfyltÅrsak()));
-            Optional.ofNullable(avslåttPeriode.periodeIkkeOppfyltÅrsakHjemmel()).ifPresent(lovreferanse::add);
+            var periodeIkkeOppfyltÅrsak = PeriodeIkkeOppfyltÅrsak.fra(avslåttPeriode.periodeIkkeOppfyltÅrsak());
+            dokumentdataBuilder.medÅrsak(Årsak.of(periodeIkkeOppfyltÅrsak.getKode()));
+            periodeIkkeOppfyltÅrsak.getLovHjemmelData().ifPresent(lovreferanse::add);
 
         } else {
             dokumentdataBuilder.medÅrsak(Årsak.of(årsak.getKode()));

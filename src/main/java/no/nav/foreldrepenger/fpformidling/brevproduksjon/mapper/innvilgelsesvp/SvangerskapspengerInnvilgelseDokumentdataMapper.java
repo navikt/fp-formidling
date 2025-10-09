@@ -12,6 +12,7 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -69,7 +70,9 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var utbetalingsPerioderPerAktvivitet = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentYtelse.perioder(), språkkode);
+        UnaryOperator<String> hentArbeidsgiverNavn = arbeidsgiverTjeneste::hentArbeidsgiverNavn;
+        var utbetalingsPerioderPerAktvivitet = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentYtelse.perioder(), språkkode,
+            hentArbeidsgiverNavn);
         var inkludereBeregning = erNyEllerEndretBeregning(behandling);
         var alleUtbetalingsperioder = utledAlleUtbetalingsperioder(utbetalingsPerioderPerAktvivitet);
 
@@ -84,8 +87,8 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medAntallUtbetalingsperioder(alleUtbetalingsperioder.size())
             .medAktiviteterOgUtbetalingsperioder(utbetalingsPerioderPerAktvivitet)
-            .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.uttakArbeidsforhold(), språkkode, arbeidsgiverTjeneste))
-            .medAvslåtteAktiviteter(mapAvslåtteAktiviteter(uttaksresultatSvp.uttakArbeidsforhold(), arbeidsgiverTjeneste))
+            .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.uttakArbeidsforhold(), språkkode, hentArbeidsgiverNavn))
+            .medAvslåtteAktiviteter(mapAvslåtteAktiviteter(uttaksresultatSvp.uttakArbeidsforhold(), hentArbeidsgiverNavn))
             .medInkludereBeregning(inkludereBeregning);
 
         if (behandling.erRevurdering()) {
@@ -104,13 +107,13 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             if (BeregningMapper.erMilitærSivil(beregningsgrunnlag)) {
                 dokumentdataBuilder.medMilitærSivil(true);
             } else {
-                dokumentdataBuilder.medArbeidsforhold(BeregningMapper.mapArbeidsforhold(beregningsgrunnlag, arbeidsgiverTjeneste));
+                dokumentdataBuilder.medArbeidsforhold(BeregningMapper.mapArbeidsforhold(beregningsgrunnlag, hentArbeidsgiverNavn));
                 dokumentdataBuilder.medSelvstendigNæringsdrivende(BeregningMapper.mapSelvstendigNæringsdrivende(beregningsgrunnlag));
                 dokumentdataBuilder.medFrilanser(BeregningMapper.mapFrilanser(beregningsgrunnlag));
                 dokumentdataBuilder.medMilitærSivil(false);
             }
             dokumentdataBuilder.medNaturalytelser(NaturalytelseMapper.mapNaturalytelser(tilkjentYtelse, beregningsgrunnlag, språkkode,
-                arbeidsgiverTjeneste));
+                hentArbeidsgiverNavn));
             dokumentdataBuilder.medBruttoBeregningsgrunnlag(Beløp.of(BeregningMapper.getAvkortetPrÅrSVP(beregningsgrunnlag)));
             dokumentdataBuilder.medInntektOver6G(BeregningMapper.inntektOverSeksG(beregningsgrunnlag));
             dokumentdataBuilder.medSeksG(BeregningMapper.finnSeksG(beregningsgrunnlag).longValue());

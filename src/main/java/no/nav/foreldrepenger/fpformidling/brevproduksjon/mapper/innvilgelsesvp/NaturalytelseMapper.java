@@ -9,22 +9,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.function.UnaryOperator;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BGAndelArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse.NaturalytelseStatus;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BgAndelArbeidsforholdDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.PeriodeÅrsakDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public final class NaturalytelseMapper {
@@ -35,7 +29,7 @@ public final class NaturalytelseMapper {
     public static List<Naturalytelse> mapNaturalytelser(TilkjentYtelseDagytelseDto tilkjentYtelse,
                                                         BeregningsgrunnlagDto beregningsgrunnlag,
                                                         Språkkode språkkode,
-                                                        ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                                        UnaryOperator<String> hentNavn) {
         var naturalytelser = new TreeSet<>(Comparator.comparing(Naturalytelse::getEndringsdatoDate));
 
         var beregningingsgrunnlagperioder = beregningsgrunnlag.beregningsgrunnlagperioder();
@@ -44,7 +38,7 @@ public final class NaturalytelseMapper {
             var matchetBgPeriode = finnBeregningsgrunnlagperiode(tilkjentYtelsePeriode, beregningingsgrunnlagperioder);
             tilkjentYtelsePeriode.andeler().forEach(andel -> {
                 if (harNaturalytelse(matchetBgPeriode, andel, startFørstePeriode)) {
-                    opprettNaturalytelse(matchetBgPeriode, andel, språkkode, arbeidsgiverTjeneste).ifPresent(naturalytelser::add);
+                    opprettNaturalytelse(matchetBgPeriode, andel, språkkode, hentNavn).ifPresent(naturalytelser::add);
                 }
             });
         });
@@ -73,31 +67,31 @@ public final class NaturalytelseMapper {
         return startFørstePeriode != null && !startFørstePeriode.equals(matchetBgPeriode.beregningsgrunnlagperiodeFom());
     }
 
-    private static Optional<Naturalytelse> opprettNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
-                                                                TilkjentYtelseAndel andel,
+    private static Optional<Naturalytelse> opprettNaturalytelse(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
+                                                                TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto andel,
                                                                 Språkkode språkkode,
-                                                                ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                                                UnaryOperator<String> hentNavn) {
         Optional<Naturalytelse> naturalytelse = Optional.empty();
         var naturalytelseStatus = utledNaturalytelseStatus(beregningsgrunnlagPeriode);
 
         if (naturalytelseStatus != null) {
             naturalytelse = Optional.of(Naturalytelse.ny()
                 .medStatus(naturalytelseStatus)
-                .medEndringsdato(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom(), språkkode)
-                .medNyDagsats(beregningsgrunnlagPeriode.getDagsats())
-                .medArbeidsgiverNavn(utledAktivitetsbeskrivelse(andel, andel.getAktivitetStatus(), arbeidsgiverTjeneste))
+                .medEndringsdato(beregningsgrunnlagPeriode.beregningsgrunnlagperiodeFom(), språkkode)
+                .medNyDagsats(beregningsgrunnlagPeriode.dagsats())
+                .medArbeidsgiverNavn(utledAktivitetsbeskrivelse(andel, andel.aktivitetstatus(), hentNavn))
                 .build());
         }
         return naturalytelse;
     }
 
-    private static NaturalytelseStatus utledNaturalytelseStatus(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    private static NaturalytelseStatus utledNaturalytelseStatus(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode) {
         NaturalytelseStatus naturalytelseStatus = null;
 
-        for (var årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
-            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
+        for (var årsak : beregningsgrunnlagPeriode.periodeårsaker()) {
+            if (PeriodeÅrsakDto.NATURALYTELSE_BORTFALT.equals(årsak)) {
                 naturalytelseStatus = NaturalytelseStatus.BORTFALLER;
-            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
+            } else if (PeriodeÅrsakDto.NATURALYTELSE_TILKOMMER.equals(årsak)) {
                 naturalytelseStatus = NaturalytelseStatus.TILKOMMER;
             }
         }
@@ -106,9 +100,10 @@ public final class NaturalytelseMapper {
             return naturalytelseStatus;
         }
 
-        for (var andel : beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
-            var bortfaltPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseBortfaltPrÅr).orElse(null);
-            var tilkommetPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseTilkommetPrÅr).orElse(null);
+        for (var andel : beregningsgrunnlagPeriode.beregningsgrunnlagandeler()) {
+            var arbeidsforhold = Optional.ofNullable(andel.arbeidsforhold());
+            var bortfaltPrÅr = arbeidsforhold.map(BgAndelArbeidsforholdDto::naturalytelseBortfaltPrÅr).orElse(null);
+            var tilkommetPrÅr = arbeidsforhold.map(BgAndelArbeidsforholdDto::naturalytelseTilkommetPrÅr).orElse(null);
             if ((bortfaltPrÅr != null && tilkommetPrÅr == null) || (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr)
                 && tilkommetPrÅr.compareTo(bortfaltPrÅr) < 0)) {
                 naturalytelseStatus = NaturalytelseStatus.BORTFALLER;

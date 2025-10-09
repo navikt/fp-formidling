@@ -8,16 +8,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AktiviteterOgUtbetalingsperioder;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
-
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AktiviteterOgUtbetalingsperioder;
 
 class UtbetalingsperiodeMapperTest {
 
@@ -72,7 +71,7 @@ class UtbetalingsperiodeMapperTest {
             .build());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentPerioder, Språkkode.NB, arbeidsgiverTjeneste);
 
         resultat.sort(Comparator.comparing(AktiviteterOgUtbetalingsperioder::beskrivelse));
         // Assert
@@ -138,7 +137,7 @@ class UtbetalingsperiodeMapperTest {
             .build());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentPerioder, Språkkode.NB, arbeidsgiverTjeneste);
 
         resultat.sort(Comparator.comparing(AktiviteterOgUtbetalingsperioder::beskrivelse));
         // Assert
@@ -213,7 +212,7 @@ class UtbetalingsperiodeMapperTest {
             .build());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentPerioder, Språkkode.NB, arbeidsgiverTjeneste);
 
         resultat.sort(Comparator.comparing(AktiviteterOgUtbetalingsperioder::beskrivelse));
         // Assert

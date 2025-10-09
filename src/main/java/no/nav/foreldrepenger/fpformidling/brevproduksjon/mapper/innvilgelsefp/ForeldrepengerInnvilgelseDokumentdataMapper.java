@@ -92,7 +92,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fra(dokumentHendelse, behandling.behandlingsresultat(), behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
         var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.perioder(), uttak,
             beregningsgrunnlag.beregningsgrunnlagperioder(), språkkode, arbeidsgiverTjeneste::hentArbeidsgiverNavn);

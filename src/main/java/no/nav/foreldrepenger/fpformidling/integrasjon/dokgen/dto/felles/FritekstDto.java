@@ -24,12 +24,11 @@ public class FritekstDto {
         return fritekst;
     }
 
-    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, BrevGrunnlag behandling) {
+    public static Optional<FritekstDto> fraFritekst(DokumentHendelse dokumentHendelse, BrevGrunnlag.Behandlingsresultat.Fritekst fritekst) {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(fra(dokumentHendelse.getFritekst()));
-        } else if (behandling.behandlingsresultat() != null && behandling.behandlingsresultat().fritekst() != null
-            && behandling.behandlingsresultat().fritekst().avslagsarsakFritekst() != null) {
-            return Optional.of(fra(behandling.behandlingsresultat().fritekst().avslagsarsakFritekst()));
+        } else if (fritekst != null && fritekst.avslagsarsakFritekst() != null) {
+            return Optional.of(fra(fritekst.avslagsarsakFritekst()));
         }
         return Optional.empty();
     }

@@ -49,7 +49,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fra(dokumentHendelse, behandling.behandlingsresultat(), behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
         var familiehendelse = behandling.familieHendelse();
         var beregningsgrunnlagOpt = Optional.ofNullable(behandling.beregningsgrunnlag());

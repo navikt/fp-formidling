@@ -55,7 +55,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fra(hendelse, behandling.behandlingsresultat(), behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
         var familieHendelse = behandling.familieHendelse();
 

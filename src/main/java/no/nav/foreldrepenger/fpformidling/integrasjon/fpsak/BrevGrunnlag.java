@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling;
+package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

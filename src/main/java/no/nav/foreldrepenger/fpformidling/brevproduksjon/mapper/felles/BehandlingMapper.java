@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 import java.util.List;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.KodeverkMapper;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public final class BehandlingMapper {

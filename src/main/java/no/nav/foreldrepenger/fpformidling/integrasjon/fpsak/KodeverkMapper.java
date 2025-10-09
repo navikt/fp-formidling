@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling;
+package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;

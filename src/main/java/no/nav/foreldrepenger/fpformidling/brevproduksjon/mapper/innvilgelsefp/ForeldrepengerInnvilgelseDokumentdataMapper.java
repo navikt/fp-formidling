@@ -7,7 +7,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
@@ -33,7 +33,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.EøsUttak;
@@ -44,12 +43,12 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.A
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata.Builder;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.Behandlingsresultat.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.ForeldrepengerUttak.Stønadskonto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.ForeldrepengerUttak.Stønadskonto.Type;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.Rettigheter.Rettighetstype;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.KodeverkMapper;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Behandlingsresultat.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.ForeldrepengerUttak.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.ForeldrepengerUttak.Stønadskonto.Type;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Rettigheter.Rettighetstype;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 
@@ -317,7 +316,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private static boolean bfhrMedMinsterett(List<Stønadskonto> saldoer, BrevGrunnlag.Rettigheter rettigheter) {
-        return Set.of(Rettigheter.Rettighetstype.BARE_FAR_RETT, Rettighetstype.BARE_FAR_RETT_MOR_UFØR).contains(rettigheter.gjeldende()) && (
+        return Set.of(BrevGrunnlag.Rettigheter.Rettighetstype.BARE_FAR_RETT, BrevGrunnlag.Rettigheter.Rettighetstype.BARE_FAR_RETT_MOR_UFØR).contains(rettigheter.gjeldende()) && (
             StønadskontoMapper.kontoEksisterer(saldoer, Type.MINSTERETT) || StønadskontoMapper.kontoEksisterer(saldoer, Type.UTEN_AKTIVITETSKRAV));
     }
 

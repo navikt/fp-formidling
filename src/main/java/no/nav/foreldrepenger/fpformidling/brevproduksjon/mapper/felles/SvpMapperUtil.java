@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.SvangerskapspengerUttak;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.SvangerskapspengerUttak;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -11,8 +11,7 @@ import java.util.function.UnaryOperator;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 
 public final class SvpMapperUtil {
 
@@ -60,26 +59,20 @@ public final class SvpMapperUtil {
     public static int finnAntallArbeidsgivere(List<SvangerskapspengerUttak.UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                               List<BrevGrunnlag.Inntektsmelding> inntektsmeldinger,
                                               UnaryOperator<String> hentNavn) {
-        var antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream().map(uttakArbeidsforhold -> {
-            var arbeidsgiver = mapArbeidsgiver(uttakArbeidsforhold.arbeidsgiverReferanse(), hentNavn);
-            return getArbeidsgiverNavn(uttakArbeidsforhold, arbeidsgiver);
-        }).distinct().count();
+        var antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
+            .map(uttakArbeidsforhold -> getArbeidsgiverNavn(uttakArbeidsforhold, uttakArbeidsforhold.arbeidsgiverReferanse(), hentNavn))
+            .distinct()
+            .count();
         if (antallArbeidsgivere == 0) {
-            antallArbeidsgivere = (int) inntektsmeldinger
-                .stream()
-                .map(BrevGrunnlag.Inntektsmelding::arbeidsgiverReferanse)
-                .distinct()
-                .count();
+            antallArbeidsgivere = (int) inntektsmeldinger.stream().map(BrevGrunnlag.Inntektsmelding::arbeidsgiverReferanse).distinct().count();
         }
         return antallArbeidsgivere;
     }
 
-    private static Arbeidsgiver mapArbeidsgiver(String arbeidsgiverReferanse, UnaryOperator<String> hentNavn) {
-        return arbeidsgiverReferanse != null ? new Arbeidsgiver(arbeidsgiverReferanse, hentNavn.apply(arbeidsgiverReferanse)) : null;
-    }
-
-    private static String getArbeidsgiverNavn(SvangerskapspengerUttak.UttakArbeidsforhold arbeidsforhold, Arbeidsgiver arbeidsgiver) {
-        return arbeidsgiver != null ? arbeidsgiver.navn() : brukUttakArbeidType(arbeidsforhold);
+    private static String getArbeidsgiverNavn(SvangerskapspengerUttak.UttakArbeidsforhold arbeidsforhold,
+                                              String arbeidsgiverReferanse,
+                                              UnaryOperator<String> hentNavn) {
+        return arbeidsgiverReferanse != null ? hentNavn.apply(arbeidsgiverReferanse) : brukUttakArbeidType(arbeidsforhold);
     }
 
     private static String brukUttakArbeidType(SvangerskapspengerUttak.UttakArbeidsforhold arbeidsforhold) {

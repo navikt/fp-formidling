@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.journal;
 
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BrevGrunnlag.InnsynBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.InnsynBehandling;
 
 import java.util.Collection;
 import java.util.List;

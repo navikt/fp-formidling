@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,13 +88,13 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
             .fom(periode1Fom)
             .tom(periode1Tom)
             .aktiviteter(List.of())
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.INNVILGET)
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UKJENT.getKode())
             .build();
         var periode2 = foreldrepengerUttakPeriode()
             .fom(periode2Fom)
             .tom(periode2Tom)
             .aktiviteter(List.of())
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.INNVILGET)
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UKJENT.getKode())
             .build();
 
         return foreldrepengerUttak()

@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -80,11 +81,11 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
     }
 
     private Optional<LocalDate> finnTidligstFødselsdato(BrevGrunnlag.FamilieHendelse familieHendelse) {
-        return familieHendelse.barn().stream().map(BrevGrunnlag.Barn::fødselsdato).min(LocalDate::compareTo);
+        return familieHendelse.barn().stream().map(BrevGrunnlag.Barn::fødselsdato).filter(Objects::nonNull).min(LocalDate::compareTo);
     }
 
     private static Optional<LocalDate> finnTidligstDødsdato(BrevGrunnlag.FamilieHendelse familieHendelse) {
-        return familieHendelse.barn().stream().map(BrevGrunnlag.Barn::dødsdato).min(LocalDate::compareTo);
+        return familieHendelse.barn().stream().map(BrevGrunnlag.Barn::dødsdato).filter(Objects::nonNull).min(LocalDate::compareTo);
     }
 
     private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder,

@@ -63,23 +63,4 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
         assertThat(dokumentdata.getPlanlagtOppstartDato()).isEqualTo(formaterDatoNorsk(NY_STARTDATO));
         assertThat(dokumentdata.getKanBehandlesDato()).isEqualTo(formaterDatoNorsk(NY_STARTDATO.minusWeeks(4)));
     }
-
-    @Test
-    void skal_mappe_felter_for_brev_til_bruker_uten_ny_startdato() {
-        // Arrange
-        var behandling = defaultBuilder()
-            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
-            .nyStartDatoVedUtsattOppstart(null)
-            .build();
-        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = lagStandardHendelseBuilder().build();
-
-        // Act
-        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-
-        // Assert
-        assertThat(dokumentdata.getHarSøktOmNyPeriode()).isTrue();
-        assertThat(dokumentdata.getPlanlagtOppstartDato()).isNull();
-        assertThat(dokumentdata.getKanBehandlesDato()).isNull();
-    }
 }

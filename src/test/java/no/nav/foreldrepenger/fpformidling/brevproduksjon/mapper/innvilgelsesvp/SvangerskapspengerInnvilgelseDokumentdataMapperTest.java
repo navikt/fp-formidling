@@ -30,6 +30,7 @@ import org.mockito.Mock;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.BrevGrunnlagBuilder;
@@ -168,15 +169,15 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private TilkjentYtelseDagytelseDto opprettTilkjentYtelse() {
         var periode1 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(PERIODE1_FOM, PERIODE1_TOM, DAGSATS_PERIODE1.intValue(), List.of(
             new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER1_ORGNR, DAGSATS_PERIODE1.intValue(),
-                UTBETALINGSGRAD_PERIODE1.intValue(), TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null)));
+                UTBETALINGSGRAD_PERIODE1.intValue(), TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, BigDecimal.TEN)));
 
         var periode2 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(PERIODE2_FOM, PERIODE2_TOM, DAGSATS_PERIODE2.intValue(), List.of(
             new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER1_ORGNR, DAGSATS_PERIODE2.intValue(),
-                UTBETALINGSGRAD_PERIODE2.intValue(), TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null)));
+                UTBETALINGSGRAD_PERIODE2.intValue(), TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, BigDecimal.TEN)));
 
         var periode3 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(PERIODE3_FOM, PERIODE3_TOM, DAGSATS_PERIODE3.intValue(), List.of(
             new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER1_ORGNR, DAGSATS_PERIODE3.intValue(),
-                UTBETALINGSGRAD_PERIODE3.intValue(), TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null)));
+                UTBETALINGSGRAD_PERIODE3.intValue(), TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, BigDecimal.TEN)));
 
         return new TilkjentYtelseDagytelseDto(List.of(periode1, periode2, periode3));
     }
@@ -198,6 +199,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .tom(PERIODE3_TOM)
             .utbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
             .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
+            .periodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode())
             .build();
 
         var arbeidsforhold1 = svangerskapspengerUttakArbeidsforhold().arbeidType(BrevGrunnlag.UttakArbeidType.ORDINÆRT_ARBEID)

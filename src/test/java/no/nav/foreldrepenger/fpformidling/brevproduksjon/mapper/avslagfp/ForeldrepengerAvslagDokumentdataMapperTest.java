@@ -85,7 +85,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(dokumentdata.getFelles().getErUtkast()).isTrue();
 
-        assertThat(dokumentdata.getRelasjonskode()).isEqualTo("MOR");
+        assertThat(dokumentdata.getRelasjonskode()).isEqualTo(behandling.relasjonsRolleType().name());
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
         assertThat(dokumentdata.getGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getBarnErFødt()).isFalse();
@@ -197,22 +197,19 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
 
         var periode1 = foreldrepengerUttakPeriode().fom(PERIODE1_FOM)
             .tom(PERIODE1_TOM)
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("4007")
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT, "4007")
             .aktiviteter(List.of(aktivitet))
             .build();
 
         var periode2 = foreldrepengerUttakPeriode().fom(PERIODE2_FOM)
             .tom(PERIODE2_TOM)
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("4005")
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT, "4005")
             .aktiviteter(List.of(aktivitet))
             .build();
 
         var periode3 = foreldrepengerUttakPeriode().fom(PERIODE3_FOM)
             .tom(PERIODE3_TOM)
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("4005")
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT, "4005")
             .aktiviteter(List.of(aktivitet))
             .build();
 
@@ -228,15 +225,13 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
 
         var periode1 = foreldrepengerUttakPeriode().fom(PERIODE1_FOM)
             .tom(PERIODE2_TOM)
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("4007")
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT, "4007")
             .aktiviteter(List.of(aktivitet))
             .build();
 
         var periode3 = foreldrepengerUttakPeriode().fom(PERIODE3_FOM)
             .tom(PERIODE3_TOM)
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("4005")
+            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT, "4005")
             .aktiviteter(List.of(aktivitet))
             .build();
 

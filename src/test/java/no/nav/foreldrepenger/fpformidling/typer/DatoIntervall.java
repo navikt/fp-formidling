@@ -9,7 +9,7 @@ public class DatoIntervall {
     private Dato tomDato;
 
     public static DatoIntervall fraOgMedTilOgMed(LocalDate fom, LocalDate tom) {
-        return new DatoIntervall(fom, fom);
+        return new DatoIntervall(fom, tom);
     }
 
     public static DatoIntervall fraOgMed(LocalDate fom) {

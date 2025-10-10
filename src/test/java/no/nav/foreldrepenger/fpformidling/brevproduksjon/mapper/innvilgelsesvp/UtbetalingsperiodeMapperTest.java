@@ -21,8 +21,8 @@ class UtbetalingsperiodeMapperTest {
 
     private static final String ARBEIDSGIVER_1 = "Arbeidsgiver1";
     private static final String ARBEIDSGIVER_2 = "Arbeidsgiver2";
-    private static final String ORG_NR_1 = "97525987";
-    private static final String ORG_NR_2 = "97525988";
+    private static final String ORG_NR_1 = "1111";
+    private static final String ORG_NR_2 = "2222";
 
     private static final LocalDate START = LocalDate.now();
 

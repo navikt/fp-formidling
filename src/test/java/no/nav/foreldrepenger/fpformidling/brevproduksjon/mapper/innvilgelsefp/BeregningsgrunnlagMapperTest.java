@@ -47,7 +47,7 @@ class BeregningsgrunnlagMapperTest {
         // Arrange
         var andel = lagBraListeFrilanser();
         var periode = lagBeregningsgrunnlagPeriode(andel);
-        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(), null, null, List.of(periode), false, false);
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(), null, GRUNNBELØP, List.of(periode), false, false);
 
         // Act + Assert
         assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(of(ARBEIDSTAKER_BRUTTO_PR_ÅR.add(FRILANSER_BRUTTO_PR_ÅR).longValue()));
@@ -56,7 +56,7 @@ class BeregningsgrunnlagMapperTest {
     @Test
     void skal_finne_seksG() {
         // Arrange
-        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(), null, null, List.of(lagBeregningsgrunnlagPeriode(lagBraListeFrilanser())),
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(), null, GRUNNBELØP, List.of(lagBeregningsgrunnlagPeriode(lagBraListeFrilanser())),
             false, false);
 
         // Act + Assert

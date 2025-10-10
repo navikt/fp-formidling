@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
 
 class InnsynDokumentdataMapperTest {
 
@@ -74,6 +75,7 @@ class InnsynDokumentdataMapperTest {
             .behandlingType(BrevGrunnlag.BehandlingType.INNSYN)
             .innsynBehandling(innsynsBehandling)
             .fagsakYtelseType(ytelseType)
+            .behandlingsresultat(BrevGrunnlagBuilders.behandlingsresultat().build())
             .build();
     }
 

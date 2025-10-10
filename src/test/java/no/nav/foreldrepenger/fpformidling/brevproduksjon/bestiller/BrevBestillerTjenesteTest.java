@@ -1,5 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.FagsakStatus;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.FagsakYtelseType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.RelasjonsRolleType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Verge;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.tilkjentYtelse;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -108,7 +113,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(true);
-        mockDomeneobjektProvider(personinfo, true);
+        mockBrevGrunnlag(personinfo, true);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid, DokumentMal.ENGANGSSTØNAD_INNVILGELSE, null);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
@@ -137,7 +142,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(true);
-        mockDomeneobjektProvider(personinfo, false);
+        mockBrevGrunnlag(personinfo, false);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid, DokumentMal.ENGANGSSTØNAD_INNVILGELSE, null);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
@@ -224,7 +229,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(false);
-        mockDomeneobjektProvider(personinfo, false);
+        mockBrevGrunnlag(personinfo, false);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid, DokumentMal.ENGANGSSTØNAD_INNVILGELSE, null);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
@@ -261,9 +266,9 @@ class BrevBestillerTjenesteTest {
         return personinfoSøker;
     }
 
-    private BrevGrunnlag mockDomeneobjektProvider(Personinfo personinfo, boolean harGyldigVerge) {
+    private void mockBrevGrunnlag(Personinfo personinfo, boolean harGyldigVerge) {
         var verge = harGyldigVerge
-            ? new BrevGrunnlag.Verge(VERGE.getId(), "Verge Vergesen", null, LocalDate.now().minusDays(1), LocalDate.now().plusMonths(1), null)
+            ? new Verge(VERGE.getId(), "Verge Vergesen", null, LocalDate.now().minusDays(1), LocalDate.now().plusMonths(1), null)
             : null;
         var tilkjentYtelse = tilkjentYtelse()
             .engangsstønad(new TilkjentYtelseEngangsstønadDto(1L))
@@ -272,11 +277,11 @@ class BrevBestillerTjenesteTest {
         var behandling = brevGrunnlag()
             .uuid(BEHANDLING_UUID)
             .saksnummer(SAKSNUMMER.getVerdi())
-            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
-            .fagsakStatus(BrevGrunnlag.FagsakStatus.UNDER_BEHANDLING)
-            .relasjonsRolleType(BrevGrunnlag.RelasjonsRolleType.MORA)
+            .fagsakYtelseType(FagsakYtelseType.FORELDREPENGER)
+            .fagsakStatus(FagsakStatus.UNDER_BEHANDLING)
+            .relasjonsRolleType(RelasjonsRolleType.MORA)
             .aktørId(personinfo.getAktørId().getId())
-            .behandlingType(BrevGrunnlag.BehandlingType.FØRSTEGANGSSØKNAD)
+            .behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .opprettet(LocalDateTime.now().minusDays(1))
             .avsluttet(LocalDateTime.now())
             .behandlendeEnhet("4812")
@@ -284,10 +289,10 @@ class BrevBestillerTjenesteTest {
             .automatiskBehandlet(false)
             .tilkjentYtelse(tilkjentYtelse)
             .verge(verge)
+            .behandlingÅrsakTyper(List.of())
             .build();
 
         when(fpsakRestKlient.hentBrevGrunnlag(any(UUID.class))).thenReturn(behandling);
-        return behandling;
     }
 
     private DokumentHendelse opprettDokumentHendelse(UUID randomBestillingsUuid, DokumentMal dokumentMal, DokumentMal journalførSom) {

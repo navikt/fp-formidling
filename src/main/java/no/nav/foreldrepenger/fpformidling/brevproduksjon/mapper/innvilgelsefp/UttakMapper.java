@@ -16,10 +16,12 @@ public class UttakMapper {
         Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
         for (var periode : foreldrepengerUttak.perioderSøker()) {
             //TODO TFP-6069 - riktig?
-            if (!periode.graderingAvslagÅrsak().equals("-")) {
+            if (periode.graderingAvslagÅrsak() != null && !"-".equals(periode.graderingAvslagÅrsak())) {
                 lovhjemler.add(periode.graderingsAvslagÅrsakLovhjemmel());
             }
-            lovhjemler.add(periode.periodeResultatÅrsakLovhjemmel());
+            if (periode.periodeResultatÅrsakLovhjemmel() != null) {
+                lovhjemler.add(periode.periodeResultatÅrsakLovhjemmel());
+            }
         }
         return FellesMapper.formaterLovhjemlerUttak(lovhjemler, konsekvensForYtelse, innvilgetRevurdering);
     }

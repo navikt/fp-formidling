@@ -23,6 +23,7 @@ public final class AvslåttAktivitetMapper {
     public static List<AvslåttAktivitet> mapAvslåtteAktiviteter(List<UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                                                 UnaryOperator<String> hentNavn) {
         return uttakResultatArbeidsforhold.stream()
+            .filter(ura -> ura.arbeidsforholdIkkeOppfyltÅrsak() != null && !ura.arbeidsforholdIkkeOppfyltÅrsak().equals("-"))
             .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.arbeidsforholdIkkeOppfyltÅrsak()))
             .map(uttakArbeidsforhold -> opprettSvpAvslagArbeidsforhold(uttakArbeidsforhold, hentNavn))
             .toList();

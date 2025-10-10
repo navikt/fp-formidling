@@ -125,7 +125,7 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getGjelderTilbakekreving()).isTrue();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("folketrygdloven § 21-12 og forvaltningsloven §§ 28, 31, 32 og 33");
         assertThat(dokumentdata.getAvvistGrunner()).containsAll(
-            of("KLAGET_FOR_SENT", "KLAGER_IKKE_PART", "KLAGE_UGYLDIG", "IKKE_KONKRET", "IKKE_PÅKLAGD_VEDTAK"));
+            of("KLAGET_FOR_SENT", "KLAGER_IKKE_PART", "KLAGE_UGYLDIG", "IKKE_KONKRET", "IKKE_PAKLAGD_VEDTAK"));
         assertThat(dokumentdata.isPåklagdVedtak()).isFalse();
     }
 }

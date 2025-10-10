@@ -367,9 +367,9 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public ForeldrepengerUttakPeriodeBuilder periodeResultatType(PeriodeResultatType periodeResultatType) {
+        public ForeldrepengerUttakPeriodeBuilder periodeResultatType(PeriodeResultatType periodeResultatType, String periodeResultatÅrsak) {
             this.periodeResultatType = periodeResultatType;
-            return this;
+            return periodeResultatÅrsak(periodeResultatÅrsak);
         }
 
         public ForeldrepengerUttakPeriodeBuilder periodeResultatÅrsak(String periodeResultatÅrsak) {

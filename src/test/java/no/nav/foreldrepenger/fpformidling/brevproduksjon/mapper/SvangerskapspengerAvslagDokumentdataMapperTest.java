@@ -27,6 +27,8 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Datamappe
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
@@ -56,7 +58,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_med_årsak_fra_behandling() {
         // Arrange
-        var behandling = opprettBehandling("1007");
+        var behandling = opprettBehandling(Avslagsårsak.SØKT_FOR_SENT);
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
@@ -73,7 +75,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
-        assertThat(dokumentdata.getÅrsak()).isEqualTo(Årsak.of("1007"));
+        assertThat(dokumentdata.getÅrsak()).isEqualTo(Årsak.of(Avslagsårsak.SØKT_FOR_SENT.getKode()));
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDato(LocalDate.now(), SPRÅKKODE_NB));
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
@@ -86,7 +88,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_med_årsak_fra_uttaket() {
         // Arrange
-        var behandling = opprettBehandling("4001");
+        var behandling = opprettBehandling(Avslagsårsak.SØKT_FOR_SENT);
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
@@ -103,7 +105,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
-        assertThat(dokumentdata.getÅrsak()).isEqualTo(Årsak.of("4001"));
+        assertThat(dokumentdata.getÅrsak()).isEqualTo(Årsak.of(Avslagsårsak.SØKT_FOR_SENT.getKode()));
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDato(LocalDate.now(), SPRÅKKODE_NB));
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
@@ -120,29 +122,24 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             List.of(periode), true, false);
     }
 
-    private BrevGrunnlag.SvangerskapspengerUttak opprettUttaksresultat(String periodeÅrsakKode) {
+    private BrevGrunnlag.SvangerskapspengerUttak opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak periodeÅrsakKode) {
         var periode1 = svangerskapspengerUttakPeriode().fom(PERIODE1_FOM)
             .tom(PERIODE1_TOM)
-            .periodeResultatType(BrevGrunnlag.PeriodeResultatType.INNVILGET)
-            .build();
-
-        var periode2 = svangerskapspengerUttakPeriode().fom(PERIODE1_FOM)
-            .tom(PERIODE1_TOM)
             .periodeResultatType(BrevGrunnlag.PeriodeResultatType.AVSLÅTT)
-            .periodeIkkeOppfyltÅrsak(periodeÅrsakKode)
+            .periodeIkkeOppfyltÅrsak(periodeÅrsakKode.getKode())
             .build();
 
         var arbeidsforhold = svangerskapspengerUttakArbeidsforhold().arbeidsgiverReferanse(ARBEIDSGIVER_1_REF)
             .arbeidType(BrevGrunnlag.UttakArbeidType.ORDINÆRT_ARBEID)
-            .perioder(List.of(periode1, periode2))
+            .perioder(List.of(periode1))
             .build();
 
         return svangerskapspengerUttak().uttakArbeidsforhold(List.of(arbeidsforhold)).build();
     }
 
-    private BrevGrunnlag opprettBehandling(String avslagsårsakKode) {
+    private BrevGrunnlag opprettBehandling(Avslagsårsak avslagsårsak) {
         var behandlingsres = behandlingsresultat().behandlingResultatType(BrevGrunnlag.Behandlingsresultat.BehandlingResultatType.AVSLÅTT)
-            .avslagsårsak(avslagsårsakKode)
+            .avslagsårsak(avslagsårsak.getKode())
             .build();
 
         return defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.SVANGERSKAPSPENGER)
@@ -151,7 +148,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
             .språkkode(BrevGrunnlag.Språkkode.BOKMÅL)
             .søknadMottattDato(LocalDate.now())
             .beregningsgrunnlag(opprettBeregningsgrunnlag())
-            .svangerskapspengerUttak(opprettUttaksresultat(avslagsårsakKode))
+            .svangerskapspengerUttak(opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT))
             .build();
     }
 }

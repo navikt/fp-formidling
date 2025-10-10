@@ -34,8 +34,8 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagB
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -52,6 +52,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
@@ -93,7 +94,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
 
-        when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(ARBEIDSGIVER_ORGNR)).thenReturn(ARBEIDSGIVER_NAVN);
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(ARBEIDSGIVER_ORGNR)).thenReturn(ARBEIDSGIVER_NAVN);
     }
 
     @Test
@@ -240,7 +241,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @Test
     void avslåtte_perioder_får_tidligstmottatt() {
         var tidligstMottatt = LocalDate.now();
-        var avslåttUttaksperiode = foreldrepengerUttakPeriode().periodeResultatType(PeriodeResultatType.AVSLÅTT)
+        var avslåttUttaksperiode = foreldrepengerUttakPeriode()
+            .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.SØKNADSFRIST.getKode())
             .fom(LocalDate.now())
             .tom(LocalDate.now().plusDays(10))
             .tidligstMottattDato(tidligstMottatt)
@@ -304,11 +306,11 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private TilkjentYtelseDagytelseDto opprettTilkjentYtelseFP() {
         var andel1 = new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER_ORGNR, 100, 100,
-            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null);
+            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(20), BigDecimal.valueOf(100));
         var periode1 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(PERIODE_FOM, PERIODE_FOM, 100, List.of(andel1));
 
         var andel2 = new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER_ORGNR, 200, 100,
-            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null);
+            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(20), BigDecimal.valueOf(100));
         var periode2 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(PERIODE_TOM, PERIODE_TOM, 200, List.of(andel2));
 
         return new TilkjentYtelseDagytelseDto(List.of(periode1, periode2));
@@ -316,16 +318,16 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private TilkjentYtelseDagytelseDto opprettTilkjentYtelseFP2() {
         var andel1 = new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER_ORGNR, 100, 100,
-            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null);
+            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(20), BigDecimal.valueOf(100));
         var periode1 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(LocalDate.now(), LocalDate.now().plusDays(1), 100, List.of(andel1));
 
         var andel2 = new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER_ORGNR, 100, 100,
-            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null);
+            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(20), BigDecimal.valueOf(100));
         var periode2 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(LocalDate.now().plusDays(2), LocalDate.now().plusDays(4), 100,
             List.of(andel2));
 
         var andel3 = new TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto(ARBEIDSGIVER_ORGNR, 200, 100,
-            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, null, null);
+            TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(20), BigDecimal.valueOf(100));
         var periode3 = new TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto(LocalDate.now().plusDays(5), LocalDate.now().plusDays(10), 200,
             List.of(andel3));
 
@@ -363,21 +365,17 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         var uttakResultatPeriode1 = foreldrepengerUttakPeriode().aktiviteter(List.of(uttakAktivitet))
             .fom(LocalDate.now())
             .tom(LocalDate.now().plusDays(1))
-            .periodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("FOR_SEN_SØKNAD")
-            .graderingAvslagÅrsak("FOR_SEN_SØKNAD")
+            .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.FOR_SEN_SØKNAD.getKode())
             .build();
         var uttakResultatPeriode2 = foreldrepengerUttakPeriode().aktiviteter(List.of(uttakAktivitet))
             .fom(PERIODE_FOM)
             .tom(PERIODE_TOM)
-            .periodeResultatType(PeriodeResultatType.INNVILGET)
-            .periodeResultatÅrsak("MOR_HAR_IKKE_OMSORG")
+            .periodeResultatType(PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UKJENT.getKode())
             .build();
         var uttakResultatPeriode3 = foreldrepengerUttakPeriode().aktiviteter(List.of(uttakAktivitet1))
             .fom(LocalDate.now())
             .tom(LocalDate.now().plusDays(1))
-            .periodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("MOR_TAR_IKKE_ALLE_UKENE")
+            .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode())
             .build();
 
         return foreldrepengerUttak().stønadskontoer(List.of(stønadskonto().stønadskontotype(ForeldrepengerUttak.Stønadskonto.Type.MØDREKVOTE)
@@ -407,15 +405,12 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         var uttakResultatPeriode1 = foreldrepengerUttakPeriode().aktiviteter(List.of(uttakAktivitet))
             .fom(LocalDate.now())
             .tom(LocalDate.now().plusDays(4))
-            .periodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .periodeResultatÅrsak("FOR_SEN_SØKNAD")
-            .graderingAvslagÅrsak("FOR_SEN_SØKNAD")
+            .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.FOR_SEN_SØKNAD.getKode())
             .build();
         var uttakResultatPeriode2 = foreldrepengerUttakPeriode().aktiviteter(List.of(uttakAktivitet))
             .fom(LocalDate.now().plusDays(5))
             .tom(LocalDate.now().plusDays(10))
-            .periodeResultatType(PeriodeResultatType.INNVILGET)
-            .periodeResultatÅrsak("MOR_HAR_IKKE_OMSORG")
+            .periodeResultatType(PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UKJENT.getKode())
             .build();
 
         return foreldrepengerUttak().stønadskontoer(List.of(stønadskonto().stønadskontotype(ForeldrepengerUttak.Stønadskonto.Type.MØDREKVOTE)

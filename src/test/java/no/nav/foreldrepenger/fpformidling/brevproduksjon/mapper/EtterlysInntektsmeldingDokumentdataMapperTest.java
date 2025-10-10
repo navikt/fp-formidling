@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +36,12 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     @Test
     void test_map_fagtype_foreldrepenger() {
         var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", BigDecimal.valueOf(100), false);
-        var inntektsmeldingerStatus = List.of(imStatus);
-        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER).build();
+        var inntektsmeldingerStatus = new ArbeidsforholdInntektsmeldingerDto(List.of(imStatus));
+        var behandling = DatamapperTestUtil.defaultBuilder()
+            .inntektsmeldingerStatus(inntektsmeldingerStatus)
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
+            .søknadMottattDato(LocalDate.now())
+            .build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 
@@ -45,7 +50,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
 
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.FORELDREPENGER.getKode());
         assertThat(dokumentdata.getSøknadDato()).isNotEmpty();
-        assertThat(dokumentdata.getInntektsmeldingerStatus()).hasSize(inntektsmeldingerStatus.size());
+        assertThat(dokumentdata.getInntektsmeldingerStatus()).hasSize(1);
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverIdent()).isEqualTo(imStatus.arbeidsgiverIdent());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
@@ -61,7 +66,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
             .behandlingType(BrevGrunnlag.BehandlingType.FØRSTEGANGSSØKNAD)
             .inntektsmeldingerStatus(new ArbeidsforholdInntektsmeldingerDto(inntektsmeldingerStatus))
             .build();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 

@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 
 @ExtendWith(MockitoExtension.class)
 class KlageOversendtDokumentdataMapperTest {
@@ -44,7 +45,8 @@ class KlageOversendtDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brevet() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
+        var behandling = DatamapperTestUtil.defaultBuilder()
+                .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling);

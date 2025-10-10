@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +51,7 @@ class KlageAvvistDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_vanlig_behandling() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
@@ -81,7 +82,7 @@ class KlageAvvistDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.TILBAKEKREVING,

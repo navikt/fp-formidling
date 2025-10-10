@@ -34,10 +34,13 @@ class FritekstbrevDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_fritekstbrev_til_bruker_fra_hendelsen() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag();
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER).build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medTittel(OVERSKRIFT).medFritekst(BRØDTEKST_INN).medDokumentMal(
-            DokumentMal.FRITEKSTBREV).build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder()
+            .medTittel(OVERSKRIFT)
+            .medFritekst(BRØDTEKST_INN)
+            .medDokumentMal(DokumentMal.FRITEKSTBREV)
+            .build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -63,9 +66,16 @@ class FritekstbrevDokumentdataMapperTest {
         // Arrange
         var behandlingsresultat = new BrevGrunnlag.Behandlingsresultat(null, null, BrevGrunnlag.Behandlingsresultat.BehandlingResultatType.INNVILGET,
             null, new BrevGrunnlag.Behandlingsresultat.Fritekst(OVERSKRIFT, BRØDTEKST_INN, null), null, false, null, List.of(), List.of());
-        var behandling = DatamapperTestUtil.standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER, behandlingsresultat);
+        var behandling = DatamapperTestUtil.defaultBuilder()
+            .behandlingsresultat(behandlingsresultat)
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
+            .build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medTittel(null).medFritekst(null).medDokumentMal(DokumentMal.FRITEKSTBREV).build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder()
+            .medTittel(null)
+            .medFritekst(null)
+            .medDokumentMal(DokumentMal.FRITEKSTBREV)
+            .build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

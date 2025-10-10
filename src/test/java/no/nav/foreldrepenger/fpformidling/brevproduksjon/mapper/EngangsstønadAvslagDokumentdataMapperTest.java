@@ -91,7 +91,13 @@ class EngangsstønadAvslagDokumentdataMapperTest {
                                              String avslagsfritekst,
                                              FamilieHendelse familieHendelse,
                                              Behandlingsresultat.VilkårType vilkårType) {
-        return DatamapperTestUtil.avslåttBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.ENGANGSTØNAD, avslagsårsak, avslagsfritekst, familieHendelse,
-            vilkårType);
+        var behandlingsresultat = new Behandlingsresultat(null, null, Behandlingsresultat.BehandlingResultatType.AVSLÅTT, avslagsårsak.getKode(),
+            new Behandlingsresultat.Fritekst("avslag", null, avslagsfritekst), null, false, null, List.of(), List.of(vilkårType));
+        return DatamapperTestUtil.defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.ENGANGSTØNAD)
+            .behandlingType(BrevGrunnlag.BehandlingType.FØRSTEGANGSSØKNAD)
+            .familieHendelse(familieHendelse)
+            .behandlingsresultat(behandlingsresultat)
+            .build();
     }
 }

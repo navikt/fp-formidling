@@ -70,7 +70,11 @@ class InnsynDokumentdataMapperTest {
     }
 
     private BrevGrunnlag opprettBehandling(BrevGrunnlag.FagsakYtelseType ytelseType, InnsynBehandling innsynsBehandling) {
-        return DatamapperTestUtil.innsynBrevGrunnlag(innsynsBehandling, ytelseType);
+        return DatamapperTestUtil.defaultBuilder()
+            .behandlingType(BrevGrunnlag.BehandlingType.INNSYN)
+            .innsynBehandling(innsynsBehandling)
+            .fagsakYtelseType(ytelseType)
+            .build();
     }
 
     private DokumentHendelse lagDokumentHendelse() {

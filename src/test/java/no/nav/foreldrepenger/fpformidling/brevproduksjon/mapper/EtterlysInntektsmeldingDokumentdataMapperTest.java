@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
 import no.nav.foreldrepenger.kontrakter.fpsak.inntektsmeldinger.ArbeidsforholdInntektsmeldingerDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +36,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     void test_map_fagtype_foreldrepenger() {
         var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", BigDecimal.valueOf(100), false);
         var inntektsmeldingerStatus = List.of(imStatus);
-        var behandling = DatamapperTestUtil.standardForeldrepengerBrevGrunnlag(new ArbeidsforholdInntektsmeldingerDto(inntektsmeldingerStatus));
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 
@@ -55,7 +56,11 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     void test_map_fagtype_svangerskapspenger() {
         var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", BigDecimal.valueOf(100), false);
         var inntektsmeldingerStatus = List.of(imStatus);
-        var behandling = DatamapperTestUtil.standardSvangerskapspengerBrevGrunnlag(new ArbeidsforholdInntektsmeldingerDto(inntektsmeldingerStatus));
+        var behandling = DatamapperTestUtil.defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.SVANGERSKAPSPENGER)
+            .behandlingType(BrevGrunnlag.BehandlingType.FØRSTEGANGSSØKNAD)
+            .inntektsmeldingerStatus(new ArbeidsforholdInntektsmeldingerDto(inntektsmeldingerStatus))
+            .build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.fra;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.fraFritekst;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.ivaretaLinjeskiftIFritekst;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.fritekst;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
@@ -51,7 +52,7 @@ class FritekstTest {
     }
 
     private static BrevGrunnlag.Behandlingsresultat.@NotNull Fritekst friTekst(String behandlingFritekst) {
-        return new BrevGrunnlag.Behandlingsresultat.Fritekst(null, null, behandlingFritekst);
+        return fritekst().avslagsarsakFritekst(behandlingFritekst).build();
     }
 
     @Test

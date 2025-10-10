@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.FamilieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.familieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.fritekst;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -65,7 +68,11 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     }
 
     private static FamilieHendelse getFamilieHendelse() {
-        return new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
+        return familieHendelse()
+            .barn(List.of())
+            .termindato(LocalDate.now())
+            .antallBarn(1)
+            .build();
     }
 
     @Test
@@ -91,13 +98,19 @@ class EngangsstønadAvslagDokumentdataMapperTest {
                                              String avslagsfritekst,
                                              FamilieHendelse familieHendelse,
                                              Behandlingsresultat.VilkårType vilkårType) {
-        var behandlingsresultat = new Behandlingsresultat(null, null, Behandlingsresultat.BehandlingResultatType.AVSLÅTT, avslagsårsak.getKode(),
-            new Behandlingsresultat.Fritekst("avslag", null, avslagsfritekst), null, false, null, List.of(), List.of(vilkårType));
         return DatamapperTestUtil.defaultBuilder()
             .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.ENGANGSTØNAD)
             .behandlingType(BrevGrunnlag.BehandlingType.FØRSTEGANGSSØKNAD)
             .familieHendelse(familieHendelse)
-            .behandlingsresultat(behandlingsresultat)
+            .behandlingsresultat(behandlingsresultat()
+                .behandlingResultatType(Behandlingsresultat.BehandlingResultatType.AVSLÅTT)
+                .avslagsårsak(avslagsårsak.getKode())
+                .fritekst(fritekst()
+                    .overskrift("avslag")
+                    .avslagsarsakFritekst(avslagsfritekst)
+                    .build())
+                .vilkårTyper(List.of(vilkårType))
+                .build())
             .build();
     }
 }

@@ -1,5 +1,27 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Barn;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.BehandlingÅrsakType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Dekningsgrad;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.FagsakStatus;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.FagsakYtelseType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.FamilieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.ForeldrepengerUttak;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.InnsynBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Inntektsmelding;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.KlageBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.OriginalBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.PeriodeResultatType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.RelasjonsRolleType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Rettigheter;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Språkkode;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.SvangerskapspengerUttak;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.TilkjentYtelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.UttakArbeidType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Verge;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,35 +42,35 @@ public class BrevGrunnlagBuilders {
     public static class BrevGrunnlagBuilder {
         private UUID uuid;
         private String saksnummer;
-        private BrevGrunnlag.FagsakYtelseType fagsakYtelseType;
-        private BrevGrunnlag.FagsakStatus fagsakStatus;
-        private BrevGrunnlag.RelasjonsRolleType relasjonsRolleType;
+        private FagsakYtelseType fagsakYtelseType;
+        private FagsakStatus fagsakStatus;
+        private RelasjonsRolleType relasjonsRolleType;
         private String aktørId;
-        private BrevGrunnlag.Dekningsgrad dekningsgrad;
-        private BrevGrunnlag.BehandlingType behandlingType;
+        private Dekningsgrad dekningsgrad;
+        private BehandlingType behandlingType;
         private LocalDateTime opprettet;
         private LocalDateTime avsluttet;
         private String behandlendeEnhet;
-        private BrevGrunnlag.Språkkode språkkode;
+        private Språkkode språkkode;
         private boolean automatiskBehandlet;
-        private BrevGrunnlag.FamilieHendelse familieHendelse;
-        private BrevGrunnlag.OriginalBehandling originalBehandling;
-        private BrevGrunnlag.Rettigheter rettigheter;
-        private BrevGrunnlag.Behandlingsresultat behandlingsresultat;
-        private List<BrevGrunnlag.BehandlingÅrsakType> behandlingÅrsakTyper;
-        private BrevGrunnlag.TilkjentYtelse tilkjentYtelse;
+        private FamilieHendelse familieHendelse;
+        private OriginalBehandling originalBehandling;
+        private Rettigheter rettigheter;
+        private Behandlingsresultat behandlingsresultat;
+        private List<BehandlingÅrsakType> behandlingÅrsakTyper;
+        private TilkjentYtelse tilkjentYtelse;
         private BeregningsgrunnlagDto beregningsgrunnlag;
         private ArbeidsforholdInntektsmeldingerDto inntektsmeldingerStatus;
         private LocalDate førsteSøknadMottattDato;
         private LocalDate sisteSøknadMottattDato;
         private LocalDate søknadMottattDato;
-        private List<BrevGrunnlag.Inntektsmelding> inntektsmeldinger;
+        private List<Inntektsmelding> inntektsmeldinger;
         private LocalDate nyStartDatoVedUtsattOppstart;
-        private BrevGrunnlag.Verge verge;
-        private BrevGrunnlag.KlageBehandling klageBehandling;
-        private BrevGrunnlag.InnsynBehandling innsynBehandling;
-        private BrevGrunnlag.SvangerskapspengerUttak svangerskapspengerUttak;
-        private BrevGrunnlag.ForeldrepengerUttak foreldrepengerUttak;
+        private Verge verge;
+        private KlageBehandling klageBehandling;
+        private InnsynBehandling innsynBehandling;
+        private SvangerskapspengerUttak svangerskapspengerUttak;
+        private ForeldrepengerUttak foreldrepengerUttak;
 
         public BrevGrunnlagBuilder uuid(UUID uuid) {
             this.uuid = uuid;
@@ -60,17 +82,17 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlagBuilder fagsakYtelseType(BrevGrunnlag.FagsakYtelseType fagsakYtelseType) {
+        public BrevGrunnlagBuilder fagsakYtelseType(FagsakYtelseType fagsakYtelseType) {
             this.fagsakYtelseType = fagsakYtelseType;
             return this;
         }
 
-        public BrevGrunnlagBuilder fagsakStatus(BrevGrunnlag.FagsakStatus fagsakStatus) {
+        public BrevGrunnlagBuilder fagsakStatus(FagsakStatus fagsakStatus) {
             this.fagsakStatus = fagsakStatus;
             return this;
         }
 
-        public BrevGrunnlagBuilder relasjonsRolleType(BrevGrunnlag.RelasjonsRolleType relasjonsRolleType) {
+        public BrevGrunnlagBuilder relasjonsRolleType(RelasjonsRolleType relasjonsRolleType) {
             this.relasjonsRolleType = relasjonsRolleType;
             return this;
         }
@@ -80,12 +102,12 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlagBuilder dekningsgrad(BrevGrunnlag.Dekningsgrad dekningsgrad) {
+        public BrevGrunnlagBuilder dekningsgrad(Dekningsgrad dekningsgrad) {
             this.dekningsgrad = dekningsgrad;
             return this;
         }
 
-        public BrevGrunnlagBuilder behandlingType(BrevGrunnlag.BehandlingType behandlingType) {
+        public BrevGrunnlagBuilder behandlingType(BehandlingType behandlingType) {
             this.behandlingType = behandlingType;
             return this;
         }
@@ -105,7 +127,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlagBuilder språkkode(BrevGrunnlag.Språkkode språkkode) {
+        public BrevGrunnlagBuilder språkkode(Språkkode språkkode) {
             this.språkkode = språkkode;
             return this;
         }
@@ -115,32 +137,32 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlagBuilder familieHendelse(BrevGrunnlag.FamilieHendelse familieHendelse) {
+        public BrevGrunnlagBuilder familieHendelse(FamilieHendelse familieHendelse) {
             this.familieHendelse = familieHendelse;
             return this;
         }
 
-        public BrevGrunnlagBuilder originalBehandling(BrevGrunnlag.OriginalBehandling originalBehandling) {
+        public BrevGrunnlagBuilder originalBehandling(OriginalBehandling originalBehandling) {
             this.originalBehandling = originalBehandling;
             return this;
         }
 
-        public BrevGrunnlagBuilder rettigheter(BrevGrunnlag.Rettigheter rettigheter) {
+        public BrevGrunnlagBuilder rettigheter(Rettigheter rettigheter) {
             this.rettigheter = rettigheter;
             return this;
         }
 
-        public BrevGrunnlagBuilder behandlingsresultat(BrevGrunnlag.Behandlingsresultat behandlingsresultat) {
+        public BrevGrunnlagBuilder behandlingsresultat(Behandlingsresultat behandlingsresultat) {
             this.behandlingsresultat = behandlingsresultat;
             return this;
         }
 
-        public BrevGrunnlagBuilder behandlingÅrsakTyper(List<BrevGrunnlag.BehandlingÅrsakType> behandlingÅrsakTyper) {
+        public BrevGrunnlagBuilder behandlingÅrsakTyper(List<BehandlingÅrsakType> behandlingÅrsakTyper) {
             this.behandlingÅrsakTyper = behandlingÅrsakTyper;
             return this;
         }
 
-        public BrevGrunnlagBuilder tilkjentYtelse(BrevGrunnlag.TilkjentYtelse tilkjentYtelse) {
+        public BrevGrunnlagBuilder tilkjentYtelse(TilkjentYtelse tilkjentYtelse) {
             this.tilkjentYtelse = tilkjentYtelse;
             return this;
         }
@@ -170,7 +192,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlagBuilder inntektsmeldinger(List<BrevGrunnlag.Inntektsmelding> inntektsmeldinger) {
+        public BrevGrunnlagBuilder inntektsmeldinger(List<Inntektsmelding> inntektsmeldinger) {
             this.inntektsmeldinger = inntektsmeldinger;
             return this;
         }
@@ -180,27 +202,27 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlagBuilder verge(BrevGrunnlag.Verge verge) {
+        public BrevGrunnlagBuilder verge(Verge verge) {
             this.verge = verge;
             return this;
         }
 
-        public BrevGrunnlagBuilder klageBehandling(BrevGrunnlag.KlageBehandling klageBehandling) {
+        public BrevGrunnlagBuilder klageBehandling(KlageBehandling klageBehandling) {
             this.klageBehandling = klageBehandling;
             return this;
         }
 
-        public BrevGrunnlagBuilder innsynBehandling(BrevGrunnlag.InnsynBehandling innsynBehandling) {
+        public BrevGrunnlagBuilder innsynBehandling(InnsynBehandling innsynBehandling) {
             this.innsynBehandling = innsynBehandling;
             return this;
         }
 
-        public BrevGrunnlagBuilder svangerskapspengerUttak(BrevGrunnlag.SvangerskapspengerUttak svangerskapspengerUttak) {
+        public BrevGrunnlagBuilder svangerskapspengerUttak(SvangerskapspengerUttak svangerskapspengerUttak) {
             this.svangerskapspengerUttak = svangerskapspengerUttak;
             return this;
         }
 
-        public BrevGrunnlagBuilder foreldrepengerUttak(BrevGrunnlag.ForeldrepengerUttak foreldrepengerUttak) {
+        public BrevGrunnlagBuilder foreldrepengerUttak(ForeldrepengerUttak foreldrepengerUttak) {
             this.foreldrepengerUttak = foreldrepengerUttak;
             return this;
         }
@@ -219,16 +241,16 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class OriginalBehandlingBuilder {
-        private BrevGrunnlag.FamilieHendelse familieHendelse;
-        private BrevGrunnlag.Behandlingsresultat.BehandlingResultatType originalBehandlingResultatType;
+        private FamilieHendelse familieHendelse;
+        private Behandlingsresultat.BehandlingResultatType originalBehandlingResultatType;
         private LocalDate førsteDagMedUtbetaltForeldrepenger;
 
-        public OriginalBehandlingBuilder familieHendelse(BrevGrunnlag.FamilieHendelse familieHendelse) {
+        public OriginalBehandlingBuilder familieHendelse(FamilieHendelse familieHendelse) {
             this.familieHendelse = familieHendelse;
             return this;
         }
 
-        public OriginalBehandlingBuilder originalBehandlingResultatType(BrevGrunnlag.Behandlingsresultat.BehandlingResultatType originalBehandlingResultatType) {
+        public OriginalBehandlingBuilder originalBehandlingResultatType(Behandlingsresultat.BehandlingResultatType originalBehandlingResultatType) {
             this.originalBehandlingResultatType = originalBehandlingResultatType;
             return this;
         }
@@ -238,8 +260,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.OriginalBehandling build() {
-            return new BrevGrunnlag.OriginalBehandling(familieHendelse, originalBehandlingResultatType, førsteDagMedUtbetaltForeldrepenger);
+        public OriginalBehandling build() {
+            return new OriginalBehandling(familieHendelse, originalBehandlingResultatType, førsteDagMedUtbetaltForeldrepenger);
         }
     }
 
@@ -267,8 +289,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.TilkjentYtelse build() {
-            return new BrevGrunnlag.TilkjentYtelse(engangsstønad, originalBehandlingEngangsstønad, dagytelse);
+        public TilkjentYtelse build() {
+            return new TilkjentYtelse(engangsstønad, originalBehandlingEngangsstønad, dagytelse);
         }
     }
 
@@ -277,13 +299,13 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class ForeldrepengerUttakBuilder {
-        private List<BrevGrunnlag.ForeldrepengerUttak.Stønadskonto> stønadskontoer;
+        private List<ForeldrepengerUttak.Stønadskonto> stønadskontoer;
         private Integer tapteDagerFpff;
-        private List<BrevGrunnlag.ForeldrepengerUttak.Periode> perioderSøker;
-        private List<BrevGrunnlag.ForeldrepengerUttak.Periode> perioderAnnenpart;
+        private List<ForeldrepengerUttak.Periode> perioderSøker;
+        private List<ForeldrepengerUttak.Periode> perioderAnnenpart;
         private Boolean ønskerJustertUttakVedFødsel;
 
-        public ForeldrepengerUttakBuilder stønadskontoer(List<BrevGrunnlag.ForeldrepengerUttak.Stønadskonto> stønadskontoer) {
+        public ForeldrepengerUttakBuilder stønadskontoer(List<ForeldrepengerUttak.Stønadskonto> stønadskontoer) {
             this.stønadskontoer = stønadskontoer;
             return this;
         }
@@ -293,12 +315,12 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public ForeldrepengerUttakBuilder perioderSøker(List<BrevGrunnlag.ForeldrepengerUttak.Periode> perioderSøker) {
+        public ForeldrepengerUttakBuilder perioderSøker(List<ForeldrepengerUttak.Periode> perioderSøker) {
             this.perioderSøker = perioderSøker;
             return this;
         }
 
-        public ForeldrepengerUttakBuilder perioderAnnenpart(List<BrevGrunnlag.ForeldrepengerUttak.Periode> perioderAnnenpart) {
+        public ForeldrepengerUttakBuilder perioderAnnenpart(List<ForeldrepengerUttak.Periode> perioderAnnenpart) {
             this.perioderAnnenpart = perioderAnnenpart;
             return this;
         }
@@ -308,8 +330,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.ForeldrepengerUttak build() {
-            return new BrevGrunnlag.ForeldrepengerUttak(stønadskontoer, tapteDagerFpff == null ? 0 : tapteDagerFpff, perioderSøker, perioderAnnenpart,
+        public ForeldrepengerUttak build() {
+            return new ForeldrepengerUttak(stønadskontoer, tapteDagerFpff == null ? 0 : tapteDagerFpff, perioderSøker, perioderAnnenpart,
                 ønskerJustertUttakVedFødsel != null && ønskerJustertUttakVedFødsel);
         }
     }
@@ -321,8 +343,8 @@ public class BrevGrunnlagBuilders {
     public static class ForeldrepengerUttakPeriodeBuilder {
         private LocalDate fom;
         private LocalDate tom;
-        private List<BrevGrunnlag.ForeldrepengerUttak.Aktivitet> aktiviteter;
-        private BrevGrunnlag.PeriodeResultatType periodeResultatType;
+        private List<ForeldrepengerUttak.Aktivitet> aktiviteter;
+        private PeriodeResultatType periodeResultatType;
         private String periodeResultatÅrsak;
         private String graderingAvslagÅrsak;
         private String periodeResultatÅrsakLovhjemmel;
@@ -340,12 +362,12 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public ForeldrepengerUttakPeriodeBuilder aktiviteter(List<BrevGrunnlag.ForeldrepengerUttak.Aktivitet> aktiviteter) {
+        public ForeldrepengerUttakPeriodeBuilder aktiviteter(List<ForeldrepengerUttak.Aktivitet> aktiviteter) {
             this.aktiviteter = aktiviteter;
             return this;
         }
 
-        public ForeldrepengerUttakPeriodeBuilder periodeResultatType(BrevGrunnlag.PeriodeResultatType periodeResultatType) {
+        public ForeldrepengerUttakPeriodeBuilder periodeResultatType(PeriodeResultatType periodeResultatType) {
             this.periodeResultatType = periodeResultatType;
             return this;
         }
@@ -380,9 +402,9 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.ForeldrepengerUttak.Periode build() {
-            return new BrevGrunnlag.ForeldrepengerUttak.Periode(fom, tom, aktiviteter, periodeResultatType, periodeResultatÅrsak,
-                graderingAvslagÅrsak, periodeResultatÅrsakLovhjemmel, graderingsAvslagÅrsakLovhjemmel, tidligstMottattDato,
+        public ForeldrepengerUttak.Periode build() {
+            return new ForeldrepengerUttak.Periode(fom, tom, aktiviteter, periodeResultatType, periodeResultatÅrsak, graderingAvslagÅrsak,
+                periodeResultatÅrsakLovhjemmel, graderingsAvslagÅrsakLovhjemmel, tidligstMottattDato,
                 erUtbetalingRedusertTilMorsStillingsprosent != null && erUtbetalingRedusertTilMorsStillingsprosent);
         }
     }
@@ -392,16 +414,16 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class ForeldrepengerUttakAktivitetBuilder {
-        private BrevGrunnlag.ForeldrepengerUttak.TrekkontoType trekkontoType;
+        private ForeldrepengerUttak.TrekkontoType trekkontoType;
         private BigDecimal trekkdager;
         private BigDecimal prosentArbeid;
         private String arbeidsgiverReferanse;
         private String arbeidsforholdId;
         private BigDecimal utbetalingsgrad;
-        private BrevGrunnlag.UttakArbeidType uttakArbeidType;
+        private UttakArbeidType uttakArbeidType;
         private Boolean gradering;
 
-        public ForeldrepengerUttakAktivitetBuilder trekkontoType(BrevGrunnlag.ForeldrepengerUttak.TrekkontoType trekkontoType) {
+        public ForeldrepengerUttakAktivitetBuilder trekkontoType(ForeldrepengerUttak.TrekkontoType trekkontoType) {
             this.trekkontoType = trekkontoType;
             return this;
         }
@@ -431,7 +453,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public ForeldrepengerUttakAktivitetBuilder uttakArbeidType(BrevGrunnlag.UttakArbeidType uttakArbeidType) {
+        public ForeldrepengerUttakAktivitetBuilder uttakArbeidType(UttakArbeidType uttakArbeidType) {
             this.uttakArbeidType = uttakArbeidType;
             return this;
         }
@@ -441,8 +463,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.ForeldrepengerUttak.Aktivitet build() {
-            return new BrevGrunnlag.ForeldrepengerUttak.Aktivitet(trekkontoType, trekkdager, prosentArbeid, arbeidsgiverReferanse, arbeidsforholdId,
+        public ForeldrepengerUttak.Aktivitet build() {
+            return new ForeldrepengerUttak.Aktivitet(trekkontoType, trekkdager, prosentArbeid, arbeidsgiverReferanse, arbeidsforholdId,
                 utbetalingsgrad, uttakArbeidType, gradering != null && gradering);
         }
     }
@@ -452,12 +474,12 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class StønadskontoBuilder {
-        private BrevGrunnlag.ForeldrepengerUttak.Stønadskonto.Type stønadskontotype;
+        private ForeldrepengerUttak.Stønadskonto.Type stønadskontotype;
         private Integer maxDager;
         private Integer saldo;
-        private BrevGrunnlag.ForeldrepengerUttak.KontoUtvidelser kontoUtvidelser;
+        private ForeldrepengerUttak.KontoUtvidelser kontoUtvidelser;
 
-        public StønadskontoBuilder stønadskontotype(BrevGrunnlag.ForeldrepengerUttak.Stønadskonto.Type stønadskontotype) {
+        public StønadskontoBuilder stønadskontotype(ForeldrepengerUttak.Stønadskonto.Type stønadskontotype) {
             this.stønadskontotype = stønadskontotype;
             return this;
         }
@@ -472,13 +494,13 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public StønadskontoBuilder kontoUtvidelser(BrevGrunnlag.ForeldrepengerUttak.KontoUtvidelser kontoUtvidelser) {
+        public StønadskontoBuilder kontoUtvidelser(ForeldrepengerUttak.KontoUtvidelser kontoUtvidelser) {
             this.kontoUtvidelser = kontoUtvidelser;
             return this;
         }
 
-        public BrevGrunnlag.ForeldrepengerUttak.Stønadskonto build() {
-            return new BrevGrunnlag.ForeldrepengerUttak.Stønadskonto(stønadskontotype, maxDager == null ? 0 : maxDager, saldo == null ? 0 : saldo,
+        public ForeldrepengerUttak.Stønadskonto build() {
+            return new ForeldrepengerUttak.Stønadskonto(stønadskontotype, maxDager == null ? 0 : maxDager, saldo == null ? 0 : saldo,
                 kontoUtvidelser);
         }
     }
@@ -501,9 +523,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.ForeldrepengerUttak.KontoUtvidelser build() {
-            return new BrevGrunnlag.ForeldrepengerUttak.KontoUtvidelser(prematurdager == null ? 0 : prematurdager,
-                flerbarnsdager == null ? 0 : flerbarnsdager);
+        public ForeldrepengerUttak.KontoUtvidelser build() {
+            return new ForeldrepengerUttak.KontoUtvidelser(prematurdager == null ? 0 : prematurdager, flerbarnsdager == null ? 0 : flerbarnsdager);
         }
     }
 
@@ -512,15 +533,15 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class SvangerskapspengerUttakBuilder {
-        private List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakArbeidsforhold;
+        private List<SvangerskapspengerUttak.UttakArbeidsforhold> uttakArbeidsforhold;
 
-        public SvangerskapspengerUttakBuilder uttakArbeidsforhold(List<BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold> uttakArbeidsforhold) {
+        public SvangerskapspengerUttakBuilder uttakArbeidsforhold(List<SvangerskapspengerUttak.UttakArbeidsforhold> uttakArbeidsforhold) {
             this.uttakArbeidsforhold = uttakArbeidsforhold;
             return this;
         }
 
-        public BrevGrunnlag.SvangerskapspengerUttak build() {
-            return new BrevGrunnlag.SvangerskapspengerUttak(uttakArbeidsforhold);
+        public SvangerskapspengerUttak build() {
+            return new SvangerskapspengerUttak(uttakArbeidsforhold);
         }
     }
 
@@ -531,8 +552,8 @@ public class BrevGrunnlagBuilders {
     public static class SvangerskapspengerUttakArbeidsforholdBuilder {
         private String arbeidsforholdIkkeOppfyltÅrsak;
         private String arbeidsgiverReferanse;
-        private BrevGrunnlag.UttakArbeidType arbeidType;
-        private List<BrevGrunnlag.SvangerskapspengerUttak.Periode> perioder;
+        private UttakArbeidType arbeidType;
+        private List<SvangerskapspengerUttak.Periode> perioder;
 
         public SvangerskapspengerUttakArbeidsforholdBuilder arbeidsforholdIkkeOppfyltÅrsak(String arbeidsforholdIkkeOppfyltÅrsak) {
             this.arbeidsforholdIkkeOppfyltÅrsak = arbeidsforholdIkkeOppfyltÅrsak;
@@ -544,19 +565,18 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public SvangerskapspengerUttakArbeidsforholdBuilder arbeidType(BrevGrunnlag.UttakArbeidType arbeidType) {
+        public SvangerskapspengerUttakArbeidsforholdBuilder arbeidType(UttakArbeidType arbeidType) {
             this.arbeidType = arbeidType;
             return this;
         }
 
-        public SvangerskapspengerUttakArbeidsforholdBuilder perioder(List<BrevGrunnlag.SvangerskapspengerUttak.Periode> perioder) {
+        public SvangerskapspengerUttakArbeidsforholdBuilder perioder(List<SvangerskapspengerUttak.Periode> perioder) {
             this.perioder = perioder;
             return this;
         }
 
-        public BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold build() {
-            return new BrevGrunnlag.SvangerskapspengerUttak.UttakArbeidsforhold(arbeidsforholdIkkeOppfyltÅrsak, arbeidsgiverReferanse, arbeidType,
-                perioder);
+        public SvangerskapspengerUttak.UttakArbeidsforhold build() {
+            return new SvangerskapspengerUttak.UttakArbeidsforhold(arbeidsforholdIkkeOppfyltÅrsak, arbeidsgiverReferanse, arbeidType, perioder);
         }
     }
 
@@ -568,7 +588,7 @@ public class BrevGrunnlagBuilders {
         private LocalDate fom;
         private LocalDate tom;
         private BigDecimal utbetalingsgrad;
-        private BrevGrunnlag.PeriodeResultatType periodeResultatType;
+        private PeriodeResultatType periodeResultatType;
         private String periodeIkkeOppfyltÅrsak;
 
         public SvangerskapspengerUttakPeriodeBuilder fom(LocalDate fom) {
@@ -586,7 +606,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public SvangerskapspengerUttakPeriodeBuilder periodeResultatType(BrevGrunnlag.PeriodeResultatType periodeResultatType) {
+        public SvangerskapspengerUttakPeriodeBuilder periodeResultatType(PeriodeResultatType periodeResultatType) {
             this.periodeResultatType = periodeResultatType;
             return this;
         }
@@ -596,8 +616,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.SvangerskapspengerUttak.Periode build() {
-            return new BrevGrunnlag.SvangerskapspengerUttak.Periode(fom, tom, utbetalingsgrad, periodeResultatType, periodeIkkeOppfyltÅrsak);
+        public SvangerskapspengerUttak.Periode build() {
+            return new SvangerskapspengerUttak.Periode(fom, tom, utbetalingsgrad, periodeResultatType, periodeIkkeOppfyltÅrsak);
         }
     }
 
@@ -619,8 +639,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.Inntektsmelding build() {
-            return new BrevGrunnlag.Inntektsmelding(arbeidsgiverReferanse, innsendingstidspunkt);
+        public Inntektsmelding build() {
+            return new Inntektsmelding(arbeidsgiverReferanse, innsendingstidspunkt);
         }
     }
 
@@ -629,27 +649,27 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class RettighetBuilder {
-        private BrevGrunnlag.Rettigheter.Rettighetstype opprinnelig;
-        private BrevGrunnlag.Rettigheter.Rettighetstype gjeldende;
-        private BrevGrunnlag.Rettigheter.EøsUttak eøsUttak;
+        private Rettigheter.Rettighetstype opprinnelig;
+        private Rettigheter.Rettighetstype gjeldende;
+        private Rettigheter.EøsUttak eøsUttak;
 
-        public RettighetBuilder opprinnelig(BrevGrunnlag.Rettigheter.Rettighetstype opprinnelig) {
+        public RettighetBuilder opprinnelig(Rettigheter.Rettighetstype opprinnelig) {
             this.opprinnelig = opprinnelig;
             return this;
         }
 
-        public RettighetBuilder gjeldende(BrevGrunnlag.Rettigheter.Rettighetstype gjeldende) {
+        public RettighetBuilder gjeldende(Rettigheter.Rettighetstype gjeldende) {
             this.gjeldende = gjeldende;
             return this;
         }
 
-        public RettighetBuilder eøsUttak(BrevGrunnlag.Rettigheter.EøsUttak eøsUttak) {
+        public RettighetBuilder eøsUttak(Rettigheter.EøsUttak eøsUttak) {
             this.eøsUttak = eøsUttak;
             return this;
         }
 
-        public BrevGrunnlag.Rettigheter build() {
-            return new BrevGrunnlag.Rettigheter(opprinnelig, gjeldende, eøsUttak);
+        public Rettigheter build() {
+            return new Rettigheter(opprinnelig, gjeldende, eøsUttak);
         }
     }
 
@@ -683,8 +703,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.Rettigheter.EøsUttak build() {
-            return new BrevGrunnlag.Rettigheter.EøsUttak(fom, tom, forbruktFellesperiode == null ? 0 : forbruktFellesperiode,
+        public Rettigheter.EøsUttak build() {
+            return new Rettigheter.EøsUttak(fom, tom, forbruktFellesperiode == null ? 0 : forbruktFellesperiode,
                 fellesperiodeINorge == null ? 0 : fellesperiodeINorge);
         }
     }
@@ -694,12 +714,12 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class FamilieHendelseBuilder {
-        private List<BrevGrunnlag.Barn> barn;
+        private List<Barn> barn;
         private LocalDate termindato;
         private Integer antallBarn;
         private LocalDate omsorgsovertakelse;
 
-        public FamilieHendelseBuilder barn(List<BrevGrunnlag.Barn> barn) {
+        public FamilieHendelseBuilder barn(List<Barn> barn) {
             this.barn = barn;
             return this;
         }
@@ -719,8 +739,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.FamilieHendelse build() {
-            return new BrevGrunnlag.FamilieHendelse(barn, termindato, antallBarn == null ? 0 : antallBarn, omsorgsovertakelse);
+        public FamilieHendelse build() {
+            return new FamilieHendelse(barn, termindato, antallBarn == null ? 0 : antallBarn, omsorgsovertakelse);
         }
     }
 
@@ -742,8 +762,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.Barn build() {
-            return new BrevGrunnlag.Barn(fødselsdato, dødsdato);
+        public Barn build() {
+            return new Barn(fødselsdato, dødsdato);
         }
     }
 
@@ -757,7 +777,7 @@ public class BrevGrunnlagBuilders {
         private String organisasjonsnummer;
         private LocalDate gyldigFom;
         private LocalDate gyldigTom;
-        private BrevGrunnlag.Verge.VergeType vergeType;
+        private Verge.VergeType vergeType;
 
         public VergeBuilder aktørId(String aktørId) {
             this.aktørId = aktørId;
@@ -784,13 +804,13 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public VergeBuilder vergeType(BrevGrunnlag.Verge.VergeType vergeType) {
+        public VergeBuilder vergeType(Verge.VergeType vergeType) {
             this.vergeType = vergeType;
             return this;
         }
 
-        public BrevGrunnlag.Verge build() {
-            return new BrevGrunnlag.Verge(aktørId, navn, organisasjonsnummer, gyldigFom, gyldigTom, vergeType);
+        public Verge build() {
+            return new Verge(aktørId, navn, organisasjonsnummer, gyldigFom, gyldigTom, vergeType);
         }
     }
 
@@ -799,21 +819,21 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class InnsynBehandlingBuilder {
-        private BrevGrunnlag.InnsynBehandling.InnsynResultatType innsynResultatType;
-        private List<BrevGrunnlag.InnsynBehandling.InnsynDokument> dokumenter;
+        private InnsynBehandling.InnsynResultatType innsynResultatType;
+        private List<InnsynBehandling.InnsynDokument> dokumenter;
 
-        public InnsynBehandlingBuilder innsynResultatType(BrevGrunnlag.InnsynBehandling.InnsynResultatType innsynResultatType) {
+        public InnsynBehandlingBuilder innsynResultatType(InnsynBehandling.InnsynResultatType innsynResultatType) {
             this.innsynResultatType = innsynResultatType;
             return this;
         }
 
-        public InnsynBehandlingBuilder dokumenter(List<BrevGrunnlag.InnsynBehandling.InnsynDokument> dokumenter) {
+        public InnsynBehandlingBuilder dokumenter(List<InnsynBehandling.InnsynDokument> dokumenter) {
             this.dokumenter = dokumenter;
             return this;
         }
 
-        public BrevGrunnlag.InnsynBehandling build() {
-            return new BrevGrunnlag.InnsynBehandling(innsynResultatType, dokumenter);
+        public InnsynBehandling build() {
+            return new InnsynBehandling(innsynResultatType, dokumenter);
         }
     }
 
@@ -841,8 +861,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.InnsynBehandling.InnsynDokument build() {
-            return new BrevGrunnlag.InnsynBehandling.InnsynDokument(fikkInnsyn != null && fikkInnsyn, journalpostId, dokumentId);
+        public InnsynBehandling.InnsynDokument build() {
+            return new InnsynBehandling.InnsynDokument(fikkInnsyn != null && fikkInnsyn, journalpostId, dokumentId);
         }
     }
 
@@ -851,36 +871,36 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class KlageBehandlingBuilder {
-        private BrevGrunnlag.KlageBehandling.KlageFormkravResultat klageFormkravResultatNFP;
-        private BrevGrunnlag.KlageBehandling.KlageVurderingResultat klageVurderingResultatNFP;
-        private BrevGrunnlag.KlageBehandling.KlageFormkravResultat klageFormkravResultatKA;
-        private BrevGrunnlag.KlageBehandling.KlageVurderingResultat klageVurderingResultatNK;
-        private List<BrevGrunnlag.KlageBehandling.KlageHjemmel> aktuelleHjemler;
+        private KlageBehandling.KlageFormkravResultat klageFormkravResultatNFP;
+        private KlageBehandling.KlageVurderingResultat klageVurderingResultatNFP;
+        private KlageBehandling.KlageFormkravResultat klageFormkravResultatKA;
+        private KlageBehandling.KlageVurderingResultat klageVurderingResultatNK;
+        private List<KlageBehandling.KlageHjemmel> aktuelleHjemler;
         private Boolean underBehandlingKabal;
         private Boolean behandletAvKabal;
         private LocalDate mottattDato;
 
-        public KlageBehandlingBuilder klageFormkravResultatNFP(BrevGrunnlag.KlageBehandling.KlageFormkravResultat klageFormkravResultatNFP) {
+        public KlageBehandlingBuilder klageFormkravResultatNFP(KlageBehandling.KlageFormkravResultat klageFormkravResultatNFP) {
             this.klageFormkravResultatNFP = klageFormkravResultatNFP;
             return this;
         }
 
-        public KlageBehandlingBuilder klageVurderingResultatNFP(BrevGrunnlag.KlageBehandling.KlageVurderingResultat klageVurderingResultatNFP) {
+        public KlageBehandlingBuilder klageVurderingResultatNFP(KlageBehandling.KlageVurderingResultat klageVurderingResultatNFP) {
             this.klageVurderingResultatNFP = klageVurderingResultatNFP;
             return this;
         }
 
-        public KlageBehandlingBuilder klageFormkravResultatKA(BrevGrunnlag.KlageBehandling.KlageFormkravResultat klageFormkravResultatKA) {
+        public KlageBehandlingBuilder klageFormkravResultatKA(KlageBehandling.KlageFormkravResultat klageFormkravResultatKA) {
             this.klageFormkravResultatKA = klageFormkravResultatKA;
             return this;
         }
 
-        public KlageBehandlingBuilder klageVurderingResultatNK(BrevGrunnlag.KlageBehandling.KlageVurderingResultat klageVurderingResultatNK) {
+        public KlageBehandlingBuilder klageVurderingResultatNK(KlageBehandling.KlageVurderingResultat klageVurderingResultatNK) {
             this.klageVurderingResultatNK = klageVurderingResultatNK;
             return this;
         }
 
-        public KlageBehandlingBuilder aktuelleHjemler(List<BrevGrunnlag.KlageBehandling.KlageHjemmel> aktuelleHjemler) {
+        public KlageBehandlingBuilder aktuelleHjemler(List<KlageBehandling.KlageHjemmel> aktuelleHjemler) {
             this.aktuelleHjemler = aktuelleHjemler;
             return this;
         }
@@ -900,10 +920,9 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.KlageBehandling build() {
-            return new BrevGrunnlag.KlageBehandling(klageFormkravResultatNFP, klageVurderingResultatNFP, klageFormkravResultatKA,
-                klageVurderingResultatNK, aktuelleHjemler, underBehandlingKabal != null && underBehandlingKabal,
-                behandletAvKabal != null && behandletAvKabal, mottattDato);
+        public KlageBehandling build() {
+            return new KlageBehandling(klageFormkravResultatNFP, klageVurderingResultatNFP, klageFormkravResultatKA, klageVurderingResultatNK,
+                aktuelleHjemler, underBehandlingKabal != null && underBehandlingKabal, behandletAvKabal != null && behandletAvKabal, mottattDato);
         }
     }
 
@@ -914,13 +933,13 @@ public class BrevGrunnlagBuilders {
     public static class KlageFormkravResultatBuilder {
         private Long påklagdBehandlingId;
         private UUID påklagdBehandlingUuid;
-        private BrevGrunnlag.BehandlingType påklagdBehandlingType;
+        private BehandlingType påklagdBehandlingType;
         private String begrunnelse;
         private Boolean erKlagerPart;
         private Boolean erKlageKonkret;
         private Boolean erKlagefirstOverholdt;
         private Boolean erSignert;
-        private List<BrevGrunnlag.KlageBehandling.KlageAvvistÅrsak> avvistÅrsaker;
+        private List<KlageBehandling.KlageAvvistÅrsak> avvistÅrsaker;
 
         public KlageFormkravResultatBuilder påklagdBehandlingId(Long påklagdBehandlingId) {
             this.påklagdBehandlingId = påklagdBehandlingId;
@@ -932,7 +951,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public KlageFormkravResultatBuilder påklagdBehandlingType(BrevGrunnlag.BehandlingType påklagdBehandlingType) {
+        public KlageFormkravResultatBuilder påklagdBehandlingType(BehandlingType påklagdBehandlingType) {
             this.påklagdBehandlingType = påklagdBehandlingType;
             return this;
         }
@@ -962,14 +981,14 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public KlageFormkravResultatBuilder avvistÅrsaker(List<BrevGrunnlag.KlageBehandling.KlageAvvistÅrsak> avvistÅrsaker) {
+        public KlageFormkravResultatBuilder avvistÅrsaker(List<KlageBehandling.KlageAvvistÅrsak> avvistÅrsaker) {
             this.avvistÅrsaker = avvistÅrsaker;
             return this;
         }
 
-        public BrevGrunnlag.KlageBehandling.KlageFormkravResultat build() {
-            return new BrevGrunnlag.KlageBehandling.KlageFormkravResultat(påklagdBehandlingId, påklagdBehandlingUuid, påklagdBehandlingType,
-                begrunnelse, erKlagerPart != null && erKlagerPart, erKlageKonkret != null && erKlageKonkret,
+        public KlageBehandling.KlageFormkravResultat build() {
+            return new KlageBehandling.KlageFormkravResultat(påklagdBehandlingId, påklagdBehandlingUuid, påklagdBehandlingType, begrunnelse,
+                erKlagerPart != null && erKlagerPart, erKlageKonkret != null && erKlageKonkret,
                 erKlagefirstOverholdt != null && erKlagefirstOverholdt, erSignert != null && erSignert, avvistÅrsaker);
         }
     }
@@ -980,11 +999,11 @@ public class BrevGrunnlagBuilders {
 
     public static class KlageVurderingResultatBuilder {
         private String klageVurdertAv;
-        private BrevGrunnlag.KlageBehandling.KlageVurdering klageVurdering;
+        private KlageBehandling.KlageVurdering klageVurdering;
         private String begrunnelse;
-        private BrevGrunnlag.KlageBehandling.KlageMedholdÅrsak klageMedholdÅrsak;
-        private BrevGrunnlag.KlageBehandling.KlageVurderingOmgjør klageVurderingOmgjør;
-        private BrevGrunnlag.KlageBehandling.KlageHjemmel klageHjemmel;
+        private KlageBehandling.KlageMedholdÅrsak klageMedholdÅrsak;
+        private KlageBehandling.KlageVurderingOmgjør klageVurderingOmgjør;
+        private KlageBehandling.KlageHjemmel klageHjemmel;
         private Boolean godkjentAvMedunderskriver;
         private String fritekstTilBrev;
 
@@ -993,7 +1012,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public KlageVurderingResultatBuilder klageVurdering(BrevGrunnlag.KlageBehandling.KlageVurdering klageVurdering) {
+        public KlageVurderingResultatBuilder klageVurdering(KlageBehandling.KlageVurdering klageVurdering) {
             this.klageVurdering = klageVurdering;
             return this;
         }
@@ -1003,17 +1022,17 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public KlageVurderingResultatBuilder klageMedholdÅrsak(BrevGrunnlag.KlageBehandling.KlageMedholdÅrsak klageMedholdÅrsak) {
+        public KlageVurderingResultatBuilder klageMedholdÅrsak(KlageBehandling.KlageMedholdÅrsak klageMedholdÅrsak) {
             this.klageMedholdÅrsak = klageMedholdÅrsak;
             return this;
         }
 
-        public KlageVurderingResultatBuilder klageVurderingOmgjør(BrevGrunnlag.KlageBehandling.KlageVurderingOmgjør klageVurderingOmgjør) {
+        public KlageVurderingResultatBuilder klageVurderingOmgjør(KlageBehandling.KlageVurderingOmgjør klageVurderingOmgjør) {
             this.klageVurderingOmgjør = klageVurderingOmgjør;
             return this;
         }
 
-        public KlageVurderingResultatBuilder klageHjemmel(BrevGrunnlag.KlageBehandling.KlageHjemmel klageHjemmel) {
+        public KlageVurderingResultatBuilder klageHjemmel(KlageBehandling.KlageHjemmel klageHjemmel) {
             this.klageHjemmel = klageHjemmel;
             return this;
         }
@@ -1028,9 +1047,9 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.KlageBehandling.KlageVurderingResultat build() {
-            return new BrevGrunnlag.KlageBehandling.KlageVurderingResultat(klageVurdertAv, klageVurdering, begrunnelse, klageMedholdÅrsak,
-                klageVurderingOmgjør, klageHjemmel, godkjentAvMedunderskriver != null && godkjentAvMedunderskriver, fritekstTilBrev);
+        public KlageBehandling.KlageVurderingResultat build() {
+            return new KlageBehandling.KlageVurderingResultat(klageVurdertAv, klageVurdering, begrunnelse, klageMedholdÅrsak, klageVurderingOmgjør,
+                klageHjemmel, godkjentAvMedunderskriver != null && godkjentAvMedunderskriver, fritekstTilBrev);
         }
     }
 
@@ -1041,14 +1060,14 @@ public class BrevGrunnlagBuilders {
     public static class BehandlingsresultatBuilder {
         private String medlemskapOpphørsårsak;
         private LocalDate medlemskapFom;
-        private BrevGrunnlag.Behandlingsresultat.BehandlingResultatType behandlingResultatType;
+        private Behandlingsresultat.BehandlingResultatType behandlingResultatType;
         private String avslagsårsak;
-        private BrevGrunnlag.Behandlingsresultat.Fritekst fritekst;
-        private BrevGrunnlag.Behandlingsresultat.Skjæringstidspunkt skjæringstidspunkt;
+        private Behandlingsresultat.Fritekst fritekst;
+        private Behandlingsresultat.Skjæringstidspunkt skjæringstidspunkt;
         private Boolean endretDekningsgrad;
         private LocalDate opphørsdato;
-        private List<BrevGrunnlag.Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen;
-        private List<BrevGrunnlag.Behandlingsresultat.VilkårType> vilkårTyper;
+        private List<Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen = List.of();
+        private List<Behandlingsresultat.VilkårType> vilkårTyper = List.of();
 
         public BehandlingsresultatBuilder medlemskapOpphørsårsak(String medlemskapOpphørsårsak) {
             this.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
@@ -1060,7 +1079,7 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BehandlingsresultatBuilder behandlingResultatType(BrevGrunnlag.Behandlingsresultat.BehandlingResultatType behandlingResultatType) {
+        public BehandlingsresultatBuilder behandlingResultatType(Behandlingsresultat.BehandlingResultatType behandlingResultatType) {
             this.behandlingResultatType = behandlingResultatType;
             return this;
         }
@@ -1070,12 +1089,12 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BehandlingsresultatBuilder fritekst(BrevGrunnlag.Behandlingsresultat.Fritekst fritekst) {
+        public BehandlingsresultatBuilder fritekst(Behandlingsresultat.Fritekst fritekst) {
             this.fritekst = fritekst;
             return this;
         }
 
-        public BehandlingsresultatBuilder skjæringstidspunkt(BrevGrunnlag.Behandlingsresultat.Skjæringstidspunkt skjæringstidspunkt) {
+        public BehandlingsresultatBuilder skjæringstidspunkt(Behandlingsresultat.Skjæringstidspunkt skjæringstidspunkt) {
             this.skjæringstidspunkt = skjæringstidspunkt;
             return this;
         }
@@ -1090,19 +1109,19 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BehandlingsresultatBuilder konsekvenserForYtelsen(List<BrevGrunnlag.Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen) {
+        public BehandlingsresultatBuilder konsekvenserForYtelsen(List<Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen) {
             this.konsekvenserForYtelsen = konsekvenserForYtelsen;
             return this;
         }
 
-        public BehandlingsresultatBuilder vilkårTyper(List<BrevGrunnlag.Behandlingsresultat.VilkårType> vilkårTyper) {
+        public BehandlingsresultatBuilder vilkårTyper(List<Behandlingsresultat.VilkårType> vilkårTyper) {
             this.vilkårTyper = vilkårTyper;
             return this;
         }
 
-        public BrevGrunnlag.Behandlingsresultat build() {
-            return new BrevGrunnlag.Behandlingsresultat(medlemskapOpphørsårsak, medlemskapFom, behandlingResultatType, avslagsårsak, fritekst,
-                skjæringstidspunkt, endretDekningsgrad != null && endretDekningsgrad, opphørsdato, konsekvenserForYtelsen, vilkårTyper);
+        public Behandlingsresultat build() {
+            return new Behandlingsresultat(medlemskapOpphørsårsak, medlemskapFom, behandlingResultatType, avslagsårsak, fritekst, skjæringstidspunkt,
+                endretDekningsgrad != null && endretDekningsgrad, opphørsdato, konsekvenserForYtelsen, vilkårTyper);
         }
     }
 
@@ -1130,8 +1149,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.Behandlingsresultat.Fritekst build() {
-            return new BrevGrunnlag.Behandlingsresultat.Fritekst(overskrift, brødtekst, avslagsarsakFritekst);
+        public Behandlingsresultat.Fritekst build() {
+            return new Behandlingsresultat.Fritekst(overskrift, brødtekst, avslagsarsakFritekst);
         }
     }
 
@@ -1153,8 +1172,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public BrevGrunnlag.Behandlingsresultat.Skjæringstidspunkt build() {
-            return new BrevGrunnlag.Behandlingsresultat.Skjæringstidspunkt(dato, utenMinsterett != null && utenMinsterett);
+        public Behandlingsresultat.Skjæringstidspunkt build() {
+            return new Behandlingsresultat.Skjæringstidspunkt(dato, utenMinsterett != null && utenMinsterett);
         }
     }
 }

@@ -30,7 +30,7 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER);
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER).build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 

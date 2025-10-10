@@ -1,8 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
-import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.BeregningMapper.utledLovhjemmelForBeregning;
-import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -13,21 +15,12 @@ import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BgAndelArbeidsforholdDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.HjemmelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.OpptjeningAktivitetDto;
 
 class BeregningMapperTest {
@@ -52,18 +45,22 @@ class BeregningMapperTest {
         // Arrange
         var beregningsperiodeFom = LocalDate.now().minusDays(20);
         var beregningsperiodeTom = LocalDate.now().plusDays(20);
-        var andel1 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false, OpptjeningAktivitetDto.ARBEID,
-            beregningsperiodeFom, beregningsperiodeTom, new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false);
-        var andel2 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null, false, OpptjeningAktivitetDto.ARBEID,
-            beregningsperiodeFom, beregningsperiodeTom, new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Skal sorteres først
-        var andel3 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, null, null, false, OpptjeningAktivitetDto.NÆRING,
-            beregningsperiodeFom, beregningsperiodeTom, new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Ignoreres
+        var andel1 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false,
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom,
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false);
+        var andel2 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null, false,
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom,
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Skal sorteres først
+        var andel3 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, null, null, false,
+            OpptjeningAktivitetDto.NÆRING, beregningsperiodeFom, beregningsperiodeTom,
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Ignoreres
 
-        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(),
-            beregningsperiodeFom, beregningsperiodeTom, List.of(andel1, andel2, andel3));
+        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L,
+            BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(), beregningsperiodeFom,
+            beregningsperiodeTom, List.of(andel1, andel2, andel3));
 
-        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE), null, null,
-            List.of(beregningsgrunnlagPeriode), false, false);
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE),
+            null, null, List.of(beregningsgrunnlagPeriode), false, false);
 
         // Act
         var resultat = BeregningMapper.mapArbeidsforhold(beregningsgrunnlag, HENT_NAVN);
@@ -82,25 +79,21 @@ class BeregningMapperTest {
     @Test
     void er_militær() {
         // Arrange
-        var andel = of(BeregningsgrunnlagPrStatusOgAndel.ny()
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-            .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
-            .medDagsats(500L)
-            .build(), BeregningsgrunnlagPrStatusOgAndel.ny() // Skal sorteres først
-            .medAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)
-            .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2))
-            .medDagsats(1000L)
-            .build());
+        var beregningsperiodeFom = LocalDate.now().minusDays(20);
+        var beregningsperiodeTom = LocalDate.now().plusDays(20);
 
-        var beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
-            .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
-            .medBeregningsgrunnlagPrStatusOgAndelList(andel)
-            .build();
-        var beregningsgrunnlag = Beregningsgrunnlag.ny()
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
-            .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
-            .build();
+        var andel1 = new BeregningsgrunnlagAndelDto(500L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false,
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom, null, false);
+        var andel2 = new BeregningsgrunnlagAndelDto(1000L, AktivitetStatusDto.MILITÆR_ELLER_SIVIL, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2),
+            null, false, OpptjeningAktivitetDto.MILITÆR_ELLER_SIVILTJENESTE, beregningsperiodeFom, beregningsperiodeTom, null, false);
+
+        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L,
+            BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(), beregningsperiodeFom,
+            beregningsperiodeTom, List.of(andel1, andel2));
+
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER, AktivitetStatusDto.MILITÆR_ELLER_SIVIL), null,
+            null, List.of(beregningsgrunnlagPeriode), false, false);
+
         // Act & Assert
         assertThat(BeregningMapper.erMilitærSivil(beregningsgrunnlag)).isTrue();
     }
@@ -108,25 +101,21 @@ class BeregningMapperTest {
     @Test
     void er_ikke_militær() {
         // Arrange
-        var andel = of(BeregningsgrunnlagPrStatusOgAndel.ny()
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-            .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
-            .medDagsats(500L)
-            .build(), BeregningsgrunnlagPrStatusOgAndel.ny() // Skal sorteres først
-            .medAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)
-            .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2))
-            .medDagsats(0L)
-            .build());
+        var beregningsperiodeFom = LocalDate.now().minusDays(20);
+        var beregningsperiodeTom = LocalDate.now().plusDays(20);
 
-        var beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
-            .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
-            .medBeregningsgrunnlagPrStatusOgAndelList(andel)
-            .build();
-        var beregningsgrunnlag = Beregningsgrunnlag.ny()
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
-            .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
-            .build();
+        var andel1 = new BeregningsgrunnlagAndelDto(500L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false,
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom, null, false);
+        var andel2 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.MILITÆR_ELLER_SIVIL, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null,
+            false, OpptjeningAktivitetDto.MILITÆR_ELLER_SIVILTJENESTE, beregningsperiodeFom, beregningsperiodeTom, null, false);
+
+        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L,
+            BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(), beregningsperiodeFom,
+            beregningsperiodeTom, List.of(andel1, andel2));
+
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER, AktivitetStatusDto.MILITÆR_ELLER_SIVIL), null,
+            null, List.of(beregningsgrunnlagPeriode), false, false);
+
         // Act & Assert
         assertThat(BeregningMapper.erMilitærSivil(beregningsgrunnlag)).isFalse();
     }
@@ -134,9 +123,12 @@ class BeregningMapperTest {
     @Test
     void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_30() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
-        var behandling = Behandling.builder().medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medBehandlingsresultat(behandlingsresultat).build();
-        var beregningsgrunnlag = Beregningsgrunnlag.ny().medhHjemmel(Hjemmel.F_14_7_8_30).build();
+        var behandling = defaultBuilder().behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .behandlingsresultat(
+                behandlingsresultat().behandlingResultatType(Behandlingsresultat.BehandlingResultatType.INNVILGET).build())
+            .build();
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER), HjemmelDto.F_14_7_8_30,
+            BigDecimal.valueOf(100000), List.of(), false, false);
 
         // Act
         var hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
@@ -148,9 +140,12 @@ class BeregningMapperTest {
     @Test
     void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_49() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
-        var behandling = Behandling.builder().medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medBehandlingsresultat(behandlingsresultat).build();
-        var beregningsgrunnlag = Beregningsgrunnlag.ny().medhHjemmel(Hjemmel.F_14_7_8_49).build();
+        var behandling = defaultBuilder().behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .behandlingsresultat(
+                behandlingsresultat().behandlingResultatType(Behandlingsresultat.BehandlingResultatType.INNVILGET).build())
+            .build();
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER), HjemmelDto.F_14_7_8_49,
+            BigDecimal.valueOf(100000), List.of(), false, false);
 
         // Act
         var hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
@@ -162,9 +157,12 @@ class BeregningMapperTest {
     @Test
     void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
-        var behandling = Behandling.builder().medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medBehandlingsresultat(behandlingsresultat).build();
-        var beregningsgrunnlag = Beregningsgrunnlag.ny().medhHjemmel(Hjemmel.F_14_7).build();
+        var behandling = defaultBuilder().behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .behandlingsresultat(
+                behandlingsresultat().behandlingResultatType(Behandlingsresultat.BehandlingResultatType.INNVILGET).build())
+            .build();
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER), HjemmelDto.F_14_7, BigDecimal.valueOf(100000),
+            List.of(), false, false);
 
         // Act
         var hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);

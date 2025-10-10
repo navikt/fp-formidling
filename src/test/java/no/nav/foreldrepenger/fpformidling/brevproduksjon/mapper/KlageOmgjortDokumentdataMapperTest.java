@@ -48,7 +48,8 @@ class KlageOmgjortDokumentdataMapperTest {
         var behandling = DatamapperTestUtil.defaultBuilder()
             .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
             .behandlingType(BrevGrunnlag.BehandlingType.KLAGE)
-            .klageBehandling(getKlageBehandling());
+            .klageBehandling(getKlageBehandling())
+            .build();
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 

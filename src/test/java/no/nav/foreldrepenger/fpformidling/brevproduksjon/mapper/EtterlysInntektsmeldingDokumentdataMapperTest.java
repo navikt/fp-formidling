@@ -36,7 +36,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     void test_map_fagtype_foreldrepenger() {
         var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", BigDecimal.valueOf(100), false);
         var inntektsmeldingerStatus = List.of(imStatus);
-        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER);
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER).build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 

@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.fritekst;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,10 +65,11 @@ class FritekstbrevDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_fritekstbrev_fra_behandlingsresultatet_når_hendelsen_ikke_har_dem() {
         // Arrange
-        var behandlingsresultat = new BrevGrunnlag.Behandlingsresultat(null, null, BrevGrunnlag.Behandlingsresultat.BehandlingResultatType.INNVILGET,
-            null, new BrevGrunnlag.Behandlingsresultat.Fritekst(OVERSKRIFT, BRØDTEKST_INN, null), null, false, null, List.of(), List.of());
+        var behandlingsresultatData = behandlingsresultat().behandlingResultatType(BrevGrunnlag.Behandlingsresultat.BehandlingResultatType.INNVILGET)
+            .fritekst(fritekst().overskrift(OVERSKRIFT).brødtekst(BRØDTEKST_INN).build())
+            .build();
         var behandling = DatamapperTestUtil.defaultBuilder()
-            .behandlingsresultat(behandlingsresultat)
+            .behandlingsresultat(behandlingsresultatData)
             .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
             .build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);

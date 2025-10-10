@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
@@ -39,8 +38,9 @@ class BeregningsgrunnlagMapperTest {
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
     private static final long FRILANSER_DAGSATS = 200L;
     private static final long ARBEIDSTAKER_DAGSATS = 300L;
-    private static final DatoIntervall BER_PERIODE = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2021, 1, 1), LocalDate.of(2021, 9, 1));
-    public static final UnaryOperator<String> HENT_NAVN = _ -> "Navn";
+    private static final LocalDate BER_PERIODE_FOM = LocalDate.of(2021, 1, 1);
+    private static final LocalDate BER_PERIODE_TOM = LocalDate.of(2021, 9, 1);
+    private static final UnaryOperator<String> HENT_NAVN = _ -> "Navn";
 
     @Test
     void skal_finne_brutto() {
@@ -167,7 +167,7 @@ class BeregningsgrunnlagMapperTest {
         var regler = tilRegelListe(beregningsgrunnlag);
 
         // Assert
-        assertThat(regler.get(0).getAndelListe().getFirst().getSistLignedeÅr()).isEqualTo(BER_PERIODE.getTomDato().getYear());
+        assertThat(regler.get(0).getAndelListe().getFirst().getSistLignedeÅr()).isEqualTo(BER_PERIODE_TOM.getYear());
         assertThat(regler.get(1).getAndelListe().getFirst().getSistLignedeÅr()).isZero();
     }
 
@@ -275,12 +275,12 @@ class BeregningsgrunnlagMapperTest {
                                                     AktivitetStatusDto aktivitetStatus,
                                                     Boolean erTilkommetAndeler) {
 
-        return new BeregningsgrunnlagAndelDto(dagsats, aktivitetStatus, brPrÅr, avkortetPrÅr, null, null, BER_PERIODE.getFomDato(),
-            BER_PERIODE.getTomDato(), null, erTilkommetAndeler);
+        return new BeregningsgrunnlagAndelDto(dagsats, aktivitetStatus, brPrÅr, avkortetPrÅr, null, null, BER_PERIODE_FOM,
+            BER_PERIODE_TOM, null, erTilkommetAndeler);
     }
 
     private BeregningsgrunnlagAndelDto lagBgpsaAvkortetArbeidstaker() {
         return new BeregningsgrunnlagAndelDto(ARBEIDSTAKER_DAGSATS, ARBEIDSTAKER, ARBEIDSTAKER_BRUTTO_PR_ÅR, AVKORTET_PR_ÅR, null, null,
-            BER_PERIODE.getFomDato(), BER_PERIODE.getTomDato(), null, false);
+            BER_PERIODE_FOM, BER_PERIODE_TOM, null, false);
     }
 }

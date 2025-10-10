@@ -70,7 +70,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
-        FritekstDto.fra(hendelse, behandling.behandlingsresultat(), behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fraFritekst(hendelse, behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
         var uttaksperioder = svpUttaksresultat.map(SvpMapperUtil::hentUttaksperioder).orElse(List.of());
 

@@ -141,6 +141,7 @@ public class DatamapperTestUtil {
             UUID.randomUUID().toString(), null, BehandlingType.FØRSTEGANGSSØKNAD, LocalDateTime.now().minusDays(1), null, "enhet", BrevGrunnlag.Språkkode.BOKMÅL,
             true, familieHendelse, null, null, behandlingsresultat, List.of(), null, null,
             null, null, null, null, List.of(), null, null, null, null, null, null);
-
     }
+
+
 }

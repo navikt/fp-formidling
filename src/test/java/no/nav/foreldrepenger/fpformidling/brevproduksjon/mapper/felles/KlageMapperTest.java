@@ -1,21 +1,24 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.KlageBehandling.KlageAvvistÅrsak;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.KlageBehandling.KlageFormkravResultat;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurdering;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.KlageBehandling;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.KlageDtoMapper;
-import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurdering;
 
 class KlageMapperTest {
 
@@ -29,8 +32,9 @@ class KlageMapperTest {
         assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), "forvaltningsloven §§ 28 og 33");
     }
 
-    private Klage lagKlageNFP(List<KlageAvvistÅrsak> avvistÅrsaker) {
-        return KlageDtoMapper.mapKlagefraDto(lagKlageDto(avvistÅrsaker));
+    private KlageBehandling lagKlageNFP(List<KlageAvvistÅrsak> avvistÅrsaker) {
+        return new KlageBehandling(new KlageFormkravResultat(1L, UUID.randomUUID(), BrevGrunnlag.BehandlingType.FØRSTEGANGSSØKNAD,
+            "begrunnelse", true, true, false, avvistÅrsaker.isEmpty(), avvistÅrsaker), null, null, null, List.of(), true, true, LocalDate.now());
     }
 
     private KlagebehandlingDto lagKlageDto(List<KlageAvvistÅrsak> avvistÅrsaker) {

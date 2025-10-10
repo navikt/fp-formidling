@@ -77,7 +77,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                                                                     DokumentHendelse dokumentHendelse,
                                                                     BrevGrunnlag behandling,
                                                                     boolean erUtkast) {
-        var tilkjentYtelseForeldrepenger = behandling.tilkentYtelse().dagytelse();
+        var tilkjentYtelseForeldrepenger = behandling.tilkjentYtelse().dagytelse();
         var beregningsgrunnlag = behandling.beregningsgrunnlag();
         var uttak = behandling.foreldrepengerUttak();
         var familieHendelse = behandling.familieHendelse();

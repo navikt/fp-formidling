@@ -50,7 +50,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var svpUttaksresultat = Optional.ofNullable(behandling.svangerskapspengerUttak());
         var familieHendelse = behandling.familieHendelse();
         var inntektsmeldinger = behandling.inntektsmeldinger();
-        var tilkjentYtelse = Optional.ofNullable(behandling.tilkentYtelse()).map(BrevGrunnlag.TilkjentYtelse::dagytelse);
+        var tilkjentYtelse = Optional.ofNullable(behandling.tilkjentYtelse()).map(BrevGrunnlag.TilkjentYtelse::dagytelse);
 
         var språkkode = dokumentFelles.getSpråkkode();
 

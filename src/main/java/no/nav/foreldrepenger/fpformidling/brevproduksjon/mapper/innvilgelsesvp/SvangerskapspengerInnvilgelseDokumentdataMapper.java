@@ -60,7 +60,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
                                                                         BrevGrunnlag behandling,
                                                                         boolean erUtkast) {
         var beregningsgrunnlag = behandling.beregningsgrunnlag();
-        var tilkjentYtelse = behandling.tilkentYtelse().dagytelse();
+        var tilkjentYtelse = behandling.tilkjentYtelse().dagytelse();
         var uttaksresultatSvp = behandling.svangerskapspengerUttak();
         var mottattDatoSøknad = behandling.søknadMottattDato();
 

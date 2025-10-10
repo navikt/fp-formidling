@@ -41,7 +41,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
                                                                    DokumentHendelse hendelse,
                                                                    BrevGrunnlag behandling,
                                                                    boolean erUtkast) {
-        var tilkjentYtelse = behandling.tilkentYtelse().engangsstønad();
+        var tilkjentYtelse = behandling.tilkjentYtelse().engangsstønad();
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
@@ -60,7 +60,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
             .medErEndretSats(false);
 
         if (behandling.erRevurdering()) {
-            var differanse = sjekkOmDifferanseHvisRevurdering(behandling.tilkentYtelse().originalBehandlingEngangsstønad(), tilkjentYtelse);
+            var differanse = sjekkOmDifferanseHvisRevurdering(behandling.tilkjentYtelse().originalBehandlingEngangsstønad(), tilkjentYtelse);
 
             if (differanse != 0L) {
                 var famHendelse = behandling.familieHendelse();

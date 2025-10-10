@@ -75,7 +75,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
     private void mapAvslåttePerioder(BrevGrunnlag behandling,
                                      ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
                                      Optional<BrevGrunnlag.ForeldrepengerUttak> uttakResultatPerioder, Språkkode språkkode) {
-        var tilkjentYtelseFP = Optional.ofNullable(behandling.tilkentYtelse()).map(BrevGrunnlag.TilkjentYtelse::dagytelse);
+        var tilkjentYtelseFP = Optional.ofNullable(behandling.tilkjentYtelse()).map(BrevGrunnlag.TilkjentYtelse::dagytelse);
         var avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(behandling,
             tilkjentYtelseFP.map(TilkjentYtelseDagytelseDto::perioder).orElse(Collections.emptyList()), uttakResultatPerioder, språkkode);
 

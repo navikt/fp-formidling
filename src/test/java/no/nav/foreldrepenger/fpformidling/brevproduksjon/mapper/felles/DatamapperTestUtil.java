@@ -8,6 +8,7 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.InnsynBehandling;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.KlageBehandling;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag.RelasjonsRolleType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlag;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
@@ -62,8 +64,7 @@ public class DatamapperTestUtil {
     }
 
     public static DokumentFelles lagStandardDokumentFelles(Kopi kopi, boolean tilVerge, FagsakYtelseType fagsakYtelseType) {
-        return standardDokumentFellesBuilder(kopi, tilVerge, fagsakYtelseType)
-            .build();
+        return standardDokumentFellesBuilder(kopi, tilVerge, fagsakYtelseType).build();
     }
 
     public static DokumentFelles.Builder lagStandardDokumentFellesBuilder(FagsakYtelseType fagsakYtelseType) {
@@ -98,16 +99,35 @@ public class DatamapperTestUtil {
         return lagStandardHendelseBuilder().build();
     }
 
+    public static BrevGrunnlagBuilders.BrevGrunnlagBuilder defaultBuilder() {
+        return brevGrunnlag().uuid(UUID.randomUUID())
+            .saksnummer(UUID.randomUUID().toString())
+            .fagsakStatus(FagsakStatus.UNDER_BEHANDLING)
+            .relasjonsRolleType(RelasjonsRolleType.MORA)
+            .aktørId(UUID.randomUUID().toString())
+            .opprettet(LocalDateTime.now().minusDays(1))
+            .behandlendeEnhet("enhet")
+            .språkkode(BrevGrunnlag.Språkkode.BOKMÅL)
+            .automatiskBehandlet(true)
+            .behandlingÅrsakTyper(List.of())
+            .inntektsmeldinger(List.of());
+    }
+
     public static BrevGrunnlag standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType ytelseType,
                                                     Behandlingsresultat behandlingsresultat,
                                                     KlageBehandling klageBehandling,
                                                     InnsynBehandling innsynBehandling,
                                                     ArbeidsforholdInntektsmeldingerDto imStatus) {
-        var behandlingType = klageBehandling != null ? BehandlingType.KLAGE : innsynBehandling != null ? BehandlingType.INNSYN : BehandlingType.FØRSTEGANGSSØKNAD;
-        return new BrevGrunnlag(UUID.randomUUID(), UUID.randomUUID().toString(), ytelseType, FagsakStatus.UNDER_BEHANDLING, RelasjonsRolleType.MORA,
-            UUID.randomUUID().toString(), null, behandlingType, LocalDateTime.now().minusDays(1), null, "enhet", BrevGrunnlag.Språkkode.BOKMÅL,
-            true, new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null), null, null, behandlingsresultat, List.of(), null, null,
-            imStatus, null, null, null, List.of(), null, null, klageBehandling, null, null, null);
+        var behandlingType =
+            klageBehandling != null ? BehandlingType.KLAGE : innsynBehandling != null ? BehandlingType.INNSYN : BehandlingType.FØRSTEGANGSSØKNAD;
+        return defaultBuilder().fagsakYtelseType(ytelseType)
+            .behandlingType(behandlingType)
+            .familieHendelse(standardFamilieHendelse())
+            .behandlingsresultat(behandlingsresultat)
+            .inntektsmeldingerStatus(imStatus)
+            .klageBehandling(klageBehandling)
+            .innsynBehandling(innsynBehandling)
+            .build();
     }
 
     public static BrevGrunnlag standardForeldrepengerBrevGrunnlag() {
@@ -115,19 +135,43 @@ public class DatamapperTestUtil {
     }
 
     public static BrevGrunnlag standardForeldrepengerBrevGrunnlag(ArbeidsforholdInntektsmeldingerDto imStatus) {
-        return standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER, null, null, null, imStatus);
+        return defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
+            .behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .familieHendelse(standardFamilieHendelse())
+            .inntektsmeldingerStatus(imStatus)
+            .build();
     }
 
     public static BrevGrunnlag klageForeldrepengerBrevGrunnlag(KlageBehandling klageBehandling) {
-        return standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER, null, klageBehandling, null, null);
+        return defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.FORELDREPENGER)
+            .behandlingType(BehandlingType.KLAGE)
+            .familieHendelse(standardFamilieHendelse())
+            .klageBehandling(klageBehandling)
+            .build();
     }
 
     public static BrevGrunnlag innsynBrevGrunnlag(InnsynBehandling innsynBehandling, BrevGrunnlag.FagsakYtelseType fagsakYtelseType) {
-        return standardBrevGrunnlag(fagsakYtelseType, null, null, innsynBehandling, null);
+        return defaultBuilder()
+            .fagsakYtelseType(fagsakYtelseType)
+            .behandlingType(BehandlingType.INNSYN)
+            .familieHendelse(standardFamilieHendelse())
+            .innsynBehandling(innsynBehandling)
+            .build();
     }
 
     public static BrevGrunnlag standardSvangerskapspengerBrevGrunnlag(ArbeidsforholdInntektsmeldingerDto imStatus) {
-        return standardBrevGrunnlag(BrevGrunnlag.FagsakYtelseType.SVANGERSKAPSPENGER, null, null, null, imStatus);
+        return defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlag.FagsakYtelseType.SVANGERSKAPSPENGER)
+            .behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .familieHendelse(standardFamilieHendelse())
+            .inntektsmeldingerStatus(imStatus)
+            .build();
+    }
+
+    private static FamilieHendelse standardFamilieHendelse() {
+        return new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null);
     }
 
     public static BrevGrunnlag avslåttBrevGrunnlag(BrevGrunnlag.FagsakYtelseType ytelseType,
@@ -135,12 +179,13 @@ public class DatamapperTestUtil {
                                                    String avslagsfritekst,
                                                    FamilieHendelse familieHendelse,
                                                    Behandlingsresultat.VilkårType vilkårType) {
-        var behandlingsresultat = new Behandlingsresultat(null, null, Behandlingsresultat.BehandlingResultatType.AVSLÅTT, avslagsårsak.getKode(), new Behandlingsresultat.Fritekst("avslag", null, avslagsfritekst),
-            null, false, null, List.of(), List.of(vilkårType));
-        return new BrevGrunnlag(UUID.randomUUID(), UUID.randomUUID().toString(), ytelseType, FagsakStatus.UNDER_BEHANDLING, RelasjonsRolleType.MORA,
-            UUID.randomUUID().toString(), null, BehandlingType.FØRSTEGANGSSØKNAD, LocalDateTime.now().minusDays(1), null, "enhet", BrevGrunnlag.Språkkode.BOKMÅL,
-            true, familieHendelse, null, null, behandlingsresultat, List.of(), null, null,
-            null, null, null, null, List.of(), null, null, null, null, null, null);
+        var behandlingsresultat = new Behandlingsresultat(null, null, Behandlingsresultat.BehandlingResultatType.AVSLÅTT, avslagsårsak.getKode(),
+            new Behandlingsresultat.Fritekst("avslag", null, avslagsfritekst), null, false, null, List.of(), List.of(vilkårType));
+        return defaultBuilder().fagsakYtelseType(ytelseType)
+            .behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .familieHendelse(familieHendelse)
+            .behandlingsresultat(behandlingsresultat)
+            .build();
     }
 
 

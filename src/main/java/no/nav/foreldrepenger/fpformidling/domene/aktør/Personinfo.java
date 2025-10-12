@@ -2,16 +2,12 @@ package no.nav.foreldrepenger.fpformidling.domene.aktør;
 
 import static java.util.Objects.requireNonNull;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 
 public class Personinfo {
     private AktørId aktørId;
-    private LocalDate fødselsdato;
-    private LocalDate dødsdato;
 
     //Brukt for mapping
     private String navn;
@@ -42,14 +38,6 @@ public class Personinfo {
         return registrertDød;
     }
 
-    public LocalDate getFødselsdato() {
-        return fødselsdato;
-    }
-
-    public LocalDate getDødsdato() {
-        return dødsdato;
-    }
-
     public static Builder getbuilder(AktørId aktørId) {
         return new Builder(aktørId);
     }
@@ -74,16 +62,6 @@ public class Personinfo {
 
         public Builder medPersonIdent(PersonIdent fnr) {
             personinfoMal.personIdent = fnr;
-            return this;
-        }
-
-        public Builder medDødsdato(LocalDate dødsdato) {
-            personinfoMal.dødsdato = dødsdato;
-            return this;
-        }
-
-        public Builder medFødselsdato(LocalDate dato) {
-            personinfoMal.fødselsdato = dato;
             return this;
         }
 

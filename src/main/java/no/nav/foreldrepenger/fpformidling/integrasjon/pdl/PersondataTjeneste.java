@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.pdl;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,10 +12,8 @@ import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
-import no.nav.pdl.Doedsfall;
 import no.nav.pdl.DoedsfallResponseProjection;
-import no.nav.pdl.Foedselsdato;
-import no.nav.pdl.FoedselsdatoResponseProjection;
+import no.nav.pdl.FolkeregisteridentifikatorResponseProjection;
 import no.nav.pdl.Folkeregisterpersonstatus;
 import no.nav.pdl.FolkeregisterpersonstatusResponseProjection;
 import no.nav.pdl.HentIdenterQueryRequest;
@@ -30,18 +26,18 @@ import no.nav.pdl.IdentlisteResponseProjection;
 import no.nav.pdl.Kjoenn;
 import no.nav.pdl.KjoennResponseProjection;
 import no.nav.pdl.KjoennType;
-import no.nav.pdl.Navn;
 import no.nav.pdl.NavnResponseProjection;
 import no.nav.pdl.Person;
 import no.nav.pdl.PersonResponseProjection;
 import no.nav.vedtak.exception.VLException;
+import no.nav.vedtak.felles.integrasjon.person.FalskIdentitet;
+import no.nav.vedtak.felles.integrasjon.person.PersonMappers;
 import no.nav.vedtak.felles.integrasjon.person.Persondata;
 import no.nav.vedtak.util.LRUCache;
 
 @ApplicationScoped
 public class PersondataTjeneste {
 
-    private static final String FREG_DØD = "doed";
     private static final String FREG_DØD_FORENKLET = "doedIFolkeregisteret";
 
     private static final int DEFAULT_CACHE_SIZE = 1000;
@@ -93,7 +89,7 @@ public class PersondataTjeneste {
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
         var projection = new PersonResponseProjection().navn(new NavnResponseProjection().fornavn().mellomnavn().etternavn())
-            .foedselsdato(new FoedselsdatoResponseProjection().foedselsdato())
+            .folkeregisteridentifikator(new FolkeregisteridentifikatorResponseProjection().identifikasjonsnummer().status())
             .doedsfall(new DoedsfallResponseProjection().doedsdato())
             .kjoenn(new KjoennResponseProjection().kjoenn())
             .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
@@ -101,20 +97,19 @@ public class PersondataTjeneste {
         var ytelse = utledYtelse(ytelseType);
         var person = pdlKlient.hentPerson(ytelse, query, projection);
 
-        var fødselsdato = person.getFoedselsdato()
-            .stream()
-            .map(Foedselsdato::getFoedselsdato)
-            .filter(Objects::nonNull)
-            .findFirst()
-            .map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE))
-            .orElse(null);
-        var dødssdato = person.getDoedsfall()
-            .stream()
-            .map(Doedsfall::getDoedsdato)
-            .filter(Objects::nonNull)
-            .findFirst()
-            .map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE))
-            .orElse(null);
+        if (PersonMappers.manglerIdentifikator(person)) {
+            var falskIdent = FalskIdentitet.finnFalskIdentitet(aktørId.getId(), pdlKlient).orElse(null);
+            if (falskIdent != null) {
+                return Personinfo.getbuilder(aktørId)
+                    .medPersonIdent(personIdent)
+                    .medNavn(falskIdent.navn())
+                    .medNavBrukerKjønn(mapKjønn(falskIdent.kjønn()))
+                    .medRegistrertDød(false)
+                    .build();
+            }
+        }
+
+        var dødsdato = PersonMappers.mapDødsdato(person);
         var pdlStatusDød = person.getFolkeregisterpersonstatus()
             .stream()
             .map(Folkeregisterpersonstatus::getForenkletStatus)
@@ -123,32 +118,23 @@ public class PersondataTjeneste {
             .orElse(false);
         return Personinfo.getbuilder(aktørId)
             .medPersonIdent(personIdent)
-            .medNavn(person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
-            .medFødselsdato(fødselsdato)
-            .medDødsdato(dødssdato)
+            .medNavn(PersonMappers.mapNavn(person).orElse("Ukjent Navn"))
             .medNavBrukerKjønn(mapKjønn(person))
-            .medRegistrertDød(pdlStatusDød)
+            .medRegistrertDød(pdlStatusDød || dødsdato.isPresent())
             .build();
     }
 
-    private static String mapNavn(Navn navn) {
-        return navn.getFornavn() + leftPad(navn.getMellomnavn()) + leftPad(navn.getEtternavn());
-    }
-
-    private static String leftPad(String navn) {
-        if (navn == null) {
-            return "";
-        }
-        return " " + navn;
-    }
-
     public static boolean harPersonstatusDød(String fregStatus) {
-        return fregStatus != null && (Objects.equals(FREG_DØD_FORENKLET, fregStatus) || Objects.equals(FREG_DØD, fregStatus));
+        return fregStatus != null && (Objects.equals(FREG_DØD_FORENKLET, fregStatus));
     }
 
     private static NavBrukerKjønn mapKjønn(Person person) {
         var kode = person.getKjoenn().stream().map(Kjoenn::getKjoenn).filter(Objects::nonNull).findFirst().orElse(KjoennType.UKJENT);
-        return switch (kode) {
+        return PersondataTjeneste.mapKjønn(kode);
+    }
+
+    private static NavBrukerKjønn mapKjønn(KjoennType kjoenn) {
+        return switch (kjoenn) {
             case MANN -> NavBrukerKjønn.MANN;
             case KVINNE -> NavBrukerKjønn.KVINNE;
             default -> NavBrukerKjønn.UDEFINERT;

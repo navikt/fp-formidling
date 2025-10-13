@@ -48,7 +48,7 @@ public class JettyServer {
     private final Integer serverPort;
 
     static void main() throws Exception {
-        LOG.warn("JVM Default Locale: {}", Locale.getDefault());
+        LOG.info("JVM Default Locale: {}", Locale.getDefault());
         jettyServer().bootStrap();
     }
 

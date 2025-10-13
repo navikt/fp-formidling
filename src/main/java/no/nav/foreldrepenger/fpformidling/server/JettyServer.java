@@ -5,6 +5,7 @@ import static org.eclipse.jetty.ee11.webapp.MetaInfConfiguration.CONTAINER_JAR_P
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.naming.NamingException;
 
@@ -46,14 +47,12 @@ public class JettyServer {
 
     private final Integer serverPort;
 
-    public static void main(String[] args) throws Exception {
-        jettyServer(args).bootStrap();
+    static void main() throws Exception {
+        LOG.warn("JVM Default Locale: {}", Locale.getDefault());
+        jettyServer().bootStrap();
     }
 
-    private static JettyServer jettyServer(String[] args) {
-        if (args.length > 0) {
-            return new JettyServer(Integer.parseUnsignedInt(args[0]));
-        }
+    protected static JettyServer jettyServer() {
         return new JettyServer(ENV.getProperty("server.port", Integer.class, 8080));
     }
 

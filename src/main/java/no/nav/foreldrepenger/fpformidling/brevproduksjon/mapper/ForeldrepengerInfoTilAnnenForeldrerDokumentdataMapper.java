@@ -1,38 +1,27 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.PeriodeResultatType;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER)
 public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapper {
-    private DomeneobjektProvider domeneobjektProvider;
-
-    ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper() {
-        //CDI
-    }
-
-    @Inject
-    public ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(DomeneobjektProvider domeneobjektProvider) {
-        this.domeneobjektProvider = domeneobjektProvider;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -42,7 +31,7 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
     @Override
     public ForeldrepengerInfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                              DokumentHendelse hendelse,
-                                                                             Behandling behandling,
+                                                                             BrevGrunnlagDto behandling,
                                                                              boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
@@ -52,21 +41,21 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
 
         var aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;
 
-        if (behandling.harBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
+        if (behandling.behandlingÅrsakTyper().stream().anyMatch(bå -> bå == BrevGrunnlagDto.BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
             aarsak = BehandlingÅrsakType.INFOBREV_OPPHOLD;
         }
 
-        var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
+        var uttak = Optional.ofNullable(behandling.foreldrepenger());
 
         String sisteUttaksdagMor = null;
-        if (uttakResultatPerioder.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(aarsak)) {
-            sisteUttaksdagMor = uttakResultatPerioder.get()
-                .perioderAnnenPart()
+        if (uttak.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(aarsak)) {
+            sisteUttaksdagMor = uttak.get()
+                .perioderAnnenpart()
                 .stream()
-                .filter(up -> PeriodeResultatType.INNVILGET.equals(up.getPeriodeResultatType()) || up.getAktiviteter()
+                .filter(up -> PeriodeResultatType.INNVILGET.equals(up.periodeResultatType()) || up.aktiviteter()
                     .stream()
-                    .anyMatch(upa -> upa.getTrekkdager().compareTo(BigDecimal.ZERO) > 0))
-                .map(UttakResultatPeriode::getTom)
+                    .anyMatch(upa -> upa.trekkdager().compareTo(BigDecimal.ZERO) > 0))
+                .map(Foreldrepenger.Uttaksperiode::tom)
                 .max(LocalDate::compareTo)
                 .map(d -> formaterDato(d, språkkode))
                 .orElse(null);

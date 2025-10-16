@@ -1,112 +1,108 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.foreldrepenger;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.foreldrepengerUttakPeriode;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
+@ExtendWith(MockitoExtension.class)
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
-    private DokumentFelles dokumentFelles;
-    private DokumentHendelse dokumentHendelse;
 
     private ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper;
 
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
-
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medFritekst(null).build();
-
-        foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);
+        foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper();
     }
 
     @Test
     void mapInfoTilAnnenForelder() {
         // Arrange
-        var behandling = opprettBehandling(lagBehÅrsak(BehandlingÅrsakType.INFOBREV_BEHANDLING));
-        var foreldrepengerUttak = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
-            DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(40)));
-        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
+        var periode1Fom = LocalDate.now();
+        var periode1Tom = LocalDate.now().plusDays(20);
+        var periode2Fom = LocalDate.now().plusDays(20);
+        var periode2Tom = LocalDate.now().plusDays(40);
+
+        var foreldrepengerUttakData = lagForeldrepengerUttak(periode1Fom, periode1Tom, periode2Fom, periode2Tom);
+        var behandling = defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER)
+            .behandlingÅrsakTyper(List.of(BrevGrunnlagDto.BehandlingÅrsakType.INFOBREV_BEHANDLING))
+            .foreldrepenger(foreldrepengerUttakData)
+            .build();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
         //Act
         var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
             behandling, false);
 
         //assert
-        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_BEHANDLING.getKode());
-        assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isEqualTo(formaterDato(LocalDate.now().plusDays(40), dokumentFelles.getSpråkkode()));
+        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo("INFOBREV_BEHANDLING");
+        assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isEqualTo(formaterDato(periode2Tom, dokumentFelles.getSpråkkode()));
     }
 
     @Test
     void mapInfoTilAnnenForelderOpphold() {
         // Arrange
-        var behandling = opprettBehandling(lagBehÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD));
-        var foreldrepengerUttak = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
-            DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(30)));
-        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
+        var periode1Fom = LocalDate.now();
+        var periode1Tom = LocalDate.now().plusDays(20);
+        var periode2Fom = LocalDate.now().plusDays(20);
+        var periode2Tom = LocalDate.now().plusDays(30);
+
+        var foreldrepengerUttakData = lagForeldrepengerUttak(periode1Fom, periode1Tom, periode2Fom, periode2Tom);
+        var behandling = defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER)
+            .behandlingÅrsakTyper(List.of(BrevGrunnlagDto.BehandlingÅrsakType.INFOBREV_OPPHOLD))
+            .foreldrepenger(foreldrepengerUttakData)
+            .build();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
         //Act
         var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
             behandling, false);
 
         //assert
-        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_OPPHOLD.getKode());
+        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo("INFOBREV_OPPHOLD");
         assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isNull();
     }
 
-    private BehandlingÅrsak lagBehÅrsak(BehandlingÅrsakType årsakType) {
-        return BehandlingÅrsak.builder().medBehandlingÅrsakType(årsakType).build();
-    }
+    private BrevGrunnlagDto.Foreldrepenger lagForeldrepengerUttak(LocalDate periode1Fom, LocalDate periode1Tom,
+                                                                  LocalDate periode2Fom, LocalDate periode2Tom) {
+        var periode1 = foreldrepengerUttakPeriode()
+            .fom(periode1Fom)
+            .tom(periode1Tom)
+            .aktiviteter(List.of())
+            .periodeResultatType(BrevGrunnlagDto.PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UKJENT.getKode())
+            .build();
+        var periode2 = foreldrepengerUttakPeriode()
+            .fom(periode2Fom)
+            .tom(periode2Tom)
+            .aktiviteter(List.of())
+            .periodeResultatType(BrevGrunnlagDto.PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UKJENT.getKode())
+            .build();
 
-    private Behandling opprettBehandling(BehandlingÅrsak behÅrsak) {
-        var behandlingresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET);
-
-        var behandlingBuilder = Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-            .medBehandlingsresultat(behandlingresultat.build())
-            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
-            .medSpråkkode(Språkkode.NB)
-            .medBehandlingÅrsaker(List.of(behÅrsak));
-
-        return behandlingBuilder.build();
-    }
-
-    private ForeldrepengerUttak settOppUttaksperioder(DatoIntervall periodeEn, DatoIntervall periodeTo) {
-        return new ForeldrepengerUttak(List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)),
-            List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)));
-    }
-
-    private UttakResultatPeriode lagUttakResPeriode(DatoIntervall periode) {
-        return UttakResultatPeriode.ny().medTidsperiode(periode).medPeriodeResultatType(PeriodeResultatType.INNVILGET).build();
+        return foreldrepenger()
+            .stønadskontoer(List.of())
+            .tapteDagerFpff(0)
+            .perioderSøker(List.of(periode1, periode2))
+            .perioderAnnenpart(List.of(periode1, periode2))
+            .ønskerJustertUttakVedFødsel(false)
+            .build();
     }
 }

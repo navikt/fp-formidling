@@ -5,40 +5,28 @@ import java.util.TreeSet;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 public class UttakMapper {
 
     private UttakMapper() {
     }
 
-    public static String mapLovhjemlerForUttak(ForeldrepengerUttak foreldrepengerUttak, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+    public static String mapLovhjemlerForUttak(BrevGrunnlagDto.Foreldrepenger foreldrepenger, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
-        for (var periode : foreldrepengerUttak.perioder()) {
-            var årsak = utledÅrsakskode(periode);
-            if (årsak.erUkjent()) {
-                continue;
+        for (var periode : foreldrepenger.perioderSøker()) {
+            if (periode.graderingAvslagÅrsak() != null && !"-".equals(periode.graderingAvslagÅrsak())) {
+                var årsak = new PeriodeResultatÅrsak(periode.graderingAvslagÅrsak(),
+                    PeriodeResultatÅrsak.GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, periode.graderingsAvslagÅrsakLovhjemmel());
+                lovhjemler.addAll(årsak.hentLovhjemlerFraJson());
             }
-            if (årsak.erGraderingAvslagÅrsak() && periode.getPeriodeResultatÅrsak() != null)  {
-                lovhjemler.addAll(periode.getPeriodeResultatÅrsak().hentLovhjemlerFraJson());
+            if (periode.periodeResultatÅrsakLovhjemmel() != null) {
+                var årsak = new PeriodeResultatÅrsak(periode.periodeResultatÅrsak(),
+                    PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR, periode.periodeResultatÅrsakLovhjemmel());
+                lovhjemler.addAll(årsak.hentLovhjemlerFraJson());
             }
-            lovhjemler.addAll(årsak.hentLovhjemlerFraJson());
         }
         return FellesMapper.formaterLovhjemlerUttak(lovhjemler, konsekvensForYtelse, innvilgetRevurdering);
-    }
-
-    private static PeriodeResultatÅrsak utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
-        if (erGraderingAvslått(uttakPeriode) && uttakPeriode.isInnvilget()) {
-            return uttakPeriode.getGraderingAvslagÅrsak();
-        } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
-            return uttakPeriode.getPeriodeResultatÅrsak();
-        }
-        return PeriodeResultatÅrsak.UKJENT;
-    }
-
-    private static boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
-        return !uttakPeriode.erGraderingInnvilget() && !uttakPeriode.getGraderingAvslagÅrsak().erUkjent();
     }
 }

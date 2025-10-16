@@ -28,7 +28,7 @@ public class DokumentFelles {
 
     private Språkkode språkkode;
     private Saksnummer saksnummer;
-    private Boolean automatiskBehandlet;
+    private boolean automatiskBehandlet;
     private String sakspartId;
     private String sakspartNavn;
     private String mottakerId;
@@ -51,7 +51,7 @@ public class DokumentFelles {
         return saksnummer;
     }
 
-    public Boolean getAutomatiskBehandlet() {
+    public boolean getAutomatiskBehandlet() {
         return automatiskBehandlet;
     }
 
@@ -135,7 +135,7 @@ public class DokumentFelles {
             return this;
         }
 
-        public Builder medAutomatiskBehandlet(Boolean automatiskBehandlet) {
+        public Builder medAutomatiskBehandlet(boolean automatiskBehandlet) {
             this.dokumentFelles.automatiskBehandlet = automatiskBehandlet;
             return this;
         }

@@ -7,9 +7,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
-import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.FORELDREPENGER;
-import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.MINSTERETT;
-import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
@@ -29,33 +27,30 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.Rettigheter;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Saldoer;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.EøsUttak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata.Builder;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger.Stønadskonto.Type;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Rettigheter.Rettighetstype;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_INNVILGELSE)
@@ -64,12 +59,12 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
     private static final Logger LOG = LoggerFactory.getLogger(ForeldrepengerInnvilgelseDokumentdataMapper.class);
     private final BrevParametere brevParametere;
-    private final DomeneobjektProvider domeneobjektProvider;
+    private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public ForeldrepengerInnvilgelseDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerInnvilgelseDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
+        this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
     @Override
@@ -80,31 +75,29 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     @Override
     public ForeldrepengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                     DokumentHendelse dokumentHendelse,
-                                                                    Behandling behandling,
+                                                                    BrevGrunnlagDto behandling,
                                                                     boolean erUtkast) {
-        var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
-        var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        var uttak = domeneobjektProvider.hentForeldrepengerUttak(behandling);
-        var familieHendelse = behandling.getFamilieHendelse();
-        var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).map(Behandling::getFamilieHendelse);
-        var fagsak = behandling.getFagsak();
-        var saldoer = domeneobjektProvider.hentSaldoer(behandling);
-        if (uttak.perioder().isEmpty() || saldoer.stønadskontoer().isEmpty()) {
+        var tilkjentYtelseForeldrepenger = behandling.tilkjentYtelse().dagytelse();
+        var beregningsgrunnlag = behandling.beregningsgrunnlag();
+        var uttak = behandling.foreldrepenger();
+        var familieHendelse = behandling.familieHendelse();
+        var originalFamiliehendelse = Optional.ofNullable(behandling.originalBehandling()).map(BrevGrunnlagDto.OriginalBehandling::familieHendelse);
+        var saldoer = uttak == null ? null : uttak.stønadskontoer();
+        if (uttak == null || uttak.perioderSøker().isEmpty() || saldoer.isEmpty()) {
             throw new IllegalStateException("Ikke støttet å generere innvilgelsesbrev uten uttak");
         }
         var språkkode = dokumentFelles.getSpråkkode();
-        var utenMinsterett = behandling.utenMinsterett();
-        var ytelseFordeling = domeneobjektProvider.ytelseFordeling(behandling);
+        var utenMinsterett = behandling.behandlingsresultat().skjæringstidspunkt().utenMinsterett();
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fraFritekst(dokumentHendelse, behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
-        var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttak,
-            beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
-        var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen(),
-            behandling.getBehandlingÅrsaker());
+        var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.perioder(), uttak,
+            beregningsgrunnlag.beregningsgrunnlagperioder(), språkkode, arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.behandlingsresultat().konsekvenserForYtelsen(),
+            behandling.behandlingÅrsakTyper());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         var dagsats = TilkjentYtelseMapper.finnDagsats(tilkjentYtelseForeldrepenger);
         var antallBarn = familieHendelse.antallBarn();
@@ -114,14 +107,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         int utenAktKrav = 0;
         int medAktKrav = 0;
         int maksukerUtenAktKrav = 0;
-        var rettigheter = behandling.getRettigheter();
+        var rettigheter = uttak.rettigheter();
         if (bfhrMedMinsterett(saldoer, rettigheter)) {
             utenAktKrav = disponibleDagerUtenAktivitetskrav(saldoer);
             medAktKrav = disponibleDagerMedAktivitetskrav(saldoer);
             maksukerUtenAktKrav = maksdagerUtenAktivitetskrav(saldoer) / 5;
         }
-        var behandlingType = behandling.getBehandlingType();
-        var relasjonsRolleType = fagsak.getRelasjonsRolleType();
+        var behandlingType = behandling.behandlingType();
+        var relasjonsRolleType = behandling.relasjonsRolleType();
 
         if (rettigheter.opprinnelig() != rettigheter.gjeldende()) {
             LOG.info("Rettighetstype endret fra {} til {} - {} - {}", rettigheter.opprinnelig(), rettigheter.gjeldende(), behandlingType,
@@ -136,11 +129,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medBehandlingType(behandlingType.name())
-            .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
+            .medBehandlingType(tilString(behandlingType))
+            .medBehandlingResultatType(tilString(behandling.behandlingsresultat().behandlingResultatType()))
             .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
-            .medDekningsgrad(Optional.ofNullable(fagsak.getDekningsgrad()).orElseThrow())
-            .medEndretDekningsgrad(behandling.getBehandlingsresultat().isEndretDekningsgrad())
+            .medDekningsgrad(Optional.ofNullable(uttak.dekningsgrad()).map(d -> switch (d) {
+                case HUNDRE -> 100;
+                case ÅTTI -> 80;
+            }).orElseThrow())
+            .medEndretDekningsgrad(behandling.behandlingsresultat().endretDekningsgrad())
             .medHarUtbetaling(TilkjentYtelseMapper.harUtbetaling(tilkjentYtelseForeldrepenger))
             .medDagsats(dagsats)
             .medMånedsbeløp(TilkjentYtelseMapper.finnMånedsbeløp(tilkjentYtelseForeldrepenger))
@@ -150,7 +146,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
             .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(vedtaksperioder))
             .medAvslagBarnOver3år(sistePeriodeAvslåttPgaBarnOver3år(vedtaksperioder))
-            .medGjelderMor(gjelderMor(fagsak))
+            .medGjelderMor(gjelderMor(behandling))
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
             .medIngenRefusjon(TilkjentYtelseMapper.harIngenRefusjon(tilkjentYtelseForeldrepenger))
             .medDelvisRefusjon(TilkjentYtelseMapper.harDelvisRefusjon(tilkjentYtelseForeldrepenger))
@@ -159,7 +155,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medAntallInnvilgedePerioder(finnAntallInnvilgedePerioder(vedtaksperioder))
             .medAntallAvslåttePerioder(finnAntallAvslåttePerioder(vedtaksperioder))
             .medAntallArbeidsgivere(TilkjentYtelseMapper.finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger))
-            .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
+            .medDagerTaptFørTermin(uttak.tapteDagerFpff())
             .medDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, relasjonsRolleType))
             .medDisponibleDagerUtenAktivitetskrav(utenAktKrav)
             .medDisponibleDagerMedAktivitetskrav(medAktKrav)
@@ -170,26 +166,24 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medPrematurDager(StønadskontoMapper.finnPrematurDagerHvisFinnes(saldoer))
             .medPerioder(vedtaksperioder)
             .medHarVarierendeDagsats(harVarierendeDagsats(vedtaksperioder))
-            .medMedlemskapOpphørsårsak(behandling.getMedlemskapOpphørsårsak() == null ? null : behandling.getMedlemskapOpphørsårsak().getKode())
+            .medMedlemskapOpphørsårsak(behandling.behandlingsresultat().medlemskapOpphørsårsak())
             .medStarterMedFullUtbetaling(starterMedFullUtbetaling(vedtaksperioder))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttak, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
-                FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForInnvilgetYtelse,
-                    erInnvilgetRevurdering, behandling))
+                FellesMapper.formaterLovhjemlerForBeregning(KodeverkMapper.mapBeregningHjemmel(beregningsgrunnlag.hjemmel()).getNavn(),
+                    konsekvensForInnvilgetYtelse, erInnvilgetRevurdering, behandling.uuid()))
             .medInkludereInnvilget(UndermalInkluderingMapper.skalInkludereInnvilget(vedtaksperioder, konsekvensForInnvilgetYtelse))
             .medInkludereAvslag(UndermalInkluderingMapper.skalInkludereAvslag(vedtaksperioder, konsekvensForInnvilgetYtelse))
             .medUtenMinsterett(utenMinsterett)
             .medRettigheter(map(rettigheter, språkkode))
-            .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
-            .medGraderingOgFulltUttak(
-                vurderOmGraderingOgFulltUttakISammePeriode(beregningsgrunnlag, TilkjentYtelseMapper.finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger),
-                    innvilgedeUtbetalingsperioder))
-            .medRelasjonsRolleType(relasjonsRolleType)
+            .medØnskerJustertVedFødsel(uttak.ønskerJustertUttakVedFødsel())
+            .medGraderingOgFulltUttak(vurderOmGraderingOgFulltUttakISammePeriode(beregningsgrunnlag,
+                TilkjentYtelseMapper.finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger), innvilgedeUtbetalingsperioder))
+            .medRelasjonsRolleType(KodeverkMapper.mapRelasjonsRolle(relasjonsRolleType))
             .medMaksukerUtenAktivitetskrav(maksukerUtenAktKrav);
 
-        finnSisteDagAvSistePeriode(uttak).ifPresent(
-            dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
+        finnSisteDagAvSistePeriode(uttak).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnUtbetalingFom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medUtbetalingFom(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
         finnStønadsperiodeTom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
@@ -200,9 +194,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(vedtaksperioder, dokumentdataBuilder);
 
         //Dersom alle barna er døde skal vi sette dødsdato og faktisk antallDødeBarn. Det er kun i disse tilfellene at innvilgelsesbrevet skal informere om at barnet/barna er døde, ellers er saken fortsatt løpende
-        if (antallBarn == antallDødeBarn) {
-            familieHendelse.tidligstDødsdato()
-                .ifPresent(d -> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
+        if (antallDødeBarn > 0 && antallBarn == antallDødeBarn) {
+            var tidligstDødsdato = familieHendelse.barn().stream().map(BrevGrunnlagDto.Barn::dødsdato).min(LocalDate::compareTo).orElseThrow();
+            dokumentdataBuilder.medDødsdato(formaterDato(tidligstDødsdato, språkkode));
             dokumentdataBuilder.medAntallDødeBarn((int) antallDødeBarn);
         } else {
             dokumentdataBuilder.medAntallDødeBarn(0);
@@ -210,19 +204,70 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return dokumentdataBuilder.build();
     }
 
-    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter map(Rettigheter rettigheter, Språkkode språkkode) {
+    private static String tilString(BrevGrunnlagDto.BehandlingType behandlingType) {
+        return switch (behandlingType) {
+            case FØRSTEGANGSSØKNAD -> "FØRSTEGANGSSØKNAD";
+            case REVURDERING -> "REVURDERING";
+            case KLAGE -> "KLAGE";
+            case ANKE -> "ANKE";
+            case INNSYN -> "INNSYN";
+            case TILBAKEKREVING -> "TILBAKEKREVING";
+            case TILBAKEKREVING_REVURDERING -> "TILBAKEKREVING_REVURDERING";
+        };
+    }
+
+    private static String tilString(BehandlingResultatType behandlingResultatType) {
+        return switch (behandlingResultatType) {
+            case IKKE_FASTSATT -> "IKKE_FASTSATT";
+            case INNVILGET -> "INNVILGET";
+            case AVSLÅTT -> "AVSLÅTT";
+            case OPPHØR -> "OPPHØR";
+            case HENLAGT_SØKNAD_TRUKKET -> "HENLAGT_SØKNAD_TRUKKET";
+            case HENLAGT_FEILOPPRETTET -> "HENLAGT_FEILOPPRETTET";
+            case HENLAGT_BRUKER_DØD -> "HENLAGT_BRUKER_DØD";
+            case MERGET_OG_HENLAGT -> "MERGET_OG_HENLAGT";
+            case HENLAGT_SØKNAD_MANGLER -> "HENLAGT_SØKNAD_MANGLER";
+            case FORELDREPENGER_ENDRET -> "FORELDREPENGER_ENDRET";
+            case FORELDREPENGER_SENERE -> "FORELDREPENGER_SENERE";
+            case INGEN_ENDRING -> "INGEN_ENDRING";
+            case MANGLER_BEREGNINGSREGLER -> "MANGLER_BEREGNINGSREGLER";
+            case KLAGE_AVVIST -> "KLAGE_AVVIST";
+            case KLAGE_MEDHOLD -> "KLAGE_MEDHOLD";
+            case KLAGE_DELVIS_MEDHOLD -> "KLAGE_DELVIS_MEDHOLD";
+            case KLAGE_OMGJORT_UGUNST -> "KLAGE_OMGJORT_UGUNST";
+            case KLAGE_YTELSESVEDTAK_OPPHEVET -> "KLAGE_YTELSESVEDTAK_OPPHEVET";
+            case KLAGE_YTELSESVEDTAK_STADFESTET -> "KLAGE_YTELSESVEDTAK_STADFESTET";
+            case KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET -> "KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET";
+            case HENLAGT_KLAGE_TRUKKET -> "HENLAGT_KLAGE_TRUKKET";
+            case HJEMSENDE_UTEN_OPPHEVE -> "HJEMSENDE_UTEN_OPPHEVE";
+            case ANKE_AVVIST -> "ANKE_AVVIST";
+            case ANKE_MEDHOLD -> "ANKE_MEDHOLD";
+            case ANKE_DELVIS_MEDHOLD -> "ANKE_DELVIS_MEDHOLD";
+            case ANKE_OMGJORT_UGUNST -> "ANKE_OMGJORT_UGUNST";
+            case ANKE_OPPHEVE_OG_HJEMSENDE -> "ANKE_OPPHEVE_OG_HJEMSENDE";
+            case ANKE_HJEMSENDE_UTEN_OPPHEV -> "ANKE_HJEMSENDE_UTEN_OPPHEV";
+            case ANKE_YTELSESVEDTAK_STADFESTET -> "ANKE_YTELSESVEDTAK_STADFESTET";
+            case HENLAGT_ANKE_TRUKKET -> "HENLAGT_ANKE_TRUKKET";
+            case INNSYN_INNVILGET -> "INNSYN_INNVILGET";
+            case INNSYN_DELVIS_INNVILGET -> "INNSYN_DELVIS_INNVILGET";
+            case INNSYN_AVVIST -> "INNSYN_AVVIST";
+            case HENLAGT_INNSYN_TRUKKET -> "HENLAGT_INNSYN_TRUKKET";
+        };
+    }
+
+    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter map(BrevGrunnlagDto.Rettigheter rettigheter,
+                                                                                             Språkkode språkkode) {
         var eøsUttak = rettigheter.eøsUttak();
         return new no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter(map(rettigheter.opprinnelig()), map(rettigheter.gjeldende()),
             eøsUttak == null ? null : map(eøsUttak, språkkode));
     }
 
-    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.EøsUttak map(Rettigheter.EøsUttak eøsUttak,
-                                                                                                      Språkkode språkkode) {
-        return new no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.EøsUttak(formaterDato(eøsUttak.fom(), språkkode),
-            formaterDato(eøsUttak.tom(), språkkode), eøsUttak.forbruktFellesperiode(), eøsUttak.fellesperiodeINorge());
+    private static EøsUttak map(BrevGrunnlagDto.Rettigheter.EøsUttak eøsUttak, Språkkode språkkode) {
+        return new EøsUttak(formaterDato(eøsUttak.fom(), språkkode), formaterDato(eøsUttak.tom(), språkkode), eøsUttak.forbruktFellesperiode(),
+            eøsUttak.fellesperiodeINorge());
     }
 
-    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype map(Rettigheter.Rettighetstype opprinnelig) {
+    private static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype map(Rettighetstype opprinnelig) {
         return switch (opprinnelig) {
             case ALENEOMSORG -> no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.ALENEOMSORG;
             case BEGGE_RETT -> no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter.Rettighetstype.BEGGE_RETT;
@@ -249,33 +294,30 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
     private Optional<LocalDate> finnUtbetalingFom(List<Vedtaksperiode> vedtaksperioder) {
         //Denne kan være optional hvis saksbehandler overstyrer uttak og avslår alle perioder i en revurdering. Eks sak 152211741
-        return vedtaksperioder.stream()
-            .filter(p -> p.getPeriodeDagsats() > 0)
-            .map(Vedtaksperiode::getPeriodeFom)
-            .min(LocalDate::compareTo);
+        return vedtaksperioder.stream().filter(p -> p.getPeriodeDagsats() > 0).map(Vedtaksperiode::getPeriodeFom).min(LocalDate::compareTo);
     }
 
-    private static int disponibleDagerUtenAktivitetskrav(Saldoer saldoer) {
-        if (StønadskontoMapper.kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV)) {
-            return StønadskontoMapper.finnSaldo(saldoer, UTEN_AKTIVITETSKRAV);
+    private static int disponibleDagerUtenAktivitetskrav(List<Stønadskonto> saldoer) {
+        if (StønadskontoMapper.kontoEksisterer(saldoer, Type.UTEN_AKTIVITETSKRAV)) {
+            return StønadskontoMapper.finnSaldo(saldoer, Type.UTEN_AKTIVITETSKRAV);
         }
-        return StønadskontoMapper.finnSaldo(saldoer, MINSTERETT);
+        return StønadskontoMapper.finnSaldo(saldoer, Type.MINSTERETT);
     }
 
-    private static int maksdagerUtenAktivitetskrav(Saldoer saldoer) {
-        if (StønadskontoMapper.kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV)) {
-            return StønadskontoMapper.finnMaksdager(saldoer, UTEN_AKTIVITETSKRAV);
+    private static int maksdagerUtenAktivitetskrav(List<Stønadskonto> saldoer) {
+        if (StønadskontoMapper.kontoEksisterer(saldoer, Type.UTEN_AKTIVITETSKRAV)) {
+            return StønadskontoMapper.finnMaksdager(saldoer, Type.UTEN_AKTIVITETSKRAV);
         }
-        return StønadskontoMapper.finnMaksdager(saldoer, MINSTERETT);
+        return StønadskontoMapper.finnMaksdager(saldoer, Type.MINSTERETT);
     }
 
-    private static int disponibleDagerMedAktivitetskrav(Saldoer saldoer) {
-        return StønadskontoMapper.finnSaldo(saldoer, FORELDREPENGER) - disponibleDagerUtenAktivitetskrav(saldoer);
+    private static int disponibleDagerMedAktivitetskrav(List<Stønadskonto> saldoer) {
+        return StønadskontoMapper.finnSaldo(saldoer, Type.FORELDREPENGER) - disponibleDagerUtenAktivitetskrav(saldoer);
     }
 
-    private static boolean bfhrMedMinsterett(Saldoer saldoer, Rettigheter rettigheter) {
-        return Set.of(Rettigheter.Rettighetstype.BARE_FAR_RETT, Rettigheter.Rettighetstype.BARE_FAR_RETT_MOR_UFØR).contains(rettigheter.gjeldende())
-            && (StønadskontoMapper.kontoEksisterer(saldoer, MINSTERETT) || StønadskontoMapper.kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV));
+    private static boolean bfhrMedMinsterett(List<Stønadskonto> saldoer, BrevGrunnlagDto.Rettigheter rettigheter) {
+        return Set.of(BrevGrunnlagDto.Rettigheter.Rettighetstype.BARE_FAR_RETT, BrevGrunnlagDto.Rettigheter.Rettighetstype.BARE_FAR_RETT_MOR_UFØR).contains(rettigheter.gjeldende()) && (
+            StønadskontoMapper.kontoEksisterer(saldoer, Type.MINSTERETT) || StønadskontoMapper.kontoEksisterer(saldoer, Type.UTEN_AKTIVITETSKRAV));
     }
 
     private List<Vedtaksperiode> finnInnvilgedePerioderMedUtbetaling(List<Vedtaksperiode> vedtaksperioder) {
@@ -285,7 +327,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .toList();
     }
 
-    private boolean vurderOmGraderingOgFulltUttakISammePeriode(Beregningsgrunnlag beregningsgrunnlag,
+    private boolean vurderOmGraderingOgFulltUttakISammePeriode(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                int antallArbeidsgivere,
                                                                List<Vedtaksperiode> innvilgedeUtbetalingsperioder) {
         if (innvilgedeUtbetalingsperioder != null && (harFlereAktivitetStatuser(beregningsgrunnlag) || antallArbeidsgivere > 1)) {
@@ -315,14 +357,13 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .anyMatch(AnnenAktivitet::isGradering) || (periode.getNæring() != null && periode.getNæring().isGradering());
     }
 
-    private boolean harFlereAktivitetStatuser(Beregningsgrunnlag beregningsgrunnlag) {
-        return beregningsgrunnlag.getAktivitetStatuser().size() > 1 || beregningsgrunnlag.getAktivitetStatuser()
+    private boolean harFlereAktivitetStatuser(BeregningsgrunnlagDto beregningsgrunnlag) {
+        return beregningsgrunnlag.aktivitetstatusListe().size() > 1 || beregningsgrunnlag.aktivitetstatusListe()
             .stream()
-            .anyMatch(as -> (as.aktivitetStatus().harKombinertStatus()));
+            .anyMatch(no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper::erKombinertStatus);
     }
 
-    private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Vedtaksperiode> vedtaksperioder,
-                                                                ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
+    private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Vedtaksperiode> vedtaksperioder, Builder builder) {
         var morTarIkkeAlleUkene = vedtaksperioder.stream()
             .filter(Vedtaksperiode::isAvslått)
             .anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak().getKode()));
@@ -340,64 +381,65 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         builder.medMorKanSøkeOmDagerFørFødsel(innenforFristTilÅSøke);
     }
 
-    private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,
-                                                        ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
-        var beregningsgrunnlagregler = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag);
+    private void mapFelterRelatertTilBeregningsgrunnlag(BeregningsgrunnlagDto beregningsgrunnlag, Builder builder) {
+        var beregningsgrunnlagregler = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag, arbeidsgiverTjeneste::hentArbeidsgiverNavn);
         builder.medBeregningsgrunnlagregler(beregningsgrunnlagregler);
         builder.medBruttoBeregningsgrunnlag(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
         builder.medSekgG(BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).longValue());
         builder.medInntektOverSekgG(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
-        builder.medErBesteberegning(beregningsgrunnlag.getErBesteberegnet());
-        builder.medSeksAvDeTiBeste(beregningsgrunnlag.getSeksAvDeTiBeste());
+        builder.medErBesteberegning(beregningsgrunnlag.erBesteberegnet());
+        builder.medSeksAvDeTiBeste(beregningsgrunnlag.seksAvDeTiBeste());
         builder.medHarBruktBruttoBeregningsgrunnlag(BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag(beregningsgrunnlagregler));
     }
 
-    private Optional<LocalDate> finnSisteDagAvSistePeriode(ForeldrepengerUttak foreldrepengerUttak) {
-        return Stream.concat(foreldrepengerUttak.perioder().stream(), foreldrepengerUttak.perioderAnnenPart().stream())
-            .filter(UttakResultatPeriode::isInnvilget)
-            .map(UttakResultatPeriode::getTom)
+    private Optional<LocalDate> finnSisteDagAvSistePeriode(BrevGrunnlagDto.Foreldrepenger foreldrepenger) {
+        return Stream.concat(foreldrepenger.perioderSøker().stream(), foreldrepenger.perioderAnnenpart().stream())
+            .filter(p -> p.periodeResultatType() == BrevGrunnlagDto.PeriodeResultatType.INNVILGET)
+            .map(BrevGrunnlagDto.Foreldrepenger.Uttaksperiode::tom)
             .max(LocalDate::compareTo);
     }
 
-    private static boolean gjelderMor(Fagsak fagsak) {
-        return RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
+    private static boolean gjelderMor(BrevGrunnlagDto brevGrunnlag) {
+        return BrevGrunnlagDto.RelasjonsRolleType.MORA.equals(brevGrunnlag.relasjonsRolleType());
     }
 
-    private boolean erRevurderingPgaFødselshendelse(Behandling behandling,
-                                                    FamilieHendelse familieHendelse,
-                                                    Optional<FamilieHendelse> originalFamiliehendelse) {
-        return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) || familieHendelse.barnErFødt() && originalFamiliehendelse.map(
-            fh -> !fh.barnErFødt()).orElse(false);
+    private boolean erRevurderingPgaFødselshendelse(BrevGrunnlagDto behandling,
+                                                    BrevGrunnlagDto.FamilieHendelse familieHendelse,
+                                                    Optional<BrevGrunnlagDto.FamilieHendelse> originalFamiliehendelse) {
+        return behandling.harBehandlingÅrsak(BrevGrunnlagDto.BehandlingÅrsakType.RE_HENDELSE_FØDSEL)
+            || familieHendelse.barnErFødt() && originalFamiliehendelse.map(fh -> !fh.barnErFødt()).orElse(false);
     }
 
-    String mapKonsekvensForInnvilgetYtelse(List<KonsekvensForYtelsen> konsekvenserForYtelsen, List<BehandlingÅrsak> behandlingÅrsaker) {
+    String mapKonsekvensForInnvilgetYtelse(List<Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen,
+                                           List<BrevGrunnlagDto.BehandlingÅrsakType> behandlingÅrsaker) {
         if (konsekvenserForYtelsen.isEmpty()) {
             return KonsekvensForYtelsen.INGEN_ENDRING.name();
-        } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)
-            && behandlingÅrsaker.stream().anyMatch(ba -> ba.getBehandlingÅrsakType().equals(BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI))) {
+        } else if (konsekvenserForYtelsen.contains(Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_BEREGNING) && behandlingÅrsaker.stream()
+            .anyMatch(ba -> ba.equals(BrevGrunnlagDto.BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI))) {
             return KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name();
-        } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(
-            KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
+        } else if (konsekvenserForYtelsen.contains(Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(
+            Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
             return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
+        } else {
+            return KodeverkMapper.mapKonsekvensForYtelsen(konsekvenserForYtelsen.getFirst())
+                .getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.kombinasjoner)
         }
-        else {
-            return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.kombinasjoner)
-        }
     }
 
-    private boolean erEndringMedEndretInntektsmelding(Behandling behandling) {
-        return erEndring(behandling.getBehandlingType()) && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING);
+    private boolean erEndringMedEndretInntektsmelding(BrevGrunnlagDto behandling) {
+        return erEndring(behandling.behandlingType()) && behandling.harBehandlingÅrsak(BrevGrunnlagDto.BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING);
     }
 
-    private boolean erEndring(BehandlingType behandlingType) {
-        return BehandlingType.REVURDERING.equals(behandlingType) || BehandlingType.KLAGE.equals(behandlingType);
+    private boolean erEndring(BrevGrunnlagDto.BehandlingType behandlingType) {
+        return BrevGrunnlagDto.BehandlingType.REVURDERING.equals(behandlingType) || BrevGrunnlagDto.BehandlingType.KLAGE.equals(behandlingType);
     }
 
-    private boolean erFbEllerRvInnvilget(Behandling behandling) {
-        return behandling.getBehandlingsresultat().erInnvilget() && (behandling.erRevurdering() || behandling.erFørstegangssøknad());
+    private boolean erFbEllerRvInnvilget(BrevGrunnlagDto behandling) {
+        return behandling.behandlingsresultat().behandlingResultatType() == BehandlingResultatType.INNVILGET && (behandling.erRevurdering()
+            || behandling.erFørstegangssøknad());
     }
 
-    private boolean erInnvilgetRevurdering(Behandling behandling) {
-        return behandling.getBehandlingsresultat().erInnvilget() && behandling.erRevurdering();
+    private boolean erInnvilgetRevurdering(BrevGrunnlagDto behandling) {
+        return behandling.behandlingsresultat().behandlingResultatType() == BehandlingResultatType.INNVILGET && behandling.erRevurdering();
     }
 }

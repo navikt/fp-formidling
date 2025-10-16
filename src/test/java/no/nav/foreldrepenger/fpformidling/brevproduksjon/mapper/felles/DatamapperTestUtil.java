@@ -1,24 +1,26 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import static no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.PersonStatus.ANNET;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
 import org.mockito.Mockito;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
@@ -55,8 +57,7 @@ public class DatamapperTestUtil {
     }
 
     public static DokumentFelles lagStandardDokumentFelles(Kopi kopi, boolean tilVerge, FagsakYtelseType fagsakYtelseType) {
-        return standardDokumentFellesBuilder(kopi, tilVerge, fagsakYtelseType)
-            .build();
+        return standardDokumentFellesBuilder(kopi, tilVerge, fagsakYtelseType).build();
     }
 
     public static DokumentFelles.Builder lagStandardDokumentFellesBuilder(FagsakYtelseType fagsakYtelseType) {
@@ -91,21 +92,19 @@ public class DatamapperTestUtil {
         return lagStandardHendelseBuilder().build();
     }
 
-    public static Behandling.Builder standardBehandlingBuilder(FagsakYtelseType ytelseType) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
-            .medFamilieHendelse(new FamilieHendelse(List.of(), LocalDate.now().minusWeeks(1), 1, null))
-            .medSpråkkode(Språkkode.NB);
+    public static BrevGrunnlagBuilders.BrevGrunnlagBuilder defaultBuilder() {
+        return brevGrunnlag().uuid(UUID.randomUUID())
+            .saksnummer(UUID.randomUUID().toString())
+            .behandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .relasjonsRolleType(RelasjonsRolleType.MORA)
+            .aktørId(UUID.randomUUID().toString())
+            .opprettet(LocalDateTime.now().minusDays(1))
+            .behandlendeEnhet("enhet")
+            .språkkode(BrevGrunnlagDto.Språkkode.BOKMÅL)
+            .automatiskBehandlet(true)
+            .behandlingÅrsakTyper(List.of())
+            .inntektsmeldinger(List.of());
     }
 
-    public static Behandling standardForeldrepengerBehandling() {
-        return standardBehandlingBuilder(FagsakYtelseType.FORELDREPENGER).build();
-    }
-
-    public static Behandling standardSvangerskapspengerBehandling() {
-        return standardBehandlingBuilder(FagsakYtelseType.SVANGERSKAPSPENGER).build();
-    }
 
 }

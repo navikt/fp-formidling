@@ -1,21 +1,19 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.journal;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.InnsynBehandling;
+
 import java.util.Collection;
 import java.util.List;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
-import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
-
-import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.TilknyttVedleggRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynDokument;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
+import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.TilknyttVedleggRequest;
 
 @ApplicationScoped
 public class TilknyttVedleggTjeneste {
@@ -32,8 +30,8 @@ public class TilknyttVedleggTjeneste {
         this.dokArkivKlient = dokArkivKlient;
     }
 
-    public void knyttAlleVedleggTilDokument(Collection<InnsynDokument> vedlegg, JournalpostId journalpostId) {
-        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.journalpostId(), v.dokumentId()));
+    public void knyttAlleVedleggTilDokument(Collection<InnsynBehandling.InnsynDokument> vedlegg, JournalpostId journalpostId) {
+        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, new JournalpostId(v.journalpostId()), v.dokumentId()));
     }
 
     private void knyttVedleggTilForsendelse(JournalpostId knyttesTilJournalpostId, JournalpostId knyttesFraJournalpostId, String dokumentId) {

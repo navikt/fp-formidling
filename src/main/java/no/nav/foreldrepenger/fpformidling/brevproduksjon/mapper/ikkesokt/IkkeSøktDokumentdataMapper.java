@@ -2,31 +2,29 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
+import java.util.Comparator;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.IkkeSøktDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.IKKE_SØKT)
 public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
 
-    private DomeneobjektProvider domeneobjektProvider;
-
-    IkkeSøktDokumentdataMapper() {
-        //CDI
-    }
+    private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public IkkeSøktDokumentdataMapper(DomeneobjektProvider domeneobjektProvider) {
-        this.domeneobjektProvider = domeneobjektProvider;
+    public IkkeSøktDokumentdataMapper(ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+        this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
     @Override
@@ -37,19 +35,22 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
     @Override
     public IkkeSøktDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                    DokumentHendelse hendelse,
-                                                   Behandling behandling,
+                                                   BrevGrunnlagDto behandling,
                                                    boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
-        var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
-        var inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(iay);
+        var inntektsmeldinger = behandling.inntektsmeldinger();
+        var inntektsmelding = inntektsmeldinger.stream()
+            .max(Comparator.comparing(BrevGrunnlagDto.Inntektsmelding::innsendingstidspunkt))
+            .orElseThrow(() -> new IllegalStateException("Finner ingen inntektsmelding"));
 
+        var arbeidsgiverNavn = arbeidsgiverTjeneste.hentArbeidsgiverNavn(inntektsmelding.arbeidsgiverReferanse());
         var dokumentdataBuilder = IkkeSøktDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medArbeidsgiverNavn(inntektsmelding.arbeidsgiverNavn())
-            .medMottattDato(formaterDatoNorsk(inntektsmelding.innsendingstidspunkt()));
+            .medArbeidsgiverNavn(arbeidsgiverNavn)
+            .medMottattDato(formaterDatoNorsk(inntektsmelding.innsendingstidspunkt().toLocalDate()));
 
         return dokumentdataBuilder.build();
     }

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,7 +39,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.F
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
@@ -137,7 +137,7 @@ class DokumentdataSerializationTest {
         var dokumentdata = ForeldrepengerInnvilgelseDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.name())
-            .medBehandlingResultatType(BehandlingResultatType.INNVILGET.name())
+            .medBehandlingResultatType(Behandlingsresultat.BehandlingResultatType.INNVILGET.name())
             .medKonsekvensForInnvilgetYtelse(KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name())
             .medDekningsgrad(80)
             .medDagsats(100)

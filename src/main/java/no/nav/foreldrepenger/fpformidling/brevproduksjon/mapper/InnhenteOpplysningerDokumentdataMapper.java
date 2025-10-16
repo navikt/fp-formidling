@@ -2,39 +2,29 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.INNHENTE_OPPLYSNINGER)
 public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMapper {
 
-    private BrevMapperUtil brevMapperUtil;
-    private DomeneobjektProvider domeneobjektProvider;
-
-    InnhenteOpplysningerDokumentdataMapper() {
-        //CDI
-    }
+    private final BrevMapperUtil brevMapperUtil;
 
     @Inject
-    public InnhenteOpplysningerDokumentdataMapper(BrevMapperUtil brevMapperUtil, DomeneobjektProvider domeneobjektProvider) {
+    public InnhenteOpplysningerDokumentdataMapper(BrevMapperUtil brevMapperUtil) {
         this.brevMapperUtil = brevMapperUtil;
-        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -45,42 +35,29 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     @Override
     public InnhenteOpplysningerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                DokumentHendelse hendelse,
-                                                               Behandling behandling,
+                                                               BrevGrunnlagDto behandling,
                                                                boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         var språkkode = dokumentFelles.getSpråkkode();
-        fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
-        var dokumentdataBuilder = InnhenteOpplysningerDokumentdata.ny()
+        return InnhenteOpplysningerDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medFørstegangsbehandling(behandling.erFørstegangssøknad())
             .medRevurdering(behandling.erRevurdering())
-            .medEndringssøknad(BrevMapperUtil.erEndringssøknad(behandling))
+            .medEndringssøknad(behandling.erRevurdering() && behandling.harBehandlingÅrsak(BrevGrunnlagDto.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER))
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medKlage(behandling.erKlage())
             .medSøknadDato(finnSøknadDato(behandling, dokumentFelles))
-            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode));
-
-        return dokumentdataBuilder.build();
+            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode)).build();
     }
 
-    private String finnSøknadDato(Behandling behandling, DokumentFelles dokumentFelles) {
-        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-
-        Optional<KlageDokument> klageDokument = Optional.empty();
-        if (behandling.erKlage()) {
-            klageDokument = Optional.of(domeneobjektProvider.hentKlageDokument(behandling));
-        }
-
-        var mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
-            .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
-        return formaterDato(mottattDato, dokumentFelles.getSpråkkode());
-    }
-
-    private LocalDate hentMottattDatoFraKlage(KlageDokument klageDokument, Behandling behandling) {
-        return klageDokument.mottattDato() != null ? klageDokument.mottattDato() : behandling.getOpprettetDato().toLocalDate();
+    private String finnSøknadDato(BrevGrunnlagDto behandling, DokumentFelles dokumentFelles) {
+        var klageBehandling = Optional.ofNullable(behandling.klageBehandling());
+        var dato = klageBehandling.map(klage -> Optional.ofNullable(klage.mottattDato()).orElse(behandling.opprettet().toLocalDate()))
+            .orElse(behandling.sisteSøknadMottattDato());
+        return formaterDato(dato, dokumentFelles.getSpråkkode());
     }
 }

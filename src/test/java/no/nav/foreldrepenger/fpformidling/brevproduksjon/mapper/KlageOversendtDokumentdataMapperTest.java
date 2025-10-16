@@ -1,28 +1,25 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.klageBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.klageVurderingResultat;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 @ExtendWith(MockitoExtension.class)
 class KlageOversendtDokumentdataMapperTest {
@@ -30,24 +27,23 @@ class KlageOversendtDokumentdataMapperTest {
     private static final String FRITEKST_TIL_BREV = "FRITEKST";
     private static final LocalDate MOTTATT_DATO = LocalDate.now();
 
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider;
-
     private KlageOversendtDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
-        when(domeneobjektProvider.hentKlageDokument(any(Behandling.class))).thenReturn(new KlageDokument(MOTTATT_DATO));
-        dokumentdataMapper = new KlageOversendtDokumentdataMapper(domeneobjektProvider);
+        dokumentdataMapper = new KlageOversendtDokumentdataMapper();
     }
 
     @Test
     void skal_mappe_felter_for_brevet() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
-        mockKlage(behandling);
+        var klageVurderingResultatNK = klageVurderingResultat().fritekstTilBrev(FRITEKST_TIL_BREV).build();
+        var klageBehandlingData = klageBehandling().klageVurderingResultatNK(klageVurderingResultatNK)
+            .mottattDato(MOTTATT_DATO)
+            .build();
+        var behandling = defaultBuilder().fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER).klageBehandling(klageBehandlingData).build();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -67,13 +63,5 @@ class KlageOversendtDokumentdataMapperTest {
 
         assertThat(dokumentdata.getGjelderTilbakekreving()).isFalse();
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(MOTTATT_DATO));
-    }
-
-    private void mockKlage(Behandling behandling) {
-        var klage = Klage.ny()
-            .medPåklagdBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-            .medKlageVurderingResultatNK(new KlageVurderingResultat(null, FRITEKST_TIL_BREV))
-            .build();
-        when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
     }
 }

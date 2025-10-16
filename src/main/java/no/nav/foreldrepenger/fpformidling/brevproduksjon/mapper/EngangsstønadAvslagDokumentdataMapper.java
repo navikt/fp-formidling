@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Barn;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper.mapRelasjonsRolle;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
@@ -14,39 +17,27 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMappe
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
-import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.ENGANGSSTØNAD_AVSLAG)
 public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMapper {
-    private BrevParametere brevParametere;
-    private PersonAdapter personAdapter;
 
-    EngangsstønadAvslagDokumentdataMapper() {
-        // CDI
-    }
+    private final BrevParametere brevParametere;
 
     @Inject
-    public EngangsstønadAvslagDokumentdataMapper(BrevParametere brevParametere,
-                                                 PersonAdapter personAdapter) {
+    public EngangsstønadAvslagDokumentdataMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
-        this.personAdapter = personAdapter;
     }
 
     @Override
@@ -57,54 +48,44 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
     @Override
     public EngangsstønadAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                               DokumentHendelse hendelse,
-                                                              Behandling behandling,
+                                                              BrevGrunnlagDto behandling,
                                                               boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fraFritekst(hendelse, behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
-        var familieHendelse = behandling.getFamilieHendelse();
+        var familieHendelse = behandling.familieHendelse();
 
+        var avslagsårsak = Avslagsårsak.fraKode(behandling.behandlingsresultat().avslagsårsak());
+        var vilkårTyper = behandling.behandlingsresultat().vilkårTyper().stream().map(KodeverkMapper::mapVilkårType).toList();
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
-            .medAvslagsÅrsak(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
+            .medAvslagsÅrsak(mapAvslagsårsakerBrev(avslagsårsak))
             .medFelles(fellesBuilder.build())
-            .medFørstegangsbehandling(behandling.erFørstegangssøknad())
+            .medFørstegangsbehandling(behandling.behandlingType() == BehandlingType.FØRSTEGANGSSØKNAD)
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
-            .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsak()))
-            .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkårTyper(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
+            .medRelasjonsRolle(mapRelasjonsRolle(behandling.relasjonsRolleType()).getKode())
+            .medVilkårTyper(utledVilkårTilBrev(vilkårTyper, avslagsårsak, behandling))
             .medAntallBarn(familieHendelse.antallBarn())
-            .medMedlemskapFom(formaterDato(behandling.getMedlemskapFom(), dokumentFelles.getSpråkkode()))
+            .medMedlemskapFom(formaterDato(behandling.behandlingsresultat().medlemskapFom(), dokumentFelles.getSpråkkode()))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        utledAvslagsgrunnHvisMedlVilkår(behandling.getVilkårTyper(), behandling.getBehandlingsresultat().getAvslagsårsak(),
-            isSkjæringstidspunktPassert(familieHendelse), familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
+        utledAvslagsgrunnHvisMedlVilkår(vilkårTyper, avslagsårsak, isSkjæringstidspunktPassert(familieHendelse),
+            familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
         return dokumentdataBuilder.build();
     }
 
-    private boolean isSkjæringstidspunktPassert(FamilieHendelse familieHendelse) {
-        var stp = familieHendelse.omsorgsovertakelse() != null ? familieHendelse.omsorgsovertakelse() : familieHendelse.tidligstFødselsdato()
+    private boolean isSkjæringstidspunktPassert(BrevGrunnlagDto.FamilieHendelse familieHendelse) {
+        var stp = familieHendelse.omsorgsovertakelse() != null ? familieHendelse.omsorgsovertakelse() : familieHendelse.barn().stream().map(
+                Barn::fødselsdato).min(LocalDate::compareTo)
             .orElse(familieHendelse.termindato());
         return stp.isBefore(LocalDate.now());
     }
 
-    String utledRelasjonsRolle(Fagsak fagsak) {
-        if (!RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
-            return hentKjønnOgMapRelasjonsrolle(fagsak.getYtelseType(), fagsak.getAktørId());
-        } else {
-            return fagsak.getRelasjonsRolleType().toString();
-        }
-    }
-
-    private String hentKjønnOgMapRelasjonsrolle(FagsakYtelseType ytelseType, AktørId aktørId) {
-        var kjønn = personAdapter.hentBrukerForAktør(ytelseType, aktørId).map(Personinfo::getKjønn).orElseThrow();
-        return NavBrukerKjønn.MANN.equals(kjønn) ? RelasjonsRolleType.FARA.getKode() : RelasjonsRolleType.MEDMOR.getKode();
-    }
-
-    List<String> utledVilkårTilBrev(Collection<VilkårType> vilkårFraBehandling, Avslagsårsak avslagsÅrsakKode, Behandling behandling) {
+    List<String> utledVilkårTilBrev(List<VilkårType> vilkårFraBehandling, Avslagsårsak avslagsÅrsakKode, BrevGrunnlagDto behandling) {
         List<String> vilkårTilBrev = new ArrayList<>();
         FellesMapper.vilkårFraAvslagsårsak(FagsakYtelseType.ENGANGSTØNAD, vilkårFraBehandling, avslagsÅrsakKode)
             .forEach(vt -> vilkårTilBrev.add(mapVilkårBrev(vt, behandling)));
@@ -114,20 +95,21 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         return vilkårTilBrev;
     }
 
-    private String mapVilkårBrev(VilkårType vilkårType, Behandling behandling) {
+    private String mapVilkårBrev(VilkårType vilkårType, BrevGrunnlagDto behandling) {
         if ((VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD.equals(vilkårType) || VilkårType.OMSORGSOVERTAKELSEVILKÅR.equals(vilkårType)
             || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType)) && !behandling.erRevurdering()) {
             return "FPVK1_4";
-        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType))
-            && behandling.erFørstegangssøknad()) {
-            return "FPVK2_FB";
-        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType))
-            && behandling.erRevurdering()) {
-            return "FPVK2_RV";
-        } else if (erVilkår213(vilkårType) && behandling.erRevurdering()) {
-            return "FPVK1_4_5_8_RV";
         } else {
-            return vilkårType.getKode();
+            var erMedlemskapsvilkåret = VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType);
+            if (erMedlemskapsvilkåret && behandling.erFørstegangssøknad()) {
+                return "FPVK2_FB";
+            } else if (erMedlemskapsvilkåret && behandling.erRevurdering()) {
+                return "FPVK2_RV";
+            } else if (erVilkår213(vilkårType) && behandling.erRevurdering()) {
+                return "FPVK1_4_5_8_RV";
+            } else {
+                return vilkårType.getKode();
+            }
         }
     }
 
@@ -158,8 +140,8 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
                                                              boolean skjæringstispunktPassert,
                                                              boolean gjelderFødsel) {
         if (vilkår.stream()
-            .anyMatch(v -> v.equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE)
-                && VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak))) {
+            .anyMatch(v -> v.equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE) && VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker()
+                .contains(årsak))) {
             return Optional.of("IKKE_MEDL_FORUTGÅENDE");
         }
         if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && !skjæringstispunktPassert) {

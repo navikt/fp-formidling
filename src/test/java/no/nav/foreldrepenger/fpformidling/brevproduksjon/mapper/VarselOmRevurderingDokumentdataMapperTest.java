@@ -1,17 +1,19 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
-import static java.util.List.of;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.FRITEKST;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.barn;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.familieHendelse;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -21,25 +23,16 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,24 +41,20 @@ class VarselOmRevurderingDokumentdataMapperTest {
     private static final LocalDate TERMINDATO = LocalDate.now();
     private static final int ANTALL_BARN = 1;
 
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
-
     private BrevMapperUtil brevMapperUtil;
-
     private VarselOmRevurderingDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
-        dokumentdataMapper = new VarselOmRevurderingDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
+        dokumentdataMapper = new VarselOmRevurderingDokumentdataMapper(brevMapperUtil);
     }
 
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        var behandling = opprettBehandling();
+        var behandling = opprettBehandling(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
@@ -95,7 +84,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        var behandling = opprettBehandling();
+        var behandling = opprettBehandling(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
@@ -114,7 +103,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     @Test
     void skal_gi_flere_opplysninger_når_ikke_JOBBFULLTID_er_årasak() {
         // Arrange
-        var behandling = opprettBehandling();
+        var behandling = opprettBehandling(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEID_I_UTLANDET);
 
@@ -125,18 +114,24 @@ class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isTrue();
     }
 
-    private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(List.of(), LocalDate.now(), 1, null);
-    }
+    private BrevGrunnlagDto opprettBehandling(BrevGrunnlagDto.FagsakYtelseType ytelseType) {
+        var fhBarn = barn().fødselsdato(LocalDate.now()).build();
 
-    private Behandling opprettBehandling() {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.REVURDERING)
-            .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
-            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.FORELDREPENGER).build())
-            .medFamilieHendelse(opprettFamiliehendelse())
+        var fh = familieHendelse().barn(List.of(fhBarn))
+            .termindato(TERMINDATO)
+            .antallBarn(ANTALL_BARN)
+            .build();
+
+        var behandlingsres = behandlingsresultat()
+            .behandlingResultatType(BrevGrunnlagDto.Behandlingsresultat.BehandlingResultatType.INNVILGET)
+            .build();
+
+        return defaultBuilder()
+            .uuid(UUID.randomUUID())
+            .behandlingType(BrevGrunnlagDto.BehandlingType.REVURDERING)
+            .behandlingsresultat(behandlingsres)
+            .fagsakYtelseType(ytelseType)
+            .familieHendelse(fh)
             .build();
     }
 

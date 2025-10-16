@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
@@ -8,13 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 class HenleggeDokumentdataMapperTest {
 
@@ -28,7 +26,7 @@ class HenleggeDokumentdataMapperTest {
     @Test
     void henlegg_mapper_vanligBehandling() {
         //Arrange
-        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, FagsakYtelseType.FORELDREPENGER);
+        var behandling = opprettBehandling(BrevGrunnlagDto.BehandlingType.FØRSTEGANGSSØKNAD, BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
@@ -46,7 +44,7 @@ class HenleggeDokumentdataMapperTest {
     @Test
     void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
-        var behandling = opprettBehandling(BehandlingType.ANKE, FagsakYtelseType.SVANGERSKAPSPENGER);
+        var behandling = opprettBehandling(BrevGrunnlagDto.BehandlingType.ANKE, BrevGrunnlagDto.FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentHendelse = lagDokumentHendelse();
 
@@ -61,12 +59,16 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
     }
 
-    private Behandling opprettBehandling(BehandlingType behType, FagsakYtelseType ytelseType) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(behType)
-            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-            .medFagsak(Fagsak.ny().medYtelseType(ytelseType).build())
+    private BrevGrunnlagDto opprettBehandling(BrevGrunnlagDto.BehandlingType behType, BrevGrunnlagDto.FagsakYtelseType ytelseType) {
+        var behandlingsres = behandlingsresultat()
+            .behandlingResultatType(BrevGrunnlagDto.Behandlingsresultat.BehandlingResultatType.INNVILGET)
+            .build();
+
+        return defaultBuilder()
+            .uuid(UUID.randomUUID())
+            .behandlingType(behType)
+            .behandlingsresultat(behandlingsres)
+            .fagsakYtelseType(ytelseType)
             .build();
     }
 

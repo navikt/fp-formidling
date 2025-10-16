@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
@@ -47,13 +47,13 @@ public class FellesMapper {
     public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning,
                                                         String konsekvensForYtelse,
                                                         boolean innvilgetRevurdering,
-                                                        Behandling behandling) {
+                                                        UUID behandlingUuid) {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
         } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()
             .equals(konsekvensForYtelse)) {
             LOG.warn("Behandling {} har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, "
-                + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandling.getUuid());
+                + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandlingUuid);
             lovhjemmelBeregning = "";
         }
         if (endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering) {

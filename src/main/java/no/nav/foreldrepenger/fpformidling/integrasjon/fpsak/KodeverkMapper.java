@@ -32,6 +32,7 @@ public final class KodeverkMapper {
             case OPPTJENINGSVILKÅRET -> VilkårType.OPPTJENINGSVILKÅRET;
             case BEREGNINGSGRUNNLAGVILKÅR -> VilkårType.BEREGNINGSGRUNNLAGVILKÅR;
             case SVANGERSKAPSPENGERVILKÅR -> VilkårType.SVANGERSKAPSPENGERVILKÅR;
+            case OMSORGSOVERTAKELSEVILKÅR -> VilkårType.OMSORGSOVERTAKELSEVILKÅR;
             case UDEFINERT -> VilkårType.UDEFINERT;
         };
     }

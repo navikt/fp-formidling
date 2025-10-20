@@ -1,33 +1,40 @@
 package no.nav.foreldrepenger.fpformidling.typer;
 
+import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class DatoIntervallImpl implements DatoIntervall {
-    private Dato fomDato;
-    private Dato tomDato;
+public class DatoIntervall {
 
-    @Override
+    private final Dato fomDato;
+    private final Dato tomDato;
+
+    public static DatoIntervall fraOgMedTilOgMed(LocalDate fom, LocalDate tom) {
+        return new DatoIntervall(fom, tom);
+    }
+
+    public static DatoIntervall fraOgMed(LocalDate fom) {
+        return new DatoIntervall(fom, TIDENES_ENDE);
+    }
+
     public Dato getFom() {
         return fomDato;
     }
 
-    @Override
     public Dato getTom() {
         return tomDato;
     }
 
-    @Override
     public LocalDate getFomDato() {
         return fomDato.toLocalDate();
     }
 
-    @Override
     public LocalDate getTomDato() {
         return tomDato.toLocalDate();
     }
 
-    public DatoIntervallImpl(Dato fomDato, Dato tomDato) {
+    public DatoIntervall(Dato fomDato, Dato tomDato) {
         if (fomDato == null) {
             throw new IllegalArgumentException("Fra og med dato må være satt.");
         }
@@ -41,7 +48,7 @@ public class DatoIntervallImpl implements DatoIntervall {
         this.tomDato = tomDato;
     }
 
-    public DatoIntervallImpl(LocalDate fom, LocalDate tom) {
+    public DatoIntervall(LocalDate fom, LocalDate tom) {
         this(new Dato(fom), new Dato(tom));
     }
 

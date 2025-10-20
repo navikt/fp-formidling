@@ -5,11 +5,11 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import jakarta.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.FeilPraksisUtsettelseInfobrevDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
@@ -22,7 +22,10 @@ public class FeilPraksisUtsettelseSaksbehandlingstidDokumentdataMapper implement
     }
 
     @Override
-    public FeilPraksisUtsettelseInfobrevDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast) {
+    public FeilPraksisUtsettelseInfobrevDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                        DokumentHendelse hendelse,
+                                                                        BrevGrunnlagDto behandling,
+                                                                        boolean erUtkast) {
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(getBrevDato(dokumentFelles));
         return new FeilPraksisUtsettelseInfobrevDokumentdata(fellesBuilder.build());

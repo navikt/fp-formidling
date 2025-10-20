@@ -3,96 +3,99 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public final class TilkjentYtelseMapper {
 
     private TilkjentYtelseMapper() {
     }
 
-    public static long finnMånedsbeløp(TilkjentYtelseForeldrepenger tilkjentYtelse) {
+    public static long finnMånedsbeløp(TilkjentYtelseDagytelseDto tilkjentYtelse) {
         return finnFørsteInnvilgedePeriode(tilkjentYtelse).map(TilkjentYtelseMapper::getMånedsbeløp).orElse(0L);
     }
 
-    public static long finnDagsats(TilkjentYtelseForeldrepenger tilkjentYtelse) {
-        return finnFørsteInnvilgedePeriode(tilkjentYtelse).map(TilkjentYtelsePeriode::getDagsats).orElse(0L);
+    public static long finnDagsats(TilkjentYtelseDagytelseDto tilkjentYtelse) {
+        return finnFørsteInnvilgedePeriode(tilkjentYtelse).map(TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto::dagsats).orElse(0);
     }
 
-    public static int finnAntallArbeidsgivere(TilkjentYtelseForeldrepenger tilkjentYtelse) {
-        return (int) tilkjentYtelse.getPerioder()
+    public static int finnAntallArbeidsgivere(TilkjentYtelseDagytelseDto tilkjentYtelse) {
+        return (int) tilkjentYtelse.perioder()
             .stream()
-            .map(TilkjentYtelsePeriode::getAndeler)
+            .map(TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto::andeler)
             .flatMap(Collection::stream)
-            .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
-            .map(TilkjentYtelseAndel::getArbeidsgiver)
-            .flatMap(Optional::stream)
-            .map(Arbeidsgiver::arbeidsgiverReferanse)
+            .filter(andel -> TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER.equals(andel.aktivitetstatus()))
+            .map(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto::arbeidsgiverReferanse)
+            .filter(Objects::nonNull)
             .distinct()
             .count();
     }
 
-    public static boolean harIngenRefusjon(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
+    public static boolean harIngenRefusjon(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
         return (harBrukerAndel(tilkjentYtelseFP) && !harArbeidsgiverAndel(tilkjentYtelseFP)) || (!harBrukerAndel(tilkjentYtelseFP)
-            && !harArbeidsgiverAndel(tilkjentYtelseFP));
+                && !harArbeidsgiverAndel(tilkjentYtelseFP));
     }
 
-    public static boolean harDelvisRefusjon(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
+    public static boolean harDelvisRefusjon(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
         return harBrukerAndel(tilkjentYtelseFP) && harArbeidsgiverAndel(tilkjentYtelseFP);
     }
 
-    public static boolean harFullRefusjon(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
+    public static boolean harFullRefusjon(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
         return !harBrukerAndel(tilkjentYtelseFP) && harArbeidsgiverAndel(tilkjentYtelseFP);
     }
 
-    public static boolean harBrukerAndel(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
-        return tilkjentYtelseFP.getPerioder()
+    public static boolean harBrukerAndel(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
+        return tilkjentYtelseFP.perioder()
             .stream()
-            .map(TilkjentYtelsePeriode::getAndeler)
+            .map(TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto::andeler)
             .flatMap(List::stream)
-            .anyMatch(TilkjentYtelseAndel::erBrukerMottaker);
+            .anyMatch(a -> a.tilSoker() != null && a.tilSoker() != 0);
     }
 
-    public static boolean harArbeidsgiverAndel(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
-        return tilkjentYtelseFP.getPerioder()
+    public static boolean harArbeidsgiverAndel(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
+        return tilkjentYtelseFP.perioder()
             .stream()
-            .map(TilkjentYtelsePeriode::getAndeler)
+            .map(TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto::andeler)
             .flatMap(List::stream)
-            .anyMatch(TilkjentYtelseAndel::erArbeidsgiverMottaker);
+            .anyMatch(TilkjentYtelseMapper::erArbeidsgiverMottaker);
     }
 
-    public static boolean harUtbetaling(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
-        return tilkjentYtelseFP.getPerioder().stream().map(TilkjentYtelsePeriode::getAndeler).flatMap(List::stream).anyMatch(a -> a.getDagsats() > 0);
+    private static boolean erArbeidsgiverMottaker(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto a) {
+        return a.refusjon() != null && a.refusjon() != 0;
     }
 
-    public static int finnAntallRefusjonerTilArbeidsgivere(TilkjentYtelseForeldrepenger tilkjentYtelseFP) {
-        return (int) tilkjentYtelseFP.getPerioder()
+    public static boolean harUtbetaling(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
+        return tilkjentYtelseFP.perioder().stream().map(
+            TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto::andeler).flatMap(List::stream).anyMatch(TilkjentYtelseMapper::harUtbetaling);
+    }
+
+    private static boolean harUtbetaling(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto a) {
+        return (a.tilSoker() != null && a.tilSoker() > 0) || (a.refusjon() != null && a.refusjon() > 0);
+    }
+
+    public static int finnAntallRefusjonerTilArbeidsgivere(TilkjentYtelseDagytelseDto tilkjentYtelseFP) {
+        return (int) tilkjentYtelseFP.perioder()
             .stream()
-            .flatMap(periode -> periode.getAndeler().stream())
-            .filter(TilkjentYtelseAndel::erArbeidsgiverMottaker)
-            .map(tilkjentYtelseAndel -> tilkjentYtelseAndel.getArbeidsgiver()
-                .map(Arbeidsgiver::arbeidsgiverReferanse)
-                .orElse(tilkjentYtelseAndel.getArbeidsforholdRef() != null ? tilkjentYtelseAndel.getArbeidsforholdRef()
-                    .getReferanse() : "ukjent")) // om ikke annet som en sikring i test-miljøer.
+            .flatMap(periode -> periode.andeler().stream())
+            .filter(TilkjentYtelseMapper::erArbeidsgiverMottaker)
+            .map(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto::arbeidsgiverReferanse)
             .distinct()
             .count();
     }
 
-    private static Optional<TilkjentYtelsePeriode> finnFørsteInnvilgedePeriode(TilkjentYtelseForeldrepenger tilkjentYtelse) {
-        return tilkjentYtelse.getPerioder().stream().filter(harDagsatsOverNull()).min(Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom));
+    private static Optional<TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto> finnFørsteInnvilgedePeriode(TilkjentYtelseDagytelseDto tilkjentYtelse) {
+        return tilkjentYtelse.perioder().stream().filter(harDagsatsOverNull()).min(Comparator.comparing(
+            TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto::fom));
     }
 
-    private static Predicate<TilkjentYtelsePeriode> harDagsatsOverNull() {
-        return tilkjentYtelsePeriode -> tilkjentYtelsePeriode.getDagsats() != null && tilkjentYtelsePeriode.getDagsats() > 0;
+    private static Predicate<TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto> harDagsatsOverNull() {
+        return tilkjentYtelsePeriode -> tilkjentYtelsePeriode.dagsats() != null && tilkjentYtelsePeriode.dagsats() > 0;
     }
 
-    private static long getMånedsbeløp(TilkjentYtelsePeriode førstePeriode) {
-        return førstePeriode.getDagsats() * 260 / 12;
+    private static long getMånedsbeløp(TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto førstePeriode) {
+        return førstePeriode.dagsats() * 260 / 12;
     }
 }

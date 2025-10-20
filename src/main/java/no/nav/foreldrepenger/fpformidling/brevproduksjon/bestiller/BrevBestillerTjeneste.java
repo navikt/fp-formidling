@@ -4,16 +4,16 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.FpsakRestKlient;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ApplicationScoped
 public class BrevBestillerTjeneste {
 
-    private DomeneobjektProvider domeneobjektProvider;
+    private FpsakRestKlient fpsakRestKlient;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
 
     BrevBestillerTjeneste() {
@@ -21,30 +21,30 @@ public class BrevBestillerTjeneste {
     }
 
     @Inject
-    public BrevBestillerTjeneste(DomeneobjektProvider domeneobjektProvider,
+    public BrevBestillerTjeneste(FpsakRestKlient fpsakRestKlient,
                                  DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste) {
-        this.domeneobjektProvider = domeneobjektProvider;
+        this.fpsakRestKlient = fpsakRestKlient;
         this.dokgenBrevproduksjonTjeneste = dokgenBrevproduksjonTjeneste;
     }
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = fpsakRestKlient.hentBrevGrunnlag(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling);
     }
 
     public String genererBrevHtml(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = fpsakRestKlient.hentBrevGrunnlag(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.genererBrevHtml(dokumentHendelse, behandling);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = fpsakRestKlient.hentBrevGrunnlag(dokumentHendelse.getBehandlingUuid());
         var journalførSom = utledDokumentType(dokumentHendelse);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, journalførSom);
     }
 
     public String genererJson(UUID behandlingUuid, DokumentMal dokumentMal){
-        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
+        var behandling = fpsakRestKlient.hentBrevGrunnlag(behandlingUuid);
         var dokumentHendelse = DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(behandlingUuid)

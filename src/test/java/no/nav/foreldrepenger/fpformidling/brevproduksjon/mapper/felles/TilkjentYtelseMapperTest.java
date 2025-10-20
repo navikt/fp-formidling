@@ -1,31 +1,35 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
+import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallArbeidsgivere;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harDelvisRefusjon;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harFullRefusjon;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harIngenRefusjon;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harUtbetaling;
+import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.Aktivitetstatus;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
-import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto;
 
 class TilkjentYtelseMapperTest {
 
-    private static final DatoIntervall UBETYDELIG_PERIODE = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
+    private static final LocalDate START_DATE = LocalDate.now();
+    private static final LocalDate END_DATE = LocalDate.now().plusDays(1);
 
     @Test
     void skal_finne_månedsbeløp() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny().medDagsats(100L).medPeriode(UBETYDELIG_PERIODE).build(),
-                TilkjentYtelsePeriode.ny().medDagsats(100L * 2).medPeriode(UBETYDELIG_PERIODE).build()))
-            .build();
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(
+            of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of()), new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 200, of())));
 
         // Act + Assert
         assertThat(finnMånedsbeløp(tilkjentYtelse)).isEqualTo(2166);
@@ -34,10 +38,8 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_dagsats() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny().medDagsats(100L).medPeriode(UBETYDELIG_PERIODE).build(),
-                TilkjentYtelsePeriode.ny().medDagsats(100L * 2).medPeriode(UBETYDELIG_PERIODE).build()))
-            .build();
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(
+            of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of()), new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 200, of())));
 
         // Act + Assert
         assertThat(finnDagsats(tilkjentYtelse)).isEqualTo(100L);
@@ -46,30 +48,16 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_antall_arbeidsgivere() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1")) // #1
-                    .build(), TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.FRILANSER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn2", "Referanse2")) // Frilanser
-                    .build()))
-                .build(), TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1")) // Duplikat
-                    .build(), TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn3", "Referanse3")) // #2
-                    .build(), TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn4", "Referanse4")) // #3
-                    .build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 100, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO);
+        var andel2 = new TilkjentYtelseAndelDto("Referanse2", 100, 100, Aktivitetstatus.FRILANSER, null, BigDecimal.ZERO,
+            BigDecimal.ZERO); // Frilanser
+        var andel3 = new TilkjentYtelseAndelDto("Referanse1", 100, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO,
+            BigDecimal.ZERO); // Duplikat
+        var andel4 = new TilkjentYtelseAndelDto("Referanse3", 100, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO); // #2
+        var andel5 = new TilkjentYtelseAndelDto("Referanse4", 100, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO); // #3
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel1, andel2)),
+            new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel3, andel4, andel5))));
 
         // Act + Assert
         assertThat(finnAntallArbeidsgivere(tilkjentYtelse)).isEqualTo(3);
@@ -78,23 +66,11 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_at_bruker_har_full_refusjon() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1"))
-                    .medErBrukerMottaker(false)
-                    .build()))
-                .build(), TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn2", "Referanse2"))
-                    .medErArbeidsgiverMottaker(true)
-                    .build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 100, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(100), BigDecimal.ZERO);
+        var andel2 = new TilkjentYtelseAndelDto("Referanse2", 100, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(100), BigDecimal.ZERO);
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel1)),
+            new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel2))));
 
         // Act + Assert
         assertThat(harFullRefusjon(tilkjentYtelse)).isTrue();
@@ -103,23 +79,11 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_at_bruker_har_ingen_refusjon() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1"))
-                    .medErBrukerMottaker(true)
-                    .build()))
-                .build(), TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn2", "Referanse2"))
-                    .medErArbeidsgiverMottaker(false)
-                    .build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 0, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.valueOf(100));
+        var andel2 = new TilkjentYtelseAndelDto("Referanse2", 0, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.valueOf(100));
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel1)),
+            new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel2))));
 
         // Act + Assert
         assertThat(harIngenRefusjon(tilkjentYtelse)).isTrue();
@@ -128,23 +92,11 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_at_bruker_har_ingen_refusjon_når_ingen_er_mottakere() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1"))
-                    .medErBrukerMottaker(false)
-                    .build()))
-                .build(), TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn2", "Referanse2"))
-                    .medErArbeidsgiverMottaker(false)
-                    .build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 0, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO);
+        var andel2 = new TilkjentYtelseAndelDto("Referanse2", 0, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO);
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel1)),
+            new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel2))));
 
         // Act + Assert
         assertThat(harIngenRefusjon(tilkjentYtelse)).isTrue();
@@ -153,23 +105,11 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_at_bruker_har_delvis_refusjon() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1"))
-                    .medErBrukerMottaker(true)
-                    .build()))
-                .build(), TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(new Arbeidsgiver("Navn2", "Referanse2"))
-                    .medErArbeidsgiverMottaker(true)
-                    .build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 100, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.valueOf(100));
+        var andel2 = new TilkjentYtelseAndelDto("Referanse2", 100, 100, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.valueOf(100), BigDecimal.ZERO);
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel1)),
+            new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel2))));
 
         // Act + Assert
         assertThat(harDelvisRefusjon(tilkjentYtelse)).isTrue();
@@ -178,16 +118,12 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_at_bruker_har_utbetaling() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medDagsats(0).build(),
-                    TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medDagsats(0).build()))
-                .build(), TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).medDagsats(100).build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 0, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO);
+        var andel2 = new TilkjentYtelseAndelDto("Referanse2", 0, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO);
+        var andel3 = new TilkjentYtelseAndelDto("Referanse3", 100, 100, Aktivitetstatus.FRILANSER, null, BigDecimal.ZERO, BigDecimal.valueOf(100));
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 0, of(andel1, andel2)),
+            new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 100, of(andel3))));
 
         // Act + Assert
         assertThat(harUtbetaling(tilkjentYtelse)).isTrue();
@@ -196,12 +132,9 @@ class TilkjentYtelseMapperTest {
     @Test
     void skal_finne_at_bruker_ikke_har_utbetaling() {
         // Arrange
-        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medPeriode(UBETYDELIG_PERIODE)
-                .medAndeler(of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medDagsats(0).build()))
-                .build()))
-            .build();
+        var andel1 = new TilkjentYtelseAndelDto("Referanse1", 0, 0, Aktivitetstatus.ARBEIDSTAKER, null, BigDecimal.ZERO, BigDecimal.ZERO);
+
+        var tilkjentYtelse = new TilkjentYtelseDagytelseDto(of(new TilkjentYtelsePeriodeDto(START_DATE, END_DATE, 0, of(andel1))));
 
         // Act + Assert
         assertThat(harUtbetaling(tilkjentYtelse)).isFalse();

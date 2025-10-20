@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -17,39 +18,34 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.SvangerskapspengerAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.SVANGERSKAPSPENGER_AVSLAG)
 public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataMapper {
-    private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
-    SvangerskapspengerAvslagDokumentdataMapper() {
-        //CDI
-    }
+    private final BrevParametere brevParametere;
+    private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public SvangerskapspengerAvslagDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public SvangerskapspengerAvslagDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
+        this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
     @Override
@@ -60,37 +56,43 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
     @Override
     public SvangerskapspengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                    DokumentHendelse hendelse,
-                                                                   Behandling behandling,
+                                                                   BrevGrunnlagDto behandling,
                                                                    boolean erUtkast) {
 
         // Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
         var språkkode = Språkkode.EN.equals(dokumentFelles.getSpråkkode()) ? Språkkode.NB : dokumentFelles.getSpråkkode();
 
-        var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
-        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        var behandlingsresultat = behandling.getBehandlingsresultat();
-        var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
-        var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
+        var beregningsgrunnlag = Optional.ofNullable(behandling.beregningsgrunnlag());
+        var behandlingsresultat = behandling.behandlingsresultat();
+        var svpUttaksresultat = Optional.ofNullable(behandling.svangerskapspenger());
+        var inntektsmeldinger = behandling.inntektsmeldinger();
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
-        FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fraFritekst(hendelse, behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
-        var uttaksperioder = SvpMapperUtil.hentUttaksperioder(svpUttaksresultat);
+        var uttaksperioder = svpUttaksresultat.map(SvpMapperUtil::hentUttaksperioder).orElse(List.of());
 
+        var uttakArbeidsforhold = svpUttaksresultat.map(BrevGrunnlagDto.Svangerskapspenger::uttakArbeidsforhold)
+            .orElse(Collections.emptyList());
+        var antallArbeidsgivere = SvpMapperUtil.finnAntallArbeidsgivere(uttakArbeidsforhold, inntektsmeldinger,
+            arbeidsgiverTjeneste::hentArbeidsgiverNavn);
         var dokumentdataBuilder = SvangerskapspengerAvslagDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medErSøkerDød(BrevMapperUtil.erDød(dokumentFelles))
-            .medMottattDato(formaterDato(MottattdokumentMapper.finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
-            .medAntallArbeidsgivere(SvpMapperUtil.finnAntallArbeidsgivere(
-                svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), iay))
+            .medMottattDato(formaterDato(behandling.førsteSøknadMottattDato(), språkkode))
+            .medAntallArbeidsgivere(antallArbeidsgivere)
             .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        mapÅrsakOgLovhjemmel(behandling.getVilkårTyper(), behandlingsresultat.getAvslagsårsak(), uttaksperioder, dokumentdataBuilder, behandling.getUuid());
+        var vilkårTyper = behandling.behandlingsresultat().vilkårTyper()
+            .stream().map(KodeverkMapper::mapVilkårType)
+            .toList();
+        var avslagsårsak = Avslagsårsak.fraKode(behandlingsresultat.avslagsårsak());
+        mapÅrsakOgLovhjemmel(vilkårTyper, avslagsårsak, uttaksperioder, dokumentdataBuilder, behandling.uuid());
 
-        SvpMapperUtil.finnFørsteAvslåtteUttakDato(uttaksperioder, behandling.getBehandlingsresultat())
+        SvpMapperUtil.finnFørsteAvslåtteUttakDato(uttaksperioder, behandling.behandlingsresultat())
             .ifPresent(d -> dokumentdataBuilder.medStønadsdatoFom(formaterDato(d, språkkode)));
 
 
@@ -98,20 +100,20 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
     }
 
     private void mapÅrsakOgLovhjemmel(Collection<VilkårType> vilkår, Avslagsårsak årsak,
-                                      List<SvpUttakResultatPeriode> perioder,
+                                      List<BrevGrunnlagDto.Svangerskapspenger.Uttaksperiode> perioder,
                                       SvangerskapspengerAvslagDokumentdata.Builder dokumentdataBuilder,
                                       UUID uuid) {
         Set<String> lovreferanse = new TreeSet<>(new LovhjemmelComparator());
         if (Avslagsårsak.UDEFINERT.equals(årsak) || årsak == null) {
-            var periodeÅrsak = perioder.stream()
-                .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
-                .map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak)
+            var avslåttPeriode = perioder.stream()
+                .filter(p -> BrevGrunnlagDto.PeriodeResultatType.AVSLÅTT.equals(p.periodeResultatType()))
                 .findFirst()
                 .orElseThrow(() -> new TekniskException("FPFORMIDLING-100003",
                     String.format("Kan ikke generere avslagsbrev uten avslagsårsak for behandling UUID %s", uuid)));
 
-            dokumentdataBuilder.medÅrsak(Årsak.of(periodeÅrsak.getKode()));
-            periodeÅrsak.getLovHjemmelData().ifPresent(lovreferanse::add);
+            var periodeIkkeOppfyltÅrsak = PeriodeIkkeOppfyltÅrsak.fra(avslåttPeriode.periodeIkkeOppfyltÅrsak());
+            dokumentdataBuilder.medÅrsak(Årsak.of(periodeIkkeOppfyltÅrsak.getKode()));
+            periodeIkkeOppfyltÅrsak.getLovHjemmelData().ifPresent(lovreferanse::add);
 
         } else {
             dokumentdataBuilder.medÅrsak(Årsak.of(årsak.getKode()));

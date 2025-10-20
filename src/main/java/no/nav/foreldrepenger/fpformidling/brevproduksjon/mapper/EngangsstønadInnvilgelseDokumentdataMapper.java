@@ -2,39 +2,33 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
+import java.util.Optional;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE)
 public class EngangsstønadInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
-    private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
-
-    EngangsstønadInnvilgelseDokumentdataMapper() {
-        //CDI
-    }
+    private final BrevParametere brevParametere;
 
     @Inject
-    public EngangsstønadInnvilgelseDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public EngangsstønadInnvilgelseDokumentdataMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -45,9 +39,9 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     @Override
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                    DokumentHendelse hendelse,
-                                                                   Behandling behandling,
+                                                                   BrevGrunnlagDto behandling,
                                                                    boolean erUtkast) {
-        var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);
+        var tilkjentYtelse = behandling.tilkjentYtelse().engangsstønad();
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
@@ -59,21 +53,18 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
             .medRevurdering(behandling.erRevurdering())
             .medFørstegangsbehandling(behandling.erFørstegangssøknad())
             .medMedhold(BehandlingMapper.erMedhold(behandling))
-            .medInnvilgetBeløp(BrevMapperUtil.formaterBeløp(tilkjentYtelse.beløp()))
+            .medInnvilgetBeløp(BrevMapperUtil.formaterBeløp(tilkjentYtelse.beregnetTilkjentYtelse()))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medFbEllerMedhold(erFBellerMedhold(behandling))
             .medErEndretSats(false);
 
         if (behandling.erRevurdering()) {
-            var originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
-                .orElseThrow(() -> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
-
-            var differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, tilkjentYtelse);
+            var differanse = sjekkOmDifferanseHvisRevurdering(behandling.tilkjentYtelse().originalBehandlingEngangsstønad(), tilkjentYtelse);
 
             if (differanse != 0L) {
-                var famHendelse = behandling.getFamilieHendelse();
-                var orgFamHendelse = originalBehandling.getFamilieHendelse();
+                var famHendelse = behandling.familieHendelse();
+                var orgFamHendelse = behandling.originalBehandling().familieHendelse();
                 //dersom årsaken til differanse er økning av antall barn er det ikke endret sats
                 if (!antallBarnEndret(famHendelse, orgFamHendelse)) {
                     dokumentdataBuilder.medErEndretSats(true);
@@ -86,19 +77,21 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
         return dokumentdataBuilder.build();
     }
 
-    private boolean erFBellerMedhold(Behandling behandling) {
-        return !BehandlingType.REVURDERING.equals(behandling.getBehandlingType()) || BehandlingÅrsakType.årsakerEtterKlageBehandling()
+    private boolean erFBellerMedhold(BrevGrunnlagDto behandling) {
+        return !behandling.erRevurdering() || BehandlingÅrsakType.årsakerEtterKlageBehandling()
             .stream()
+            .map(KodeverkMapper::mapBehandlingÅrsak)
             .anyMatch(behandling::harBehandlingÅrsak);
     }
 
-    private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, TilkjentYtelseEngangsstønad tilkjentYtelse) {
-        var originaltTilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(originalBehandling);
-
-        return originaltTilkjentYtelse.map(orgTilkjentYtelse -> Math.abs(tilkjentYtelse.beløp() - orgTilkjentYtelse.beløp())).orElse(0L);
+    private Long sjekkOmDifferanseHvisRevurdering(TilkjentYtelseEngangsstønadDto originaltTilkjentYtelse,
+                                                  TilkjentYtelseEngangsstønadDto tilkjentYtelse) {
+        return Optional.ofNullable(originaltTilkjentYtelse)
+            .map(orgTilkjentYtelse -> Math.abs(tilkjentYtelse.beregnetTilkjentYtelse() - orgTilkjentYtelse.beregnetTilkjentYtelse()))
+            .orElse(0L);
     }
 
-    private boolean antallBarnEndret(FamilieHendelse famHendelse, FamilieHendelse orgFamhendelse) {
+    private boolean antallBarnEndret(BrevGrunnlagDto.FamilieHendelse famHendelse, BrevGrunnlagDto.FamilieHendelse orgFamhendelse) {
         return famHendelse.antallBarn() != orgFamhendelse.antallBarn();
     }
 }

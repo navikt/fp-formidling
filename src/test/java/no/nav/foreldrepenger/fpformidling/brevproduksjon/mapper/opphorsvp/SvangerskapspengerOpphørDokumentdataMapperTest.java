@@ -1,15 +1,20 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorsvp;
 
-import static java.util.List.of;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.barn;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.familieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.svangerskapspenger;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.svangerskapspengerUttakArbeidsforhold;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.svangerskapspengerUttakPeriode;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -19,42 +24,22 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.typer.Beløp;
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.HjemmelDto;
 
 @ExtendWith(MockitoExtension.class)
 class SvangerskapspengerOpphørDokumentdataMapperTest {
@@ -63,21 +48,16 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     private static final LocalDate PERIODE1_FOM = LocalDate.now().plusDays(2);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(3);
     private static final String ARBEIDSGIVER_1_NAVN = "Arbeidsgiver_1";
-    private static final Arbeidsgiver ARBEIDSGIVER_1 = new Arbeidsgiver("123456", ARBEIDSGIVER_1_NAVN);
-
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
+    private static final String ARBEIDSGIVER_1_REFERANSE = "123456";
 
     private SvangerskapspengerOpphørDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
-
-        when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
-        when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
+        var arbeidsgiverTjeneste = mock(ArbeidsgiverTjeneste.class);
+        when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(any())).thenReturn(ARBEIDSGIVER_1_NAVN);
+        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
     }
 
     @Test
@@ -105,8 +85,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
 
         assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(opphørsdato, Språkkode.NB));
         assertThat(dokumentdata.getDødsdatoBarn()).isNull();
-        assertThat(dokumentdata.getFødselsdato()).isEqualTo(
-            formaterDato(behandling.getFamilieHendelse().barn().getFirst().fødselsdato(), Språkkode.NB));
+        assertThat(dokumentdata.getFødselsdato()).isEqualTo(formaterDato(behandling.familieHendelse().barn().getFirst().fødselsdato(), Språkkode.NB));
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4 og forvaltningsloven § 35");
@@ -114,71 +93,48 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
         assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE1_TOM, Språkkode.NB));
         assertThat(dokumentdata.getOpphørtPeriode().getAntallArbeidsgivere()).isEqualTo(1);
-
     }
 
-    private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(List.of(new FamilieHendelse.Barn(LocalDate.now(), null)), LocalDate.now(), 1, null);
+    private BeregningsgrunnlagDto opprettBeregningsgrunnlag() {
+        return new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER), HjemmelDto.F_14_7, BigDecimal.valueOf(GRUNNBELØP), List.of(), true,
+            true);
     }
 
-    private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
-        return Optional.of(Beregningsgrunnlag.ny()
-            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-            .medhHjemmel(Hjemmel.F_14_7)
-            .medBesteberegnet(true)
-            .build());
-    }
-
-    private Optional<TilkjentYtelseForeldrepenger> opprettTilkjentYtelse() {
-        return Optional.of(TilkjentYtelseForeldrepenger.ny()
-            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
-                .medDagsats(500L)
-                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medAndeler(of(TilkjentYtelseAndel.ny()
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbeidsgiver(ARBEIDSGIVER_1)
-                    .medStillingsprosent(BigDecimal.valueOf(50))
-                    .build()))
-                .build()))
-            .build());
-    }
-
-    private Optional<SvangerskapspengerUttak> opprettUttaksresultat() {
-        var uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
-            .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-            .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
-            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+    private BrevGrunnlagDto.Svangerskapspenger opprettUttaksresultat() {
+        var uttakResultatPeriode1 = svangerskapspengerUttakPeriode().fom(PERIODE1_FOM)
+            .tom(PERIODE1_TOM)
+            .periodeResultatType(BrevGrunnlagDto.PeriodeResultatType.INNVILGET)
             .build();
-        var uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
-            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_IKKE_FØR_FØDSEL)
-            .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
-            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+        var uttakResultatPeriode2 = svangerskapspengerUttakPeriode().fom(PERIODE1_FOM)
+            .tom(PERIODE1_TOM)
+            .periodeResultatType(BrevGrunnlagDto.PeriodeResultatType.AVSLÅTT)
+            .periodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_IKKE_FØR_FØDSEL.getKode())
             .build();
 
-        var uttaksresultat = SvangerskapspengerUttak.Builder.ny()
-            .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
-                .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1_NAVN))
-                .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
-                .build())
+        var uttakArbeidsforhold = svangerskapspengerUttakArbeidsforhold().arbeidsgiverReferanse(ARBEIDSGIVER_1_REFERANSE)
+            .arbeidType(BrevGrunnlagDto.UttakArbeidType.ORDINÆRT_ARBEID)
+            .perioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
             .build();
 
-        return Optional.of(uttaksresultat);
+        return svangerskapspenger().uttakArbeidsforhold(List.of(uttakArbeidsforhold)).build();
     }
 
-    private Behandling opprettBehandling(LocalDate opphørsdato) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.REVURDERING)
-            .medBehandlingsresultat(Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.OPPHØR)
-                .medAvslagsårsak(Avslagsårsak.UDEFINERT)
-                .medOpphørsdato(opphørsdato)
-                .build())
-            .medFagsak(Fagsak.ny().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
-            .medSpråkkode(Språkkode.NB)
-            .medFamilieHendelse(opprettFamiliehendelse())
+    private BrevGrunnlagDto opprettBehandling(LocalDate opphørsdato) {
+        var fhBarn = barn().fødselsdato(LocalDate.now()).build();
+
+        var fh = familieHendelse().barn(List.of(fhBarn)).termindato(LocalDate.now()).antallBarn(1).build();
+
+        var behandlingsres = behandlingsresultat()
+            .behandlingResultatType(BrevGrunnlagDto.Behandlingsresultat.BehandlingResultatType.OPPHØR)
+            .opphørsdato(opphørsdato)
+            .build();
+
+        return defaultBuilder().fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.SVANGERSKAPSPENGER)
+            .behandlingType(BrevGrunnlagDto.BehandlingType.REVURDERING)
+            .familieHendelse(fh)
+            .behandlingsresultat(behandlingsres)
+            .beregningsgrunnlag(opprettBeregningsgrunnlag())
+            .svangerskapspenger(opprettUttaksresultat())
             .build();
     }
 }

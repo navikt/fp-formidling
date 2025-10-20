@@ -1,10 +1,14 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Barn;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -16,20 +20,14 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Beregning
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.Fagsak;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerOpphørDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.Dato;
 import no.nav.vedtak.exception.TekniskException;
@@ -38,26 +36,20 @@ import no.nav.vedtak.exception.TekniskException;
 @DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_OPPHØR)
 public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
-    private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;
+    private static final Map<RelasjonsRolleType, String> RELASJONSKODE_TYPE_MAP;
 
     static {
-        relasjonskodeTypeMap = new EnumMap<>(RelasjonsRolleType.class);
-        relasjonskodeTypeMap.put(RelasjonsRolleType.MORA, "MOR");
-        relasjonskodeTypeMap.put(RelasjonsRolleType.FARA, "FAR");
-        relasjonskodeTypeMap.put(RelasjonsRolleType.MEDMOR, "MEDMOR");
+        RELASJONSKODE_TYPE_MAP = new EnumMap<>(RelasjonsRolleType.class);
+        RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.MORA, "MOR");
+        RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.FARA, "FAR");
+        RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.MEDMOR, "MEDMOR");
     }
 
-    private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
-
-    ForeldrepengerOpphørDokumentdataMapper() {
-        //CDI
-    }
+    private final BrevParametere brevParametere;
 
     @Inject
-    public ForeldrepengerOpphørDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerOpphørDokumentdataMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -68,51 +60,52 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     @Override
     public ForeldrepengerOpphørDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                DokumentHendelse hendelse,
-                                                               Behandling behandling,
+                                                               BrevGrunnlagDto behandling,
                                                                boolean erUtkast) {
 
         var språkkode = dokumentFelles.getSpråkkode();
-        var fagsak = behandling.getFagsak();
-        var familiehendelse = behandling.getFamilieHendelse();
+        var familiehendelse = behandling.familieHendelse();
 
-        var foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
-            .orElseGet(ForeldrepengerUttak::tomtUttak); // bestående av tomme lister.
-        var originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
-            .flatMap(domeneobjektProvider::hentForeldrepengerUttakHvisFinnes);
+        var uttaksperioder = Optional.ofNullable(behandling.foreldrepenger())
+            .map(Foreldrepenger::perioderSøker)
+            .orElse(List.of());
 
-        var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
-        var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
+        var beregningsgrunnlagOpt = behandling.beregningsgrunnlag();
+        var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(Optional.ofNullable(beregningsgrunnlagOpt));
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
-        fellesBuilder.medBrevDato(
-            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         var erSøkerDød = BrevMapperUtil.erDød(dokumentFelles);
 
-        var behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.behandlingsresultat();
+
         var dokumentdataBuilder = ForeldrepengerOpphørDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medErSøkerDød(erSøkerDød)
-            .medRelasjonskode(finnRelasjonskode(fagsak))
+            .medRelasjonskode(RELASJONSKODE_TYPE_MAP.get(behandling.relasjonsRolleType()))
             .medGjelderFødsel(familiehendelse.gjelderFødsel())
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)
-            .medEndretDekningsgrad(behandlingsresultat.isEndretDekningsgrad())
+            .medEndretDekningsgrad(behandlingsresultat.endretDekningsgrad())
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        var årsakListe = mapAvslagårsaker(behandling.getVilkårTyper(), behandlingsresultat, foreldrepengerUttak, dokumentdataBuilder);
+        var vilkårTyper = behandling.behandlingsresultat().vilkårTyper().stream().map(KodeverkMapper::mapVilkårType).toList();
+        var årsakListe = mapAvslagårsaker(vilkårTyper, behandlingsresultat, dokumentdataBuilder, uttaksperioder);
 
         finnDødsdatoHvisFinnes(familiehendelse, årsakListe).map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medBarnDødsdato);
 
-        var opphørsdato = behandlingsresultat.getOpphørsdato();
+        var opphørsdato = Optional.ofNullable(behandlingsresultat.opphørsdato());
         opphørsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medOpphørDato);
 
-        var fomStønadsdato = finnStønadFomDatoHvisFinnes(originaltUttakResultat);
-        fomStønadsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medFomStønadsdato);
+        var fomStønadsdato = Optional.ofNullable(behandling.originalBehandling().førsteDagMedUtbetaltForeldrepenger())
+            .map(d -> formaterDato(d, språkkode));
+        fomStønadsdato.ifPresent(dokumentdataBuilder::medFomStønadsdato);
 
-        var tomStønadsdato = finnStønadTomDatoHvisFinnes(foreldrepengerUttak );
+        var tomStønadsdato = finnStønadTomDatoHvisFinnes(uttaksperioder);
         tomStønadsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medTomStønadsdato);
 
         if (erSøkerDød && (fomStønadsdato.isEmpty() || tomStønadsdato.isEmpty())) {
-            throw new TekniskException("FPFORMIDLING-743452", "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato eller siste utbetalingsdato fra uttaket. Påkrevd når personstatus = 'DØD'");
+            throw new TekniskException("FPFORMIDLING-743452",
+                "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato eller siste utbetalingsdato fra uttaket. Påkrevd når personstatus = 'DØD'");
         }
 
         return dokumentdataBuilder.build();
@@ -120,9 +113,9 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
     private List<String> mapAvslagårsaker(Collection<VilkårType> vilkårTyper,
                                           Behandlingsresultat behandlingsresultat,
-                                          ForeldrepengerUttak foreldrepengerUttak,
-                                          ForeldrepengerOpphørDokumentdata.Builder builder) {
-        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(vilkårTyper, behandlingsresultat, foreldrepengerUttak);
+                                          ForeldrepengerOpphørDokumentdata.Builder builder,
+                                          List<Foreldrepenger.Uttaksperiode> perioder) {
+        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(vilkårTyper, behandlingsresultat, perioder);
         var årsakListe = aarsakListeOgLovhjemmel.getElement1();
 
         builder.medAvslagÅrsaker(årsakListe);
@@ -131,30 +124,17 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         return årsakListe;
     }
 
-    private String finnRelasjonskode(Fagsak fagsak) {
-        if (RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
-            return relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType());
-        }
-        return "ANNET";
-    }
-
     private Optional<LocalDate> finnDødsdatoHvisFinnes(FamilieHendelse familieHendelse, List<String> årsakListe) {
         if (årsakListe.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {
-            return familieHendelse.tidligstDødsdato();
+            return familieHendelse.barn().stream().map(Barn::dødsdato).min(LocalDate::compareTo);
         }
         return Optional.empty();
     }
 
-    private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<ForeldrepengerUttak> originaltUttakResultat) {
-        return originaltUttakResultat.map(ForeldrepengerUttak::perioder)
-            .orElse(Collections.emptyList())
-            .stream()
-            .filter(UttakResultatPeriode::isInnvilget)
-            .map(UttakResultatPeriode::getFom)
-            .findFirst();
-    }
-
-    private Optional<LocalDate> finnStønadTomDatoHvisFinnes(ForeldrepengerUttak foreldrepengerUttak) {
-        return  foreldrepengerUttak.perioder().stream().filter(UttakResultatPeriode::isInnvilget).map(UttakResultatPeriode::getTom).max(LocalDate::compareTo);
+    private Optional<LocalDate> finnStønadTomDatoHvisFinnes(List<Foreldrepenger.Uttaksperiode> uttaksperioder) {
+        return uttaksperioder.stream()
+            .filter(Foreldrepenger.Uttaksperiode::isInnvilget)
+            .map(Foreldrepenger.Uttaksperiode::tom)
+            .max(LocalDate::compareTo);
     }
 }

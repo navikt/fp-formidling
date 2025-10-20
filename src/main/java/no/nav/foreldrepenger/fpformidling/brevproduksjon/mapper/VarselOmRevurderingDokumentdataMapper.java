@@ -8,34 +8,26 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.VARSEL_OM_REVURDERING)
 public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper {
 
-    private BrevMapperUtil brevMapperUtil;
-    private DomeneobjektProvider domeneobjektProvider;
-
-    VarselOmRevurderingDokumentdataMapper() {
-        //CDI
-    }
+    private final BrevMapperUtil brevMapperUtil;
 
     @Inject
-    public VarselOmRevurderingDokumentdataMapper(BrevMapperUtil brevMapperUtil, DomeneobjektProvider domeneobjektProvider) {
+    public VarselOmRevurderingDokumentdataMapper(BrevMapperUtil brevMapperUtil) {
         this.brevMapperUtil = brevMapperUtil;
-        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -46,7 +38,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     @Override
     public VarselOmRevurderingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                               DokumentHendelse hendelse,
-                                                              Behandling behandling,
+                                                              BrevGrunnlagDto behandling,
                                                               boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
@@ -55,21 +47,20 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
-        var familieHendelse = behandling.getFamilieHendelse();
+        var familieHendelse = behandling.familieHendelse();
 
         var advarselKode = utledAdvarselkode(hendelse);
-        var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
+
+        return VarselOmRevurderingDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medTerminDato(finnTermindato(familieHendelse, språkkode).orElse(null))
             .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode))
             .medAntallBarn(familieHendelse.antallBarn())
             .medAdvarselKode(advarselKode)
-            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.getFagsak().getYtelseType()));
-
-        return dokumentdataBuilder.build();
+            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.fagsakYtelseType())).build();
     }
 
-    private Optional<String> finnTermindato(FamilieHendelse familieHendelse, Språkkode språkkode) {
+    private Optional<String> finnTermindato(BrevGrunnlagDto.FamilieHendelse familieHendelse, Språkkode språkkode) {
         return Optional.ofNullable(familieHendelse.termindato()).map(termindato -> formaterDato(termindato, språkkode));
     }
 

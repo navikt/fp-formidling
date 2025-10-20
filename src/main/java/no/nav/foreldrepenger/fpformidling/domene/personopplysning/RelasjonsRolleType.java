@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.domene.personopplysning;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
@@ -26,13 +24,10 @@ public enum RelasjonsRolleType implements Kodeverdi {
     @JsonEnumDefaultValue UDEFINERT("-"),
     ;
 
-    private static final Set<RelasjonsRolleType> FORELDRE_ROLLER = Set.of(RelasjonsRolleType.MORA, RelasjonsRolleType.FARA,
-        RelasjonsRolleType.MEDMOR);
-
     @JsonValue
     private String kode;
 
-    private RelasjonsRolleType(String kode) {
+    RelasjonsRolleType(String kode) {
         this.kode = kode;
     }
 
@@ -40,10 +35,4 @@ public enum RelasjonsRolleType implements Kodeverdi {
     public String getKode() {
         return kode;
     }
-
-
-    public static boolean erRegistrertForeldre(RelasjonsRolleType type) {
-        return FORELDRE_ROLLER.contains(type);
-    }
-
 }

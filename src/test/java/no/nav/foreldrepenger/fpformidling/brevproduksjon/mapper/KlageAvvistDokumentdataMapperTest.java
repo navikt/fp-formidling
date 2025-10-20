@@ -2,40 +2,31 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static java.util.List.of;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.defaultBuilder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.klageBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.klageFormkravResultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.klageVurderingResultat;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.Period;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageFormkravResultat;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 @ExtendWith(MockitoExtension.class)
 class KlageAvvistDokumentdataMapperTest {
-
-    @Mock
-    private BrevParametere brevParametere;
-
-    @Mock
-    private DomeneobjektProvider domeneobjektProvider;
 
     private KlageAvvistDokumentdataMapper dokumentdataMapper;
 
@@ -43,17 +34,34 @@ class KlageAvvistDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        when(brevParametere.getKlagefristUker()).thenReturn(6);
-        dokumentdataMapper = new KlageAvvistDokumentdataMapper(brevParametere, domeneobjektProvider);
+        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
+        dokumentdataMapper = new KlageAvvistDokumentdataMapper(brevParametere);
     }
 
     @Test
     void skal_mappe_felter_for_vanlig_behandling() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
-        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
+        var klageFormkrav = klageFormkravResultat()
+            .påklagdBehandlingType(BrevGrunnlagDto.BehandlingType.FØRSTEGANGSSØKNAD)
+            .avvistÅrsaker(of(BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.KLAGER_IKKE_PART))
+            .build();
+
+        var klageVurdering = klageVurderingResultat()
+            .fritekstTilBrev(FRITEKST_TIL_BREV)
+            .build();
+
+        var klage = klageBehandling()
+            .klageFormkravResultatNFP(klageFormkrav)
+            .klageVurderingResultatNK(klageVurdering)
+            .build();
+
+        var behandling = defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER)
+            .klageBehandling(klage)
+            .build();
+
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -74,19 +82,41 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getGjelderTilbakekreving()).isFalse();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("forvaltningsloven §§ 28 og 33");
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
-        assertThat(dokumentdata.getAvvistGrunner()).containsAll(of(KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode()));
+        assertThat(dokumentdata.getAvvistGrunner()).containsAll(of("KLAGER_IKKE_PART"));
         assertThat(dokumentdata.isPåklagdVedtak()).isTrue();
     }
 
     @Test
     void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
-        var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
-        mockKlage(behandling, BehandlingType.TILBAKEKREVING,
-            of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.KLAGER_IKKE_PART, KlageAvvistÅrsak.KLAGE_UGYLDIG, KlageAvvistÅrsak.IKKE_KONKRET,
-                KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK, KlageAvvistÅrsak.IKKE_SIGNERT));
+        var klageFormkrav = klageFormkravResultat()
+            .påklagdBehandlingType(BrevGrunnlagDto.BehandlingType.TILBAKEKREVING)
+            .avvistÅrsaker(of(
+                BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.KLAGET_FOR_SENT,
+                BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.KLAGER_IKKE_PART,
+                BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.KLAGE_UGYLDIG,
+                BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.IKKE_KONKRET,
+                BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.IKKE_PÅKLAGD_VEDTAK,
+                BrevGrunnlagDto.KlageBehandling.KlageAvvistÅrsak.IKKE_SIGNERT
+            ))
+            .build();
+
+        var klageVurdering = klageVurderingResultat()
+            .fritekstTilBrev(FRITEKST_TIL_BREV)
+            .build();
+
+        var klage = klageBehandling()
+            .klageFormkravResultatNFP(klageFormkrav)
+            .klageVurderingResultatNK(klageVurdering)
+            .build();
+
+        var behandling = defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER)
+            .klageBehandling(klage)
+            .build();
+
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -95,19 +125,7 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getGjelderTilbakekreving()).isTrue();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("folketrygdloven § 21-12 og forvaltningsloven §§ 28, 31, 32 og 33");
         assertThat(dokumentdata.getAvvistGrunner()).containsAll(
-            of(KlageAvvistÅrsak.KLAGET_FOR_SENT.getKode(), KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode(), KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode(),
-                KlageAvvistÅrsak.IKKE_KONKRET.getKode(), KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK.getKode()));
+            of("KLAGET_FOR_SENT", "KLAGER_IKKE_PART", "KLAGE_UGYLDIG", "IKKE_KONKRET", "IKKE_PAKLAGD_VEDTAK"));
         assertThat(dokumentdata.isPåklagdVedtak()).isFalse();
-    }
-
-    private void mockKlage(Behandling behandling, BehandlingType behandlingType, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        var klageVurderingResultat = new KlageVurderingResultat(null, FRITEKST_TIL_BREV);
-        var klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
-        var klage = Klage.ny()
-            .medPåklagdBehandlingType(behandlingType)
-            .medKlageVurderingResultatNK(klageVurderingResultat)
-            .medFormkravNFP(klageFormkravResultat)
-            .build();
-        when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
     }
 }

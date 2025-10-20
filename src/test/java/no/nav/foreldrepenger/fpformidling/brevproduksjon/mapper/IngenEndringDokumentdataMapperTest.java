@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.VERGES_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.standardForeldrepengerBehandling;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,8 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 @ExtendWith(MockitoExtension.class)
 class IngenEndringDokumentdataMapperTest {
@@ -34,7 +35,7 @@ class IngenEndringDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        var behandling = standardForeldrepengerBehandling();
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER).build();
         var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.JA, false, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
@@ -57,7 +58,7 @@ class IngenEndringDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        var behandling = standardForeldrepengerBehandling();
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER).build();
         var dokumentFelles = lagStandardDokumentFelles(DokumentFelles.Kopi.NEI, true, FagsakYtelseType.FORELDREPENGER);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 

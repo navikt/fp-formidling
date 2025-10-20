@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.fritekst;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,8 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,10 +35,13 @@ class FritekstbrevDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_fritekstbrev_til_bruker_fra_hendelsen() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
+        var behandling = DatamapperTestUtil.defaultBuilder().fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER).build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medTittel(OVERSKRIFT).medFritekst(BRØDTEKST_INN).medDokumentMal(
-            DokumentMal.FRITEKSTBREV).build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder()
+            .medTittel(OVERSKRIFT)
+            .medFritekst(BRØDTEKST_INN)
+            .medDokumentMal(DokumentMal.FRITEKSTBREV)
+            .build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -60,10 +65,19 @@ class FritekstbrevDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_fritekstbrev_fra_behandlingsresultatet_når_hendelsen_ikke_har_dem() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder().medOverskrift(OVERSKRIFT).medFritekstbrev(BRØDTEKST_INN).build();
-        var behandling = DatamapperTestUtil.standardBehandlingBuilder(FagsakYtelseType.FORELDREPENGER).medBehandlingsresultat(behandlingsresultat).build();
+        var behandlingsresultatData = behandlingsresultat().behandlingResultatType(BrevGrunnlagDto.Behandlingsresultat.BehandlingResultatType.INNVILGET)
+            .fritekst(fritekst().overskrift(OVERSKRIFT).brødtekst(BRØDTEKST_INN).build())
+            .build();
+        var behandling = DatamapperTestUtil.defaultBuilder()
+            .behandlingsresultat(behandlingsresultatData)
+            .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER)
+            .build();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medTittel(null).medFritekst(null).medDokumentMal(DokumentMal.FRITEKSTBREV).build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder()
+            .medTittel(null)
+            .medFritekst(null)
+            .medDokumentMal(DokumentMal.FRITEKSTBREV)
+            .build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

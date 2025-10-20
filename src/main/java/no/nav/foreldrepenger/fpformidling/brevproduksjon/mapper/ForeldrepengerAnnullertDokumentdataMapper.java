@@ -7,29 +7,22 @@ import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerAnnullertDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_ANNULLERT)
 public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMapper {
 
-    private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
-
-    ForeldrepengerAnnullertDokumentdataMapper() {
-        //CDI
-    }
+    private final BrevParametere brevParametere;
 
     @Inject
-    public ForeldrepengerAnnullertDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerAnnullertDokumentdataMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
-        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -40,7 +33,7 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
     @Override
     public ForeldrepengerAnnullertDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                   DokumentHendelse hendelse,
-                                                                  Behandling behandling,
+                                                                  BrevGrunnlagDto behandling,
                                                                   boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
@@ -48,19 +41,13 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
-        var startdatoUtsatt = domeneobjektProvider.hentStartdatoUtsatt(behandling);
-        var harSøktOmNyPeriode = startdatoUtsatt.nyStartdato() != null;
+        var startdatoUtsatt = behandling.foreldrepenger().nyStartDatoVedUtsattOppstart();
 
-        var dokumentdataBuilder = ForeldrepengerAnnullertDokumentdata.ny()
+        return ForeldrepengerAnnullertDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
-            .medKlagefristUker(brevParametere.getKlagefristUker());
-
-        if (harSøktOmNyPeriode) {
-            dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt.nyStartdato(), språkkode));
-            dokumentdataBuilder.medKanBehandlesDato(formaterDato(startdatoUtsatt.nyStartdato().minusWeeks(4), språkkode));
-        }
-
-        return dokumentdataBuilder.build();
+            .medHarSøktOmNyPeriode(true)
+            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medPlanlagtOppstartDato(formaterDato(startdatoUtsatt, språkkode))
+            .medKanBehandlesDato(formaterDato(startdatoUtsatt.minusWeeks(4), språkkode)).build();
     }
 }

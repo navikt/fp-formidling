@@ -5,23 +5,20 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import jakarta.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata.VariantType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID)
 public class ForlengetSaksbehandlingstidDokumentdataMapper implements DokumentdataMapper {
-
-    ForlengetSaksbehandlingstidDokumentdataMapper() {
-        //CDI
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -31,18 +28,19 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
     @Override
     public ForlengetSaksbehandlingstidDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                                       DokumentHendelse hendelse,
-                                                                      Behandling behandling,
+                                                                      BrevGrunnlagDto behandling,
                                                                       boolean erUtkast) {
 
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
 
+        var behandlingType = KodeverkMapper.mapBehandlingType(behandling.behandlingType());
         return ForlengetSaksbehandlingstidDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medVariantType(mapVariantType(behandling.getBehandlingType(), hendelse.getDokumentMal()))
+            .medVariantType(mapVariantType(behandlingType, hendelse.getDokumentMal()))
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
-            .medBehandlingsfristUker(behandling.getBehandlingType().getBehandlingstidFristUker())
+            .medBehandlingsfristUker(behandlingType.getBehandlingstidFristUker())
             .build();
     }
 

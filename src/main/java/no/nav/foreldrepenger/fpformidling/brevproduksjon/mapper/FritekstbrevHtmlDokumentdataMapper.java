@@ -5,11 +5,11 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import jakarta.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.FritekstbrevHtmlDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
@@ -24,7 +24,7 @@ public class FritekstbrevHtmlDokumentdataMapper implements DokumentdataMapper {
     @Override
     public FritekstbrevHtmlDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
                                                            DokumentHendelse hendelse,
-                                                           Behandling behandling,
+                                                           BrevGrunnlagDto behandling,
                                                            boolean erUtkast) {
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, erUtkast);
         fellesBuilder.medBrevDato(
@@ -32,12 +32,12 @@ public class FritekstbrevHtmlDokumentdataMapper implements DokumentdataMapper {
 
         return FritekstbrevHtmlDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medHtml(finnFritekstHtml(hendelse, behandling))
+            .medHtml(finnFritekstHtml(hendelse, behandling.behandlingsresultat()))
             .build();
     }
 
-    private String finnFritekstHtml(DokumentHendelse hendelse, Behandling behandling) {
-        return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty() ? hendelse.getFritekst() : behandling.getBehandlingsresultat()
-                .getFritekstbrev();
+    private String finnFritekstHtml(DokumentHendelse hendelse, BrevGrunnlagDto.Behandlingsresultat behandlingsresultat) {
+        return
+            hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty() ? hendelse.getFritekst() : behandlingsresultat.fritekst().brødtekst();
     }
 }

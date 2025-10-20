@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 
@@ -88,7 +87,7 @@ class FellesMapperTest {
 
     private void assertLovformateringBeregning(String input, String konsekvensForYtelse, boolean innvilgetRevurdering, String forventetOutput) {
         var lovhjemler = FellesMapper.formaterLovhjemlerForBeregning(input, konsekvensForYtelse, innvilgetRevurdering,
-            Behandling.builder().medUuid(UUID.randomUUID()).build());
+                UUID.randomUUID());
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
 }

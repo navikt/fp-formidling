@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgave;
 import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgaver;
@@ -28,13 +28,13 @@ public class OppgaverTjeneste {
         this.restKlient = restKlient;
     }
 
-    public Oppgave opprettOppgave(Behandling behandling, JournalpostId journalpostId, String oppgaveBeskrivelse) {
+    public Oppgave opprettOppgave(BrevGrunnlagDto behandling, JournalpostId journalpostId, String oppgaveBeskrivelse) {
 
         var request = OpprettOppgave.getBuilderTemaFOR(Oppgavetype.VURDER_KONSEKVENS_YTELSE,
                 no.nav.vedtak.felles.integrasjon.oppgave.v1.Prioritet.NORM, 1)
-            .medAktoerId(behandling.getFagsak().getAktørId().getId())
-            .medSaksreferanse(behandling.getFagsak().getSaksnummer().getVerdi())
-            .medTildeltEnhetsnr(behandling.getBehandlendeEnhetId())
+            .medAktoerId(behandling.aktørId())
+            .medSaksreferanse(behandling.saksnummer())
+            .medTildeltEnhetsnr(behandling.behandlendeEnhet())
             .medJournalpostId(journalpostId.getVerdi())
             .medBeskrivelse(oppgaveBeskrivelse)
             .build();

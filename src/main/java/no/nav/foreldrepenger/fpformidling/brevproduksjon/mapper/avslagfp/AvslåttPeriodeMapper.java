@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.avslagfp;
 
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR;
+import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -15,37 +18,34 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMap
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger.Aktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 
 public final class AvslåttPeriodeMapper {
 
     private AvslåttPeriodeMapper() {
     }
 
-    public static Tuple<List<AvslåttPeriode>, String> mapAvslåttePerioderOgLovhjemmel(Behandling behandling,
-                                                                                      List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                                                      Optional<ForeldrepengerUttak> uttakResultatPerioder,
+    public static Tuple<List<AvslåttPeriode>, String> mapAvslåttePerioderOgLovhjemmel(BrevGrunnlagDto behandling,
+                                                                                      List<TilkjentYtelsePeriodeDto> tilkjentYtelsePerioder,
+                                                                                      Optional<BrevGrunnlagDto.Foreldrepenger> uttakResultatPerioder,
                                                                                       Språkkode språkkode) {
         var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
-        var behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.behandlingsresultat();
 
         var avslåttePerioder = finnAvslåttePerioder(tilkjentYtelsePerioder, uttakResultatPerioder, språkkode, lovReferanser);
         var lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
-            BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()), false);
+            BehandlingMapper.kodeFra(behandlingsresultat.konsekvenserForYtelsen()), false);
 
         if (avslåttePerioder.isEmpty()) {
-            avslåttePerioder = finnAvslåttePerioder(behandling.getVilkårTyper(), behandlingsresultat, uttakResultatPerioder, lovReferanser);
+            avslåttePerioder = finnAvslåttePerioder(behandling.behandlingsresultat().vilkårTyper(), behandlingsresultat, uttakResultatPerioder, lovReferanser);
             lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser);
         }
         avslåttePerioder = AvslåttPeriodeMerger.mergePerioder(avslåttePerioder);
@@ -53,8 +53,8 @@ public final class AvslåttPeriodeMapper {
         return new Tuple<>(avslåttePerioder, lovhjemmelForAvslag);
     }
 
-    private static List<AvslåttPeriode> finnAvslåttePerioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                             Optional<ForeldrepengerUttak> uttakResultatPerioder,
+    private static List<AvslåttPeriode> finnAvslåttePerioder(List<TilkjentYtelsePeriodeDto> tilkjentYtelsePerioder,
+                                                             Optional<BrevGrunnlagDto.Foreldrepenger> uttakResultatPerioder,
                                                              Språkkode språkkode,
                                                              TreeSet<String> lovReferanser) {
         List<AvslåttPeriode> avslåttePerioder = new ArrayList<>();
@@ -67,21 +67,23 @@ public final class AvslåttPeriodeMapper {
         return avslåttePerioder;
     }
 
-    private static List<AvslåttPeriode> finnAvslåttePerioder(Collection<VilkårType> fraBehandling,
-                                                             Behandlingsresultat behandlingsresultat,
-                                                             Optional<ForeldrepengerUttak> uttakResultatPerioder,
+    private static List<AvslåttPeriode> finnAvslåttePerioder(Collection<BrevGrunnlagDto.Behandlingsresultat.VilkårType> vilkårTyper,
+                                                             BrevGrunnlagDto.Behandlingsresultat behandlingsresultat,
+                                                             Optional<BrevGrunnlagDto.Foreldrepenger> uttakResultatPerioder,
                                                              TreeSet<String> lovReferanser) {
         List<AvslåttPeriode> avslagsAarsaker = new ArrayList<>();
 
-        var avslagsårsak = behandlingsresultat.getAvslagsårsak();
+        var avslagsårsak = Avslagsårsak.fraKode(behandlingsresultat.avslagsårsak());
         if (avslagsårsak != null) {
             avslagsAarsaker.add(AvslåttPeriode.ny().medAvslagsårsak(Årsak.of(avslagsårsak.getKode())).build());
-            var referanser = FellesMapper.lovhjemmelFraAvslagsårsak(FagsakYtelseType.FORELDREPENGER, fraBehandling, avslagsårsak);
+            var vt = vilkårTyper.stream().map(KodeverkMapper::mapVilkårType).toList();
+            var referanser = FellesMapper.lovhjemmelFraAvslagsårsak(FagsakYtelseType.FORELDREPENGER, vt, avslagsårsak);
             lovReferanser.addAll(referanser);
         }
-        for (var periode : uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList())) {
-            var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
-            if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
+        for (var periode : uttakResultatPerioder.map(BrevGrunnlagDto.Foreldrepenger::perioderSøker).orElse(Collections.emptyList())) {
+            var periodeResultatÅrsak = new PeriodeResultatÅrsak(periode.periodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR,
+                periode.periodeResultatÅrsakLovhjemmel());
+            if (BrevGrunnlagDto.PeriodeResultatType.AVSLÅTT.equals(periode.periodeResultatType()) && periodeResultatÅrsak != null) {
                 avslagsAarsaker.add(AvslåttPeriode.ny().medAvslagsårsak(Årsak.of(periodeResultatÅrsak.getKode())).build());
                 lovReferanser.addAll(periodeResultatÅrsak.hentLovhjemlerFraJson());
             }
@@ -89,42 +91,44 @@ public final class AvslåttPeriodeMapper {
         return avslagsAarsaker;
     }
 
-    private static AvslåttPeriode mapAvslåttPeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                    List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
-                                                    UttakResultatPeriode uttakResultatPeriode,
+    private static AvslåttPeriode mapAvslåttPeriode(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
+                                                    List<TilkjentYtelsePeriodeDto> tilkjentPeriodeListe,
+                                                    BrevGrunnlagDto.Foreldrepenger.Uttaksperiode uttakResultatPeriode,
                                                     Språkkode språkkode,
                                                     TreeSet<String> lovReferanser) {
         //TFP-5200 Hack for å forhindre dobbelt antall tapte dager om det er flere tilkjentperioder for en uttaksperiode
         var antallTilkjentPerioderForUttaksperioden = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe,
             uttakResultatPeriode);
-        var antallTapteDager = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
+        var antallTapteDager = mapAntallTapteDagerFra(uttakResultatPeriode.aktiviteter());
         var tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
         if (antallTilkjentPerioderForUttaksperioden > 1) {
             tapteDagerHvisFlereTilkjentPerioder = BigDecimal.valueOf(antallTapteDager)
                 .divide(BigDecimal.valueOf(antallTilkjentPerioderForUttaksperioden), 2, RoundingMode.HALF_UP);
         }
+        var periodeResultatÅrsak = new PeriodeResultatÅrsak(uttakResultatPeriode.periodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR,
+            uttakResultatPeriode.periodeResultatÅrsakLovhjemmel());
         var avslåttPeriode = AvslåttPeriode.ny()
-            .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
-            .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
-            .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
+            .medAvslagsårsak(Årsak.of(periodeResultatÅrsak.getKode()))
+            .medPeriodeFom(tilkjentYtelsePeriode.fom(), språkkode)
+            .medPeriodeTom(tilkjentYtelsePeriode.tom(), språkkode)
             .medAntallTapteDager(antallTapteDager, tapteDagerHvisFlereTilkjentPerioder)
             .build();
-        lovReferanser.addAll(uttakResultatPeriode.getPeriodeResultatÅrsak().hentLovhjemlerFraJson());
+        lovReferanser.addAll(periodeResultatÅrsak.hentLovhjemlerFraJson());
         return avslåttPeriode;
     }
 
-    private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
+    private static int mapAntallTapteDagerFra(List<Aktivitet> uttakAktiviteter) {
         return PeriodeBeregner.alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ? uttakAktiviteter.stream()
-            .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+            .map(Aktivitet::trekkdager)
             .filter(Objects::nonNull)
             .max(BigDecimal::compareTo)
             .map(bd -> bd.setScale(1, RoundingMode.DOWN).intValue())
             .orElse(0) : 0;
     }
 
-    private static UttakResultatPeriode finnUttakResultatPeriode(Optional<ForeldrepengerUttak> uttakResultatPerioder,
-                                                                 TilkjentYtelsePeriode tilkjentYtelsePeriode) {
+    private static BrevGrunnlagDto.Foreldrepenger.Uttaksperiode finnUttakResultatPeriode(Optional<BrevGrunnlagDto.Foreldrepenger> uttakResultatPerioder,
+                                                                                         TilkjentYtelsePeriodeDto tilkjentYtelsePeriode) {
         return PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode,
-            uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList()));
+            uttakResultatPerioder.map(BrevGrunnlagDto.Foreldrepenger::perioderSøker).orElse(Collections.emptyList()));
     }
 }

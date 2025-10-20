@@ -77,7 +77,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @Test
     void mapAvslagsårsakerBrev_mapper_riktig() {
-        var avslagsårsak = engangsstønadAvslagDokumentdataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR);
+        var avslagsårsak = engangsstønadAvslagDokumentdataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR, false);
 
         assertThat(avslagsårsak).isEqualTo("IKKE_ALENEOMSORG");
     }

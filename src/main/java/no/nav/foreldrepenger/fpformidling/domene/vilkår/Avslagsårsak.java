@@ -65,12 +65,6 @@ public enum Avslagsårsak implements Kodeverdi {
 
     ;
 
-    public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_ENGANGSSTØNAD = Collections.unmodifiableSet(
-        new LinkedHashSet<>(Arrays.asList(ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR, ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR)));
-
-    public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_FORELDREPENGER = Collections.unmodifiableSet(
-        new LinkedHashSet<>(Arrays.asList(FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR, FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR)));
-
     public static final Set<Avslagsårsak> IKKE_ALENEOMSORG = Collections.unmodifiableSet(
         new LinkedHashSet<>(Arrays.asList(SØKER_ER_MEDMOR, SØKER_ER_FAR, MOR_IKKE_DØD, MANN_ADOPTERER_IKKE_ALENE)));
 
@@ -94,14 +88,6 @@ public enum Avslagsårsak implements Kodeverdi {
     @Override
     public String getKode() {
         return kode;
-    }
-
-    public static boolean erAlleredeUtbetaltEngangsstønad(Avslagsårsak avslagsårsak) {
-        return ALLEREDE_UTBETALT_ENGANGSSTØNAD.contains(avslagsårsak);
-    }
-
-    public static boolean erAlleredeUtbetaltForeldrepenger(Avslagsårsak avslagsårsak) {
-        return ALLEREDE_UTBETALT_FORELDREPENGER.contains(avslagsårsak);
     }
 
     public static boolean farHarIkkeAleneomsorg(Avslagsårsak avslagsårsak) {

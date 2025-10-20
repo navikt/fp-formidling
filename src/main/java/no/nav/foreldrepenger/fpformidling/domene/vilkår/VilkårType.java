@@ -29,7 +29,7 @@ public enum VilkårType implements Kodeverdi {
     OMSORGSOVERTAKELSEVILKÅR("FP_VK_6", Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-17", FagsakYtelseType.FORELDREPENGER, "§ 14-5"),
         Avslagsårsak.BARN_OVER_15_ÅR,
         Avslagsårsak.EKTEFELLES_SAMBOERS_BARN,
-        Avslagsårsak.ENGANGSSTØNAD_ALLEREDE_UTBETALT_TIL_MOR,
+        Avslagsårsak.ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR,
         Avslagsårsak.ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR,
         Avslagsårsak.FAR_HAR_IKKE_OMSORG_FOR_BARNET,
         Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR,

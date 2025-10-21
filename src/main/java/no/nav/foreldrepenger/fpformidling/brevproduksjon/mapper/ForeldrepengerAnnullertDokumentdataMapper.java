@@ -43,11 +43,17 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
 
         var startdatoUtsatt = behandling.foreldrepenger().nyStartDatoVedUtsattOppstart();
 
-        return ForeldrepengerAnnullertDokumentdata.ny()
+        var harSøktOmNyPeriode = startdatoUtsatt != null;
+
+        var dokumentdataBuilder = ForeldrepengerAnnullertDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medHarSøktOmNyPeriode(true)
-            .medKlagefristUker(brevParametere.getKlagefristUker())
-            .medPlanlagtOppstartDato(formaterDato(startdatoUtsatt, språkkode))
-            .medKanBehandlesDato(formaterDato(startdatoUtsatt.minusWeeks(4), språkkode)).build();
+            .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
+            .medKlagefristUker(brevParametere.getKlagefristUker());
+
+        if (harSøktOmNyPeriode) {
+            dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt, språkkode));
+            dokumentdataBuilder.medKanBehandlesDato(formaterDato(startdatoUtsatt.minusWeeks(4), språkkode));
+        }
+        return dokumentdataBuilder.build();
     }
 }

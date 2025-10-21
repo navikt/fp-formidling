@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -126,7 +127,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
     private Optional<LocalDate> finnDødsdatoHvisFinnes(FamilieHendelse familieHendelse, List<String> årsakListe) {
         if (årsakListe.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {
-            return familieHendelse.barn().stream().map(Barn::dødsdato).min(LocalDate::compareTo);
+            return familieHendelse.barn().stream().map(Barn::dødsdato).filter(Objects::nonNull).min(LocalDate::compareTo);
         }
         return Optional.empty();
     }

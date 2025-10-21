@@ -62,7 +62,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         var avslagsårsak = Avslagsårsak.fraKode(behandling.behandlingsresultat().avslagsårsak());
         var vilkårTyper = behandling.behandlingsresultat().vilkårTyper().stream().map(KodeverkMapper::mapVilkårType).toList();
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
-            .medAvslagsÅrsak(mapAvslagsårsakerBrev(avslagsårsak))
+            .medAvslagsÅrsak(mapAvslagsårsakerBrev(avslagsårsak, BrevGrunnlagDto.RelasjonsRolleType.MORA.equals(behandling.relasjonsRolleType())))
             .medFelles(fellesBuilder.build())
             .medFørstegangsbehandling(behandling.behandlingType() == BehandlingType.FØRSTEGANGSSØKNAD)
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
@@ -119,11 +119,15 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             || VilkårType.OMSORGSOVERTAKELSEVILKÅR.equals(vilkårType);
     }
 
-    String mapAvslagsårsakerBrev(Avslagsårsak avslagsårsak) {
-        if (Avslagsårsak.erAlleredeUtbetaltEngangsstønad(avslagsårsak)) {
-            return "ALLEREDE_UTBETALT_ENGANGSSTØNAD";
-        } else if (Avslagsårsak.erAlleredeUtbetaltForeldrepenger(avslagsårsak)) {
-            return "ALLEREDE_UTBETALT_FORELDREPENGER";
+    String mapAvslagsårsakerBrev(Avslagsårsak avslagsårsak, boolean erMor) {
+        if (Avslagsårsak.ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR.equals(avslagsårsak)) {
+            return erMor ? "ALLEREDE_UTBETALT_ENGANGSSTØNAD" : "ANNENFORELDER_UTBETALT_ENGANGSSTØNAD";
+        } else if (Avslagsårsak.ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR.equals(avslagsårsak)) {
+            return erMor ? "ANNENFORELDER_UTBETALT_ENGANGSSTØNAD" : "ALLEREDE_UTBETALT_ENGANGSSTØNAD";
+        } else if (Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR.equals(avslagsårsak)) {
+            return erMor ? "ALLEREDE_UTBETALT_FORELDREPENGER" : "ANNENFORELDER_UTBETALT_FORELDREPENGER";
+        } else if (Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR.equals(avslagsårsak)) {
+            return erMor ? "ANNENFORELDER_UTBETALT_FORELDREPENGER" : "ALLEREDE_UTBETALT_FORELDREPENGER";
         } else if (Avslagsårsak.farHarIkkeAleneomsorg(avslagsårsak)) {
             return "IKKE_ALENEOMSORG";
         } else if (Avslagsårsak.barnIkkeRiktigAlder(avslagsårsak)) {

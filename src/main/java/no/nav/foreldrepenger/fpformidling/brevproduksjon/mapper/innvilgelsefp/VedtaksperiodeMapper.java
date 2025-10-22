@@ -19,6 +19,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
@@ -35,7 +36,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.PeriodeÅrsakDto;
-import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public final class VedtaksperiodeMapper {
 
@@ -265,7 +265,7 @@ public final class VedtaksperiodeMapper {
 
     private static AnnenAktivitet mapAnnenAktivitet(BeregningsresOgUttaksAndel tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
         var annenAktivitetBuilder = AnnenAktivitet.ny()
-            .medAktivitetStatus((tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.andel.aktivitetstatus().name()));
+            .medAktivitetStatus(map(tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.andel.aktivitetstatus()));
         tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.UttakAktivitet.ifPresent(uttakAktivitet -> {
             annenAktivitetBuilder.medGradering(uttakAktivitet.gradering());
             annenAktivitetBuilder.medUtbetalingsgrad(Prosent.of(uttakAktivitet.utbetalingsgrad()));
@@ -273,6 +273,26 @@ public final class VedtaksperiodeMapper {
             annenAktivitetBuilder.medAktivitetDagsats(summerDagsats(tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.andel));
         });
         return annenAktivitetBuilder.build();
+    }
+
+    private static AktivitetStatus map(Aktivitetstatus aktivitetstatus) {
+        return switch (aktivitetstatus) {
+            case ARBEIDSAVKLARINGSPENGER -> AktivitetStatus.ARBEIDSAVKLARINGSPENGER;
+            case ARBEIDSTAKER -> AktivitetStatus.ARBEIDSTAKER;
+            case DAGPENGER -> AktivitetStatus.DAGPENGER;
+            case FRILANSER -> AktivitetStatus.FRILANSER;
+            case MILITÆR_ELLER_SIVIL -> AktivitetStatus.MILITÆR_ELLER_SIVIL;
+            case SELVSTENDIG_NÆRINGSDRIVENDE -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE;
+            case KOMBINERT_AT_FL -> AktivitetStatus.KOMBINERT_AT_FL;
+            case KOMBINERT_AT_SN -> AktivitetStatus.KOMBINERT_AT_SN;
+            case KOMBINERT_FL_SN -> AktivitetStatus.KOMBINERT_FL_SN;
+            case KOMBINERT_AT_FL_SN -> AktivitetStatus.KOMBINERT_AT_FL_SN;
+            case BRUKERS_ANDEL -> AktivitetStatus.BRUKERS_ANDEL;
+            case KUN_YTELSE -> AktivitetStatus.KUN_YTELSE;
+            case TTLSTØTENDE_YTELSE -> AktivitetStatus.TTLSTØTENDE_YTELSE;
+            case VENTELØNN_VARTPENGER -> AktivitetStatus.VENTELØNN_VARTPENGER;
+            case UDEFINERT -> throw new IllegalStateException("Kan ikke mappe UDEFINERT aktivitetstatus");
+        };
     }
 
     private static Stream<BeregningsresOgUttaksAndel> finnAndelerOgUttakAnnenAktivitet(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode,
@@ -384,7 +404,7 @@ public final class VedtaksperiodeMapper {
         return arbeidsforhold.build();
     }
 
-    private static int summerDagsats(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto dto) {
+    private static int summerDagsats(TilkjentYtelseAndelDto dto) {
         var sum = 0;
         if (dto.tilSoker() != null) {
             sum += dto.tilSoker();

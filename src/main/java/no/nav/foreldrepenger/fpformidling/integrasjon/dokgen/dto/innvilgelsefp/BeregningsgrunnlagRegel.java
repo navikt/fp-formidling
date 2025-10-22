@@ -6,14 +6,16 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagRegel {
-    private String regelStatus;
+    private AktivitetStatus regelStatus;
     private int antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke;
     private boolean snNyoppstartet;
     private List<BeregningsgrunnlagAndel> andelListe = new ArrayList<>();
 
-    public String getRegelStatus() {
+    public AktivitetStatus getRegelStatus() {
         return regelStatus;
     }
 
@@ -51,7 +53,7 @@ public class BeregningsgrunnlagRegel {
             this.kladd = new BeregningsgrunnlagRegel();
         }
 
-        public Builder medAktivitetStatus(String aktivitetStatus) {
+        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
             this.kladd.regelStatus = aktivitetStatus;
             return this;
         }

@@ -69,7 +69,7 @@ public final class BeregningsgrunnlagMapper {
                                                                   UnaryOperator<String> hentNavn) {
         var builder = BeregningsgrunnlagRegel.ny();
         var filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, andeler);
-        builder.medAktivitetStatus(tilString(bgAktivitetStatus));
+        builder.medAktivitetStatus(mapAktivitetStatus(bgAktivitetStatus));
         var mapped = filtrertListe.stream().map(a -> lagBeregningsgrunnlagAndel(a, hentNavn)).toList();
         builder.medAndelListe(mapped);
         builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
@@ -77,22 +77,22 @@ public final class BeregningsgrunnlagMapper {
         return builder.build();
     }
 
-    private static String tilString(AktivitetStatusDto bgAktivitetStatus) {
+    private static AktivitetStatus mapAktivitetStatus(AktivitetStatusDto bgAktivitetStatus) {
         return switch (bgAktivitetStatus) {
-            case ARBEIDSAVKLARINGSPENGER -> "ARBEIDSAVKLARINGSPENGER";
-            case ARBEIDSTAKER -> "ARBEIDSTAKER";
-            case BRUKERS_ANDEL -> "BRUKERS_ANDEL";
-            case DAGPENGER -> "DAGPENGER";
-            case FRILANSER -> "FRILANSER";
-            case KOMBINERT_AT_FL -> "KOMBINERT_AT_FL";
-            case KOMBINERT_AT_FL_SN -> "KOMBINERT_AT_FL_SN";
-            case KOMBINERT_AT_SN -> "KOMBINERT_AT_SN";
-            case KOMBINERT_FL_SN -> "KOMBINERT_FL_SN";
-            case KUN_YTELSE -> "KUN_YTELSE";
-            case MILITÆR_ELLER_SIVIL -> "MILITÆR_ELLER_SIVIL";
-            case SELVSTENDIG_NÆRINGSDRIVENDE -> "SELVSTENDIG_NÆRINGSDRIVENDE";
-            case TTLSTØTENDE_YTELSE -> "TTLSTØTENDE_YTELSE";
-            case VENTELØNN_VARTPENGER -> "VENTELØNN_VARTPENGER";
+            case ARBEIDSAVKLARINGSPENGER -> AktivitetStatus.ARBEIDSAVKLARINGSPENGER;
+            case ARBEIDSTAKER -> AktivitetStatus.ARBEIDSTAKER;
+            case BRUKERS_ANDEL -> AktivitetStatus.BRUKERS_ANDEL;
+            case DAGPENGER -> AktivitetStatus.DAGPENGER;
+            case FRILANSER -> AktivitetStatus.FRILANSER;
+            case KOMBINERT_AT_FL -> AktivitetStatus.KOMBINERT_AT_FL;
+            case KOMBINERT_AT_FL_SN -> AktivitetStatus.KOMBINERT_AT_FL_SN;
+            case KOMBINERT_AT_SN -> AktivitetStatus.KOMBINERT_AT_SN;
+            case KOMBINERT_FL_SN -> AktivitetStatus.KOMBINERT_FL_SN;
+            case KUN_YTELSE -> AktivitetStatus.KUN_YTELSE;
+            case MILITÆR_ELLER_SIVIL -> AktivitetStatus.MILITÆR_ELLER_SIVIL;
+            case SELVSTENDIG_NÆRINGSDRIVENDE -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE;
+            case TTLSTØTENDE_YTELSE -> AktivitetStatus.TTLSTØTENDE_YTELSE;
+            case VENTELØNN_VARTPENGER -> AktivitetStatus.VENTELØNN_VARTPENGER;
         };
     }
 
@@ -113,13 +113,13 @@ public final class BeregningsgrunnlagMapper {
     }
 
     private static boolean minstEnRegelHarKombinertAktivitetStatus(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
-        return beregningsgrunnlagregler.stream().anyMatch(regel -> AktivitetStatus.erKombinertStatus(regel.getRegelStatus()));
+        return beregningsgrunnlagregler.stream().anyMatch(regel -> (regel.getRegelStatus().erKombinertStatus()));
     }
 
     public static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {
         var builder = BeregningsgrunnlagAndel.ny();
 
-        builder.medAktivitetStatus(andel.aktivitetStatus().name());
+        builder.medAktivitetStatus(mapAktivitetStatus(andel.aktivitetStatus()));
 
         BigDecimal ikkeRedusertDagsatsAAP = null;
         //Dersom andelen er arbeidsavklaringspenger, kan dagsatsen være redusert hvis bruker har 80% foreldrepenger, men det er brutto dagsats som skal vises i brevet under beregningskapittelet

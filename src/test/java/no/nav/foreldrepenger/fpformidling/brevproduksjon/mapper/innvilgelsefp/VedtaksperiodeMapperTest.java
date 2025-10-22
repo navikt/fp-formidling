@@ -432,7 +432,7 @@ class VedtaksperiodeMapperTest {
     private AnnenAktivitet opprettAnnenAktivitet(boolean gradering, Prosent utbetalingsgrad) {
         return AnnenAktivitet.ny()
             .medGradering(gradering)
-            .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode())
+            .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medUtbetalingsgrad(utbetalingsgrad)
             .medProsentArbeid(Prosent.of(BigDecimal.valueOf(0.0)))
             .build();

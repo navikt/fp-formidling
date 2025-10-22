@@ -100,14 +100,14 @@ class BeregningsgrunnlagMapperTest {
         // Assert
         assertThat(regler).hasSize(2);
 
-        assertThat(regler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.FRILANSER.name());
+        assertThat(regler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.FRILANSER);
         assertThat(regler.getFirst().getAndelListe()).hasSize(1);
         assertThat(regler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(FRILANSER_DAGSATS);
         assertThat(regler.get(0).getAndelListe().getFirst().getMånedsinntekt()).isEqualTo(
             FRILANSER_BRUTTO_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
         assertThat(regler.get(0).getAndelListe().getFirst().getÅrsinntekt()).isEqualTo(FRILANSER_BRUTTO_PR_ÅR.longValue());
 
-        assertThat(regler.get(1).getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER.name());
+        assertThat(regler.get(1).getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(regler.get(1).getAndelListe()).hasSize(1);
         assertThat(regler.get(1).getAndelListe().getFirst().getDagsats()).isEqualTo(ARBEIDSTAKER_DAGSATS);
         assertThat(regler.get(1).getAndelListe().getFirst().getMånedsinntekt()).isEqualTo(
@@ -128,9 +128,9 @@ class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler).hasSize(1);
-        assertThat(regler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
+        assertThat(regler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
         assertThat(regler.getFirst().getAndelListe()).hasSize(1);
-        assertThat(regler.getFirst().getAndelListe().getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
+        assertThat(regler.getFirst().getAndelListe().getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
         assertThat(regler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(1002);
 
     }
@@ -148,9 +148,9 @@ class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler).hasSize(1);
-        assertThat(regler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
+        assertThat(regler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
         assertThat(regler.getFirst().getAndelListe()).hasSize(1);
-        assertThat(regler.getFirst().getAndelListe().getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
+        assertThat(regler.getFirst().getAndelListe().getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
         assertThat(regler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(1002);
 
     }
@@ -178,8 +178,8 @@ class BeregningsgrunnlagMapperTest {
     @Test
     void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_mer_enn_en_regel() {
         // Arrange
-        var regel1 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.name()).build();
-        var regel2 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).build();
+        var regel1 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER).build();
+        var regel2 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build();
 
         // Act
         var resultat = harBruktBruttoBeregningsgrunnlag(of(regel1, regel2));
@@ -191,7 +191,7 @@ class BeregningsgrunnlagMapperTest {
     @Test
     void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_kombinert_status() {
         // Arrange
-        var regel1 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name()).build();
+        var regel1 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL).build();
 
         // Act
         var resultat = harBruktBruttoBeregningsgrunnlag(of(regel1));
@@ -203,7 +203,7 @@ class BeregningsgrunnlagMapperTest {
     @Test
     void skal_finne_at_brutto_beregningsgrunnlag_ikke_er_brukt() {
         // Arrange
-        var regel1 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).build();
+        var regel1 = BeregningsgrunnlagRegel.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build();
 
         // Act
         var resultat = harBruktBruttoBeregningsgrunnlag(of(regel1));
@@ -224,7 +224,7 @@ class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(beregningsgrunnlagRegler).hasSize(1);
-        assertThat(beregningsgrunnlagRegler.getFirst().getRegelStatus()).isEqualTo("MILITÆR_ELLER_SIVIL");
+        assertThat(beregningsgrunnlagRegler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.MILITÆR_ELLER_SIVIL);
         assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(1002);
     }
 
@@ -240,9 +240,9 @@ class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(beregningsgrunnlagRegler).hasSize(2);
-        assertThat(beregningsgrunnlagRegler.get(0).getRegelStatus()).isEqualTo("ARBEIDSTAKER");
+        assertThat(beregningsgrunnlagRegler.get(0).getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(beregningsgrunnlagRegler.get(0).getAndelListe().getFirst().getDagsats()).isEqualTo(24);
-        assertThat(beregningsgrunnlagRegler.get(1).getRegelStatus()).isEqualTo("MILITÆR_ELLER_SIVIL");
+        assertThat(beregningsgrunnlagRegler.get(1).getRegelStatus()).isEqualTo(AktivitetStatus.MILITÆR_ELLER_SIVIL);
         assertThat(beregningsgrunnlagRegler.get(1).getAndelListe().getFirst().getDagsats()).isZero();
     }
 

@@ -5,11 +5,12 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AnnenAktivitet {
-    private String aktivitetStatus;
+    private AktivitetStatus aktivitetStatus;
     private boolean gradering;
     private Prosent utbetalingsgrad;
     private Prosent prosentArbeid;
@@ -25,7 +26,7 @@ public class AnnenAktivitet {
         return utbetalingsgrad;
     }
 
-    public String getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -62,7 +63,7 @@ public class AnnenAktivitet {
             this.kladd = new AnnenAktivitet();
         }
 
-        public Builder medAktivitetStatus(String aktivitetStatus) {
+        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
             this.kladd.aktivitetStatus = aktivitetStatus;
             return this;
         }

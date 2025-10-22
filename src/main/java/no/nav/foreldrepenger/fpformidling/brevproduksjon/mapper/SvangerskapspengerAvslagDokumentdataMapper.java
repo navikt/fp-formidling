@@ -89,7 +89,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var vilkårTyper = behandling.behandlingsresultat().vilkårTyper()
             .stream().map(KodeverkMapper::mapVilkårType)
             .toList();
-        var avslagsårsak = Avslagsårsak.fraKode(behandlingsresultat.avslagsårsak());
+        var avslagsårsak = behandlingsresultat.avslagsårsak() == null ? null : Avslagsårsak.fraKode(behandlingsresultat.avslagsårsak());
         mapÅrsakOgLovhjemmel(vilkårTyper, avslagsårsak, uttaksperioder, dokumentdataBuilder, behandling.uuid());
 
         SvpMapperUtil.finnFørsteAvslåtteUttakDato(uttaksperioder, behandling.behandlingsresultat())

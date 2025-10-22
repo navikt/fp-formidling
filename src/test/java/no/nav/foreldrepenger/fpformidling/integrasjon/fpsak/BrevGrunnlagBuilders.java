@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
@@ -339,8 +340,7 @@ public class BrevGrunnlagBuilders {
         private PeriodeResultatType periodeResultatType;
         private String periodeResultatÅrsak;
         private String graderingAvslagÅrsak;
-        private String periodeResultatÅrsakLovhjemmel;
-        private String graderingsAvslagÅrsakLovhjemmel;
+        private Set<String> lovhjemler = Set.of();
         private LocalDate tidligstMottattDato;
         private Boolean erUtbetalingRedusertTilMorsStillingsprosent;
 
@@ -374,13 +374,8 @@ public class BrevGrunnlagBuilders {
             return this;
         }
 
-        public ForeldrepengerUttakPeriodeBuilder periodeResultatÅrsakLovhjemmel(String periodeResultatÅrsakLovhjemmel) {
-            this.periodeResultatÅrsakLovhjemmel = periodeResultatÅrsakLovhjemmel;
-            return this;
-        }
-
-        public ForeldrepengerUttakPeriodeBuilder graderingsAvslagÅrsakLovhjemmel(String graderingsAvslagÅrsakLovhjemmel) {
-            this.graderingsAvslagÅrsakLovhjemmel = graderingsAvslagÅrsakLovhjemmel;
+        public ForeldrepengerUttakPeriodeBuilder lovhjemler(String periodeResultatÅrsakLovhjemmel) {
+            this.lovhjemler = Set.of(periodeResultatÅrsakLovhjemmel);
             return this;
         }
 
@@ -396,8 +391,7 @@ public class BrevGrunnlagBuilders {
 
         public Foreldrepenger.Uttaksperiode build() {
             return new Foreldrepenger.Uttaksperiode(fom, tom, aktiviteter, periodeResultatType, periodeResultatÅrsak, graderingAvslagÅrsak,
-                periodeResultatÅrsakLovhjemmel, graderingsAvslagÅrsakLovhjemmel, tidligstMottattDato,
-                erUtbetalingRedusertTilMorsStillingsprosent != null && erUtbetalingRedusertTilMorsStillingsprosent);
+                tidligstMottattDato, erUtbetalingRedusertTilMorsStillingsprosent != null && erUtbetalingRedusertTilMorsStillingsprosent, lovhjemler);
         }
     }
 

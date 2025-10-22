@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.api.Test;
@@ -64,14 +65,14 @@ class VedtaksperiodeMapperTest {
         var uttakAktivitet = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.TEN,
             null, null, null, BigDecimal.ZERO, UttakArbeidType.FRILANS, false);
         var uPeriode = new Foreldrepenger.Uttaksperiode(tidsperiodeUp1.getFomDato(), tidsperiodeUp1.getTomDato(), of(uttakAktivitet),
-            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
 
         var uttakAktivitet2 = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.ZERO,
             null, null, null, BigDecimal.valueOf(100), UttakArbeidType.FRILANS, false);
         var uPeriode2 = new Foreldrepenger.Uttaksperiode(tidsperiodeUp2.getFomDato(), tidsperiodeUp2.getTomDato(), of(uttakAktivitet2),
-            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
         var uttaksPerioder = foreldrepenger(of(uPeriode, uPeriode2), of());
 
         // Act
@@ -115,14 +116,14 @@ class VedtaksperiodeMapperTest {
         var uttakAktivitet = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.TEN,
             null, null, null, BigDecimal.ZERO, UttakArbeidType.FRILANS, false);
         var uPeriode = new Foreldrepenger.Uttaksperiode(tidsperiodeUp1.getFomDato(), tidsperiodeUp1.getTomDato(), of(uttakAktivitet),
-            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
 
         var uttakAktivitet2 = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.ZERO,
             null, null, null, BigDecimal.valueOf(100), UttakArbeidType.FRILANS, false);
         var uPeriode2 = new Foreldrepenger.Uttaksperiode(tidsperiodeUp2.getFomDato(), tidsperiodeUp2.getTomDato(), of(uttakAktivitet2),
-            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
         var foreldrepenger = foreldrepenger(of(uPeriode2, uPeriode), of());
 
         // Act
@@ -156,14 +157,14 @@ class VedtaksperiodeMapperTest {
         var uttakAktivitet1 = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.ZERO,
             null, null, null, BigDecimal.valueOf(100), UttakArbeidType.FRILANS, false);
         var uPeriode1 = new Foreldrepenger.Uttaksperiode(tidsperiodeUp1.getFomDato(), tidsperiodeUp1.getTomDato(), of(uttakAktivitet1),
-            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
 
         var uttakAktivitet2 = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.TEN,
             null, null, null, BigDecimal.ZERO, UttakArbeidType.FRILANS, false);
         var uPeriode2 = new Foreldrepenger.Uttaksperiode(tidsperiodeUp2.getFomDato(), tidsperiodeUp2.getTomDato(), of(uttakAktivitet2),
-            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
 
         var uttaksPerioder = foreldrepenger(of(uPeriode1, uPeriode2), of());
 
@@ -210,8 +211,8 @@ class VedtaksperiodeMapperTest {
 
 
         var uPeriode = new Foreldrepenger.Uttaksperiode(tidsperiodeUp1.getFomDato(), tidsperiodeUp1.getTomDato(), of(uttakResultatPeriodeAktivitet, uttakResultatPeriodeAktivitet2),
-            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode(), null, "14-10", null,
-            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.INNVILGET, PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode(), null,
+            tidsperiodeTilkjent1.getFomDato().minusWeeks(1), false, Set.of("14-10"));
 
         var uttaksPerioder = foreldrepenger(of(uPeriode), of());
 
@@ -239,8 +240,8 @@ class VedtaksperiodeMapperTest {
         var uttakAktivitet = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.ZERO,
             null, null, null, BigDecimal.ZERO, UttakArbeidType.FRILANS, false);
         var uPeriode = new Foreldrepenger.Uttaksperiode(tidsperiode.getFomDato(), tidsperiode.getTomDato(), of(uttakAktivitet),
-            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null, "14-10", null,
-            tidsperiode.getFomDato().minusWeeks(1), false);
+            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null,
+            tidsperiode.getFomDato().minusWeeks(1), false, Set.of("14-10"));
 
         var uttaksPerioder = foreldrepenger(of(uPeriode), of());
 
@@ -265,8 +266,8 @@ class VedtaksperiodeMapperTest {
         var uttakAktivitet = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.TEN,
             null, null, null, BigDecimal.ZERO, UttakArbeidType.FRILANS, false);
         var uPeriode = new Foreldrepenger.Uttaksperiode(tidsperiode.getFomDato(), tidsperiode.getTomDato(), of(uttakAktivitet),
-            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null, "14-10", null,
-            tidsperiode.getFomDato(), false);
+            PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode(), null,
+            tidsperiode.getFomDato(), false, Set.of("14-10"));
 
         var uttaksPerioder = foreldrepenger(of(uPeriode), of());
 

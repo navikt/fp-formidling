@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
@@ -141,9 +142,8 @@ public record BrevGrunnlagDto(UUID uuid, String saksnummer, FagsakYtelseType fag
                                  List<Uttaksperiode> perioderSøker, List<Uttaksperiode> perioderAnnenpart, boolean ønskerJustertUttakVedFødsel,
                                  LocalDate nyStartDatoVedUtsattOppstart) {
         public record Uttaksperiode(LocalDate fom, LocalDate tom, List<Aktivitet> aktiviteter, PeriodeResultatType periodeResultatType,
-                                    String periodeResultatÅrsak, String graderingAvslagÅrsak, String periodeResultatÅrsakLovhjemmel,
-                                    String graderingsAvslagÅrsakLovhjemmel, LocalDate tidligstMottattDato,
-                                    boolean erUtbetalingRedusertTilMorsStillingsprosent) {
+                                    String periodeResultatÅrsak, String graderingAvslagÅrsak, LocalDate tidligstMottattDato,
+                                    boolean erUtbetalingRedusertTilMorsStillingsprosent, Set<String> lovhjemler) {
             public boolean isInnvilget() {
                 return periodeResultatType == PeriodeResultatType.INNVILGET;
             }

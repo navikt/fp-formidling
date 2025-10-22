@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp;
 
-import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.PeriodeResultatType;
@@ -15,7 +14,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMap
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 
@@ -47,9 +45,8 @@ public final class ÅrsakMapperOpphør {
         }
         for (var periode : perioder) {
             if (PeriodeResultatType.AVSLÅTT.equals(periode.periodeResultatType())) {
-                var periodeResultatÅrsak = new PeriodeResultatÅrsak(periode.periodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR, periode.periodeResultatÅrsakLovhjemmel());
-                avslagårsaker.add(periodeResultatÅrsak.getKode());
-                lovReferanser.addAll(periodeResultatÅrsak.hentLovhjemlerFraJson());
+                avslagårsaker.add(periode.periodeResultatÅrsak());
+                lovReferanser.addAll(periode.lovhjemler());
             }
         }
         return avslagårsaker;

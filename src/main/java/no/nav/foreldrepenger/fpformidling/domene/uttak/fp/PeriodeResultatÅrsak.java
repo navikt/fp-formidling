@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
-import no.nav.vedtak.mapper.json.DefaultJsonMapper;
-
 public class PeriodeResultatÅrsak {
 
     // Her kommer Lovhjemler fra UttakResultatPeriodeDto - søk på bruk av CTOR - lar derfor være å lage full enum her inntil uttak i fpsak enda mer stabilt.
@@ -19,54 +7,43 @@ public class PeriodeResultatÅrsak {
     public static final String PERIODE_ÅRSAK_DISCRIMINATOR = "PERIODE_UTFALL_AARSAK";
 
     // UKJENT
-    public static final PeriodeResultatÅrsak UKJENT = new PeriodeResultatÅrsak("-", "UKJENT", null);
+    public static final PeriodeResultatÅrsak UKJENT = new PeriodeResultatÅrsak("-", "UKJENT");
 
     // GRADERING avslått
-    public static final PeriodeResultatÅrsak FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4501", GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4501", GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR);
 
     // UTTAK periode innvilget
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID = new PeriodeResultatÅrsak("2011", PERIODE_ÅRSAK_DISCRIMINATOR,
-        null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016",
-        PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015",
-        PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2004", PERIODE_ÅRSAK_DISCRIMINATOR,
-        null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID = new PeriodeResultatÅrsak("2011");
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010");
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016");
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015");
+    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2004");
 
     // UTTAK periode avslått
-    public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023",
-        PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak FAR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4012", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak HULL_MELLOM_FORELDRENES_PERIODER = new PeriodeResultatÅrsak("4005", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak MOR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4003", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak BARNET_ER_DØD = new PeriodeResultatÅrsak("4072", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak SØKER_ER_DØD = new PeriodeResultatÅrsak("4071", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak OPPHØR_MEDLEMSKAP = new PeriodeResultatÅrsak("4087", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak MOR_TAR_IKKE_ALLE_UKENE = new PeriodeResultatÅrsak("4095", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023");
+    public static final PeriodeResultatÅrsak FAR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4012");
+    public static final PeriodeResultatÅrsak HULL_MELLOM_FORELDRENES_PERIODER = new PeriodeResultatÅrsak("4005");
+    public static final PeriodeResultatÅrsak MOR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4003");
+    public static final PeriodeResultatÅrsak BARNET_ER_DØD = new PeriodeResultatÅrsak("4072");
+    public static final PeriodeResultatÅrsak MOR_TAR_IKKE_ALLE_UKENE = new PeriodeResultatÅrsak("4095");
 
-    public static final PeriodeResultatÅrsak FØDSELSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4096", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak ADOPSJONSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4097", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", PERIODE_ÅRSAK_DISCRIMINATOR,
-        null);
-    public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080",
-        PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak BARN_OVER_3_ÅR = new PeriodeResultatÅrsak("4022", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak STØNADSPERIODE_NYTT_BARN = new PeriodeResultatÅrsak("4104", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak BARE_FAR_RETT_IKKE_SØKT = new PeriodeResultatÅrsak("4102", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak FØDSELSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4096");
+    public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080");
+    public static final PeriodeResultatÅrsak BARN_OVER_3_ÅR = new PeriodeResultatÅrsak("4022");
+    public static final PeriodeResultatÅrsak BARE_FAR_RETT_IKKE_SØKT = new PeriodeResultatÅrsak("4102");
 
-    public static final PeriodeResultatÅrsak SØKNADSFRIST = new PeriodeResultatÅrsak("4020", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak SØKNADSFRIST = new PeriodeResultatÅrsak("4020");
 
     private final String kodeverk;
     private final String kode;
-    private final String ekstraData;
 
-    public PeriodeResultatÅrsak(String kode, String kodeverk, String ekstraData) {
+    public PeriodeResultatÅrsak(String kode, String kodeverk) {
         this.kodeverk = kodeverk;
         this.kode = kode;
-        this.ekstraData = ekstraData;
+    }
+
+    public PeriodeResultatÅrsak(String kode) {
+        this(kode, PERIODE_ÅRSAK_DISCRIMINATOR);
     }
 
     public String getKodeverk() {
@@ -76,35 +53,4 @@ public class PeriodeResultatÅrsak {
     public String getKode() {
         return kode;
     }
-
-    public String getEkstraData() {
-        return ekstraData;
-    }
-
-    public boolean erUkjent() {
-        return PeriodeResultatÅrsak.UKJENT.getKode().equals(kode);
-    }
-
-    public boolean erGraderingAvslagÅrsak() {
-        return GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR.equalsIgnoreCase(kodeverk);
-    }
-
-    public Set<String> hentLovhjemlerFraJson() {
-        var jsonData = Optional.ofNullable(ekstraData).map(DefaultJsonMapper::treeFromJson).orElse(null);
-        if (jsonData != null) {
-            var hjemmelNode = jsonData.findValue("FP");
-            if (hjemmelNode != null) {
-                var hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ? hjemmelNode.findValues(
-                    "lovreferanse") : hjemmelNode.findValues("lovreferanser");
-                return hjemmelListe.stream()
-                    .flatMap(node -> node.isContainerNode() ? StreamSupport.stream(node.spliterator(), false).map(JsonNode::asText) : Arrays.stream(
-                        node.asText().split(",")))
-                    .map(String::trim)
-                    .filter(str -> !str.isEmpty())
-                    .collect(Collectors.toCollection(() -> new TreeSet<>(new LovhjemmelComparator())));
-            }
-        }
-        return Set.of();
-    }
-
 }

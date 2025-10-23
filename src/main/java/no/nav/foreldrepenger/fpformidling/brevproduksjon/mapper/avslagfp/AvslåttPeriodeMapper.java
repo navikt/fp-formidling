@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.avslagfp;
 
-import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR;
 import static no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto.TilkjentYtelsePeriodeDto;
 
 import java.math.BigDecimal;
@@ -20,7 +19,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBe
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
@@ -80,12 +78,10 @@ public final class AvslåttPeriodeMapper {
             var referanser = FellesMapper.lovhjemmelFraAvslagsårsak(FagsakYtelseType.FORELDREPENGER, vt, avslagsårsak);
             lovReferanser.addAll(referanser);
         }
-        for (var periode : uttakResultatPerioder.map(BrevGrunnlagDto.Foreldrepenger::perioderSøker).orElse(Collections.emptyList())) {
-            var periodeResultatÅrsak = new PeriodeResultatÅrsak(periode.periodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR,
-                periode.periodeResultatÅrsakLovhjemmel());
-            if (BrevGrunnlagDto.PeriodeResultatType.AVSLÅTT.equals(periode.periodeResultatType()) && periodeResultatÅrsak != null) {
-                avslagsAarsaker.add(AvslåttPeriode.ny().medAvslagsårsak(Årsak.of(periodeResultatÅrsak.getKode())).build());
-                lovReferanser.addAll(periodeResultatÅrsak.hentLovhjemlerFraJson());
+        for (var periode : uttakResultatPerioder.map(BrevGrunnlagDto.Foreldrepenger::perioderSøker).orElse(List.of())) {
+            if (BrevGrunnlagDto.PeriodeResultatType.AVSLÅTT.equals(periode.periodeResultatType())) {
+                avslagsAarsaker.add(AvslåttPeriode.ny().medAvslagsårsak(Årsak.of(periode.periodeResultatÅrsak())).build());
+                lovReferanser.addAll(periode.lovhjemler());
             }
         }
         return avslagsAarsaker;
@@ -105,15 +101,13 @@ public final class AvslåttPeriodeMapper {
             tapteDagerHvisFlereTilkjentPerioder = BigDecimal.valueOf(antallTapteDager)
                 .divide(BigDecimal.valueOf(antallTilkjentPerioderForUttaksperioden), 2, RoundingMode.HALF_UP);
         }
-        var periodeResultatÅrsak = new PeriodeResultatÅrsak(uttakResultatPeriode.periodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR,
-            uttakResultatPeriode.periodeResultatÅrsakLovhjemmel());
         var avslåttPeriode = AvslåttPeriode.ny()
-            .medAvslagsårsak(Årsak.of(periodeResultatÅrsak.getKode()))
+            .medAvslagsårsak(Årsak.of(uttakResultatPeriode.periodeResultatÅrsak()))
             .medPeriodeFom(tilkjentYtelsePeriode.fom(), språkkode)
             .medPeriodeTom(tilkjentYtelsePeriode.tom(), språkkode)
             .medAntallTapteDager(antallTapteDager, tapteDagerHvisFlereTilkjentPerioder)
             .build();
-        lovReferanser.addAll(periodeResultatÅrsak.hentLovhjemlerFraJson());
+        lovReferanser.addAll(uttakResultatPeriode.lovhjemler());
         return avslåttPeriode;
     }
 

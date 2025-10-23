@@ -7,13 +7,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.PeriodeResultatType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.UttakArbeidType;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.barn;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
@@ -22,6 +15,13 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagB
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.foreldrepengerUttakAktivitet;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.foreldrepengerUttakPeriode;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.originalBehandling;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.PeriodeResultatType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.UttakArbeidType;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -103,7 +103,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.erSøkerDød()).isFalse();
         assertThat(dokumentdata.erGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
-        assertThat(dokumentdata.getLovhjemmelForAvslag()).isEmpty();
+        assertThat(dokumentdata.getLovhjemmelForAvslag()).isEqualTo("§ 14-11");
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getBarnDødsdato()).isEqualTo(formaterDato(dødsdato, Språkkode.NB));
         assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
@@ -130,25 +130,25 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
             .tom(PERIODE1_TOM)
             .aktiviteter(of(uttakAktivitet))
             .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.FOR_SEN_SØKNAD.getKode())
-            .periodeResultatÅrsakLovhjemmel("{\"lovreferanse\": \"14-11\"}")
+            .lovhjemler("14-11")
             .build();
         var uttakResultatPeriode2 = foreldrepengerUttakPeriode().fom(PERIODE2_FOM)
             .tom(PERIODE2_TOM)
             .aktiviteter(of(uttakAktivitet))
             .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode())
-            .periodeResultatÅrsakLovhjemmel("{\"lovreferanse\": \"14-11\"}")
+            .lovhjemler("14-11")
             .build();
         var uttakResultatPeriode3 = foreldrepengerUttakPeriode().fom(PERIODE3_FOM)
             .tom(PERIODE3_TOM)
             .aktiviteter(of(uttakAktivitet))
             .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode())
-            .periodeResultatÅrsakLovhjemmel("{\"lovreferanse\": \"14-11\"}")
+            .lovhjemler("14-11")
             .build();
         var uttakResultatPeriode4 = foreldrepengerUttakPeriode().fom(PERIODE4_FOM)
             .tom(PERIODE4_TOM)
             .aktiviteter(of(uttakAktivitet))
             .periodeResultatType(PeriodeResultatType.AVSLÅTT, PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())
-            .periodeResultatÅrsakLovhjemmel("{\"lovreferanse\": \"14-11\"}")
+            .lovhjemler("14-11")
             .build();
 
         return foreldrepenger().stønadskontoer(of())

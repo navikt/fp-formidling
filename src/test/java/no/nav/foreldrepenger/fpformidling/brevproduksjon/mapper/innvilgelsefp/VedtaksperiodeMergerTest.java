@@ -8,12 +8,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
@@ -218,22 +217,22 @@ class VedtaksperiodeMergerTest {
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
         utbetalingsperiode1 = Vedtaksperiode.ny()
-            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build()))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medAktivitetDagsats(200).build()))
             .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
         utbetalingsperiode2 = Vedtaksperiode.ny()
-            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER.name()).medAktivitetDagsats(100).build()))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).medAktivitetDagsats(100).build()))
             .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
         utbetalingsperiode2 = Vedtaksperiode.ny()
-            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(100).build()))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medAktivitetDagsats(100).build()))
             .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
         utbetalingsperiode2 = Vedtaksperiode.ny()
-            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build()))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medAktivitetDagsats(200).build()))
             .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
     }

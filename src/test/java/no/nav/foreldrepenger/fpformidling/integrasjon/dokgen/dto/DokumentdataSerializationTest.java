@@ -75,7 +75,7 @@ class DokumentdataSerializationTest {
             .medProsentArbeid(Prosent.of(BigDecimal.valueOf(70)))
             .build();
         var annenAktivitet = AnnenAktivitet.ny()
-            .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
+            .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL)
             .medGradering(true)
             .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(20)))
             .medProsentArbeid(Prosent.of(BigDecimal.valueOf(30)))
@@ -105,7 +105,7 @@ class DokumentdataSerializationTest {
             .medAnnenAktivitet(List.of(annenAktivitet))
             .build();
         var andel1 = BeregningsgrunnlagAndel.ny()
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medArbeidsgiverNavn("Arbeidsgiver 1")
             .medDagsats(400)
             .medMånedsinntekt(5000)
@@ -114,7 +114,7 @@ class DokumentdataSerializationTest {
             .medSistLignedeÅr(2019)
             .build();
         var andel2 = BeregningsgrunnlagAndel.ny()
-            .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
+            .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL)
             .medArbeidsgiverNavn("Arbeidsgiver 2")
             .medDagsats(200)
             .medMånedsinntekt(1000)
@@ -123,13 +123,13 @@ class DokumentdataSerializationTest {
             .medSistLignedeÅr(2020)
             .build();
         var regel1 = BeregningsgrunnlagRegel.ny()
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(10)
             .medSnNyoppstartet(true)
             .medAndelListe(of(andel1, andel2))
             .build();
         var regel2 = BeregningsgrunnlagRegel.ny()
-            .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
+            .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL)
             .medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(3)
             .medSnNyoppstartet(true)
             .medAndelListe(List.of(andel2))

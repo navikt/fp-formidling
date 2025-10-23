@@ -12,16 +12,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Ti
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdataMapper.harVarierendeDagsats;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdataMapper.starterMedFullUtbetaling;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingÅrsakType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Dekningsgrad;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.PeriodeResultatType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Rettigheter;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.UttakArbeidType;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.familieHendelse;
@@ -32,6 +22,16 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagB
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.skjæringstidspunkt;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.stønadskonto;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.tilkjentYtelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingÅrsakType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Dekningsgrad;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.PeriodeResultatType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Rettigheter;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.UttakArbeidType;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,6 +51,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
@@ -58,9 +59,9 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.BrevGrunnlagBuilder;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
@@ -267,9 +268,9 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe()).hasSize(1);
         var andelsListe = beregningsgrunnlagRegler.getFirst().getAndelListe();
 
-        assertThat(beregningsgrunnlagRegler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER.name());
+        assertThat(beregningsgrunnlagRegler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
         assertThat(andelsListe.getFirst().getDagsats()).isEqualTo(DAGSATS);
-        assertThat(andelsListe.getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER.name());
+        assertThat(andelsListe.getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
         assertThat(andelsListe.getFirst().getMånedsinntekt()).isEqualTo(forventetMånedsinntekt);
         assertThat(andelsListe.getFirst().getÅrsinntekt()).isEqualTo(BRUTTO_BEREGNINGSGRUNNLAG);
     }

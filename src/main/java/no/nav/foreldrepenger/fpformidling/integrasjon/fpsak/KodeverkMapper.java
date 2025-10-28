@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningHjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
@@ -118,20 +118,20 @@ public final class KodeverkMapper {
         };
     }
 
-    public static Hjemmel mapBeregningHjemmel(HjemmelDto hjemmel) {
+    public static BeregningHjemmel mapBeregningHjemmel(HjemmelDto hjemmel) {
         return switch (hjemmel) {
-            case F_14_7 -> Hjemmel.F_14_7;
-            case F_14_7_8_28_8_30 -> Hjemmel.F_14_7_8_28_8_30;
-            case F_14_7_8_30 -> Hjemmel.F_14_7_8_30;
-            case F_14_7_8_35 -> Hjemmel.F_14_7_8_35;
-            case F_14_7_8_38 -> Hjemmel.F_14_7_8_38;
-            case F_14_7_8_40 -> Hjemmel.F_14_7_8_40;
-            case F_14_7_8_41 -> Hjemmel.F_14_7_8_41;
-            case F_14_7_8_42 -> Hjemmel.F_14_7_8_42;
-            case F_14_7_8_43 -> Hjemmel.F_14_7_8_43;
-            case F_14_7_8_47 -> Hjemmel.F_14_7_8_47;
-            case F_14_7_8_49 -> Hjemmel.F_14_7_8_49;
-            case null -> Hjemmel.UDEFINERT;
+            case F_14_7 -> BeregningHjemmel.F_14_7;
+            case F_14_7_8_28_8_30 -> BeregningHjemmel.F_14_7_8_28_8_30;
+            case F_14_7_8_30 -> BeregningHjemmel.F_14_7_8_30;
+            case F_14_7_8_35 -> BeregningHjemmel.F_14_7_8_35;
+            case F_14_7_8_38 -> BeregningHjemmel.F_14_7_8_38;
+            case F_14_7_8_40 -> BeregningHjemmel.F_14_7_8_40;
+            case F_14_7_8_41 -> BeregningHjemmel.F_14_7_8_41;
+            case F_14_7_8_42 -> BeregningHjemmel.F_14_7_8_42;
+            case F_14_7_8_43 -> BeregningHjemmel.F_14_7_8_43;
+            case F_14_7_8_47 -> BeregningHjemmel.F_14_7_8_47;
+            case F_14_7_8_49 -> BeregningHjemmel.F_14_7_8_49;
+            case null -> BeregningHjemmel.UDEFINERT;
         };
     }
 

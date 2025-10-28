@@ -112,7 +112,7 @@ public final class BeregningMapper {
         // men hjemmelen blir utledet kun for FP (dvs. 14-7) i dag. Denne hacken erstatter 14-7 med 14-4 for SVP før
         // brevet blir generert. Dette er en workaround inntil hjemmel for flere ytelsestyper (SVP, ES, FP, etc.) blir
         // implementert i Fpsak.
-        var hjemmel = KodeverkMapper.mapBeregningHjemmel(beregningsgrunnlag.hjemmel()).getNavn();
+        var hjemmel = KodeverkMapper.mapBeregningHjemmel(beregningsgrunnlag.hjemmel()).getLovRef();
         if (hjemmel != null) {
             hjemmel = hjemmel.replace("14-7", "14-4");
         }

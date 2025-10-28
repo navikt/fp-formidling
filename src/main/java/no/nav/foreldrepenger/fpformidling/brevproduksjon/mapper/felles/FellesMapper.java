@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningHjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
@@ -50,7 +50,7 @@ public class FellesMapper {
                                                         UUID behandlingUuid) {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
-        } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()
+        } else if (BeregningHjemmel.UDEFINERT.getLovRef().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()
             .equals(konsekvensForYtelse)) {
             LOG.warn("Behandling {} har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, "
                 + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandlingUuid);

@@ -171,7 +171,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttak, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
-                FellesMapper.formaterLovhjemlerForBeregning(KodeverkMapper.mapBeregningHjemmel(beregningsgrunnlag.hjemmel()).getNavn(),
+                FellesMapper.formaterLovhjemlerForBeregning(KodeverkMapper.mapBeregningHjemmel(beregningsgrunnlag.hjemmel()).getLovRef(),
                     konsekvensForInnvilgetYtelse, erInnvilgetRevurdering, behandling.uuid()))
             .medInkludereInnvilget(UndermalInkluderingMapper.skalInkludereInnvilget(vedtaksperioder, konsekvensForInnvilgetYtelse))
             .medInkludereAvslag(UndermalInkluderingMapper.skalInkludereAvslag(vedtaksperioder, konsekvensForInnvilgetYtelse))

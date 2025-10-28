@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.domene.behandling;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -33,9 +31,6 @@ public enum BehandlingType implements Kodeverdi {
     UDEFINERT("-", 0),
     ;
 
-    private static final Set<BehandlingType> YTELSE_BEHANDLING_TYPER = Set.of(FØRSTEGANGSSØKNAD, REVURDERING);
-    private static final Set<BehandlingType> TILBAKEKREVING_TYPER = Set.of(TILBAKEKREVING, TILBAKEKREVING_REVURDERING);
-
     @JsonIgnore
     private int behandlingstidFristUker;
 
@@ -50,14 +45,6 @@ public enum BehandlingType implements Kodeverdi {
     @Override
     public String getKode() {
         return kode;
-    }
-
-    public boolean erYtelseBehandlingType() {
-        return YTELSE_BEHANDLING_TYPER.contains(this);
-    }
-
-    public boolean erTilbakekrevingBehandlingType() {
-        return TILBAKEKREVING_TYPER.contains(this);
     }
 
     public int getBehandlingstidFristUker() {

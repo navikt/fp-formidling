@@ -4,9 +4,11 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagAndel {
-    private String aktivitetStatus;
+    private AktivitetStatus aktivitetStatus;
     private String arbeidsgiverNavn;
     private long dagsats;
     private long månedsinntekt;
@@ -14,7 +16,7 @@ public class BeregningsgrunnlagAndel {
     private boolean etterlønnSluttpakke;
     private int sistLignedeÅr;
 
-    public String getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -72,7 +74,7 @@ public class BeregningsgrunnlagAndel {
             this.kladd = new BeregningsgrunnlagAndel();
         }
 
-        public Builder medAktivitetStatus(String aktivitetStatus) {
+        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
             this.kladd.aktivitetStatus = aktivitetStatus;
             return this;
         }

@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
@@ -52,7 +53,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
             behandling, false);
 
         //assert
-        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo("INFOBREV_BEHANDLING");
+        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_BEHANDLING);
         assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isEqualTo(formaterDato(periode2Tom, dokumentFelles.getSpråkkode()));
     }
 
@@ -78,7 +79,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
             behandling, false);
 
         //assert
-        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo("INFOBREV_OPPHOLD");
+        assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_OPPHOLD);
         assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isNull();
     }
 

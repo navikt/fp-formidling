@@ -286,7 +286,7 @@ class DokumentdataSerializationTest {
         // Arrange
         var dokumentdata = ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
-            .medBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING.getKode())
+            .medBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_BEHANDLING)
             .medSisteUttaksdagMor(formaterDatoNorsk(LocalDate.now()))
             .build();
 

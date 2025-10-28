@@ -39,16 +39,12 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
-        var aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;
-
-        if (behandling.behandlingÅrsakTyper().stream().anyMatch(bå -> bå == BrevGrunnlagDto.BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
-            aarsak = BehandlingÅrsakType.INFOBREV_OPPHOLD;
-        }
+        var behandlingÅrsakType = utledBehandlingÅrsakType(behandling);
 
         var uttak = Optional.ofNullable(behandling.foreldrepenger());
 
         String sisteUttaksdagMor = null;
-        if (uttak.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(aarsak)) {
+        if (uttak.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(behandlingÅrsakType)) {
             sisteUttaksdagMor = uttak.get()
                 .perioderAnnenpart()
                 .stream()
@@ -64,8 +60,15 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
 
         return ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medBehandlingÅrsak(aarsak.getKode())
+            .medBehandlingÅrsak(behandlingÅrsakType)
             .medSisteUttaksdagMor(sisteUttaksdagMor)
             .build();
+    }
+
+    private static BehandlingÅrsakType utledBehandlingÅrsakType(BrevGrunnlagDto behandling) {
+        if (behandling.behandlingÅrsakTyper().stream().anyMatch(bå -> bå == BrevGrunnlagDto.BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
+            return BehandlingÅrsakType.INFOBREV_OPPHOLD;
+        }
+        return BehandlingÅrsakType.INFOBREV_BEHANDLING;
     }
 }

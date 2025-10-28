@@ -10,9 +10,8 @@ import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
@@ -101,15 +100,15 @@ public class OpprettJournalpostTjeneste {
 
 
     private Sak sak(Saksnummer saksnummer) {
-        return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), Sak.Sakstype.FAGSAK);
+        return new Sak(saksnummer.getVerdi(), Fpsak.OFFISIELL_KODE, Sak.Sakstype.FAGSAK);
     }
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {
         return switch (ytelseType) {
-            case ENGANGSTØNAD -> BehandlingTema.ENGANGSSTØNAD.getOffisiellKode();
-            case FORELDREPENGER -> BehandlingTema.FORELDREPENGER.getOffisiellKode();
-            case SVANGERSKAPSPENGER -> BehandlingTema.SVANGERSKAPSPENGER.getOffisiellKode();
-            case UDEFINERT -> BehandlingTema.UDEFINERT.getOffisiellKode();
+            case ENGANGSTØNAD -> "ab0327";
+            case FORELDREPENGER -> "ab0326";
+            case SVANGERSKAPSPENGER -> "ab0126";
+            case UDEFINERT -> null;
         };
     }
 

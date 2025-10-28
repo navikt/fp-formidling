@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalp
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstidspunkt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -48,7 +48,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     }
 
     private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode(),
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fpsak.OFFISIELL_KODE, Fpsak.NAVN,
             distribusjonstype, Distribusjonstidspunkt.KJERNETID);
     }
 

@@ -31,9 +31,10 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.BrevGrunnlagBuilder;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
@@ -108,7 +109,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
         assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
-        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.SVP);
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 

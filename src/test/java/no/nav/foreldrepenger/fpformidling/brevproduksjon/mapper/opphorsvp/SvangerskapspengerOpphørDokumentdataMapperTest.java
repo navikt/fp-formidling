@@ -35,6 +35,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
@@ -80,7 +81,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
         assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
-        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.SVP);
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(opphørsdato, Språkkode.NB));

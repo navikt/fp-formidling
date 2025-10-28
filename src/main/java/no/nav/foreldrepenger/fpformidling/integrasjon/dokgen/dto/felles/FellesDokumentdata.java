@@ -15,7 +15,7 @@ public class FellesDokumentdata {
     private boolean harVerge;
     private String saksnummer;
     private String mottakerNavn;
-    private String ytelseType;
+    private YtelseType ytelseType;
     private boolean erUtkast;
 
     public String getSøkerNavn() {
@@ -54,7 +54,7 @@ public class FellesDokumentdata {
         return mottakerNavn;
     }
 
-    public String getYtelseType() {
+    public YtelseType getYtelseType() {
         return ytelseType;
     }
 
@@ -148,7 +148,7 @@ public class FellesDokumentdata {
             return this;
         }
 
-        public Builder medYtelseType(String ytelseType) {
+        public Builder medYtelseType(YtelseType ytelseType) {
             this.kladd.ytelseType = ytelseType;
             return this;
         }
@@ -161,5 +161,11 @@ public class FellesDokumentdata {
         public FellesDokumentdata build() {
             return this.kladd;
         }
+    }
+
+    public enum YtelseType {
+        FP,
+        SVP,
+        ES,
     }
 }

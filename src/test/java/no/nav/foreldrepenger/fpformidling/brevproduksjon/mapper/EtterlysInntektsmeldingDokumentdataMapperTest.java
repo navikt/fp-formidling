@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.inntektsmeldinger.ArbeidsforholdInntektsmeldingerDto;
 
@@ -48,7 +49,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
 
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
-        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.FORELDREPENGER.getKode());
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
         assertThat(dokumentdata.getSøknadDato()).isNotEmpty();
         assertThat(dokumentdata.getInntektsmeldingerStatus()).hasSize(1);
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());
@@ -71,7 +72,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
-        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.SVP);
         assertThat(dokumentdata.getSøknadDato()).isNotEmpty();
         assertThat(dokumentdata.getInntektsmeldingerStatus()).hasSize(inntektsmeldingerStatus.size());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());

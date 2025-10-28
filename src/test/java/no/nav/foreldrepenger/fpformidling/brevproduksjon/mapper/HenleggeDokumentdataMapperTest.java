@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 class HenleggeDokumentdataMapperTest {
@@ -38,7 +39,7 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getAnke()).isFalse();
         assertThat(henleggelseDokumentdata.getInnsyn()).isFalse();
         assertThat(henleggelseDokumentdata.getKlage()).isFalse();
-        assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
     }
 
     @Test
@@ -56,7 +57,7 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getAnke()).isTrue();
         assertThat(henleggelseDokumentdata.getInnsyn()).isFalse();
         assertThat(henleggelseDokumentdata.getKlage()).isFalse();
-        assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
+        assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.SVP);
     }
 
     private BrevGrunnlagDto opprettBehandling(BrevGrunnlagDto.BehandlingType behType, BrevGrunnlagDto.FagsakYtelseType ytelseType) {

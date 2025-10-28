@@ -7,6 +7,7 @@ import java.util.Locale;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
 @ApplicationScoped
@@ -60,7 +61,7 @@ public class BrevMapperUtil {
             .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
             .medHarVerge(erKopi.isPresent())
             .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-            .medYtelseType(dokumentFelles.getYtelseType().getKode())
+            .medYtelseType(map(dokumentFelles.getYtelseType()))
             .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {
@@ -68,5 +69,13 @@ public class BrevMapperUtil {
         }
 
         return fellesBuilder;
+    }
+
+    private static FellesDokumentdata.YtelseType map(FagsakYtelseType ytelseType) {
+        return switch (ytelseType) {
+            case ENGANGSTØNAD -> FellesDokumentdata.YtelseType.ES;
+            case FORELDREPENGER -> FellesDokumentdata.YtelseType.FP;
+            case SVANGERSKAPSPENGER -> FellesDokumentdata.YtelseType.SVP;
+        };
     }
 }

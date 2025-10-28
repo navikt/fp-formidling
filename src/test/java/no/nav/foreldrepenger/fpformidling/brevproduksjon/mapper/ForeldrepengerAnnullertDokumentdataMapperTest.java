@@ -18,8 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerAnnullertDokumentdataMapperTest {
@@ -55,7 +56,7 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
         assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
-        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);

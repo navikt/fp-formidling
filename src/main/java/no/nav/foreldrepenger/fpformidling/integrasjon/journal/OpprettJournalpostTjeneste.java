@@ -108,7 +108,6 @@ public class OpprettJournalpostTjeneste {
             case ENGANGSTØNAD -> "ab0327";
             case FORELDREPENGER -> "ab0326";
             case SVANGERSKAPSPENGER -> "ab0126";
-            case UDEFINERT -> null;
         };
     }
 

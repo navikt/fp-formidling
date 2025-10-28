@@ -10,6 +10,9 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +20,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
@@ -51,7 +53,7 @@ class InnsynDokumentdataMapperTest {
         var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         assertThat(innsynsDokumentData.getInnsynResultat()).isEqualTo(InnsynDokumentdata.InnsynResultatType.INNV);
-        assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.FORELDREPENGER.getKode());
+        assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
         assertThat(innsynsDokumentData.getKlagefrist()).isEqualTo(6);
     }
 
@@ -66,7 +68,7 @@ class InnsynDokumentdataMapperTest {
         var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         assertThat(innsynsDokumentData.getInnsynResultat()).isEqualTo(InnsynDokumentdata.InnsynResultatType.AVVIST);
-        assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.ENGANGSTØNAD.getKode());
+        assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.ES);
         assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
     }
 

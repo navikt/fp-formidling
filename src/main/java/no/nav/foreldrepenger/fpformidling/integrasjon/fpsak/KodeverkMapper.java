@@ -41,7 +41,7 @@ public final class KodeverkMapper {
         return switch (relasjonsRolleType) {
             case FARA -> RelasjonsRolleType.FARA;
             case MORA -> RelasjonsRolleType.MORA;
-            case MEDMOR -> RelasjonsRolleType.MEDMOR;
+            case MEDMOR -> RelasjonsRolleType.MMOR;
         };
     }
 

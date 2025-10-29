@@ -30,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
@@ -85,6 +86,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getErUtkast()).isTrue();
 
         assertThat(dokumentdata.getRelasjonskode()).isEqualTo("MOR");
+        assertThat(dokumentdata.getRelasjonsRolleType()).isEqualTo(RelasjonsRolleType.MORA);
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
         assertThat(dokumentdata.getGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getBarnErFødt()).isFalse();

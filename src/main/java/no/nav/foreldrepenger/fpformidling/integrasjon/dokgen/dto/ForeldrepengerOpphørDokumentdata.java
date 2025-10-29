@@ -5,13 +5,15 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     private boolean erSøkerDød;
-    private String relasjonskode;
+    private String relasjonskode; //TODO TFP-6069 fjern etter at fpdokgen bruker relasjonsRolle
+    private RelasjonsRolleType relasjonsRolleType;
     private boolean gjelderFødsel;
     private int antallBarn;
     private long halvG;
@@ -30,6 +32,10 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
     public String getRelasjonskode() {
         return relasjonskode;
+    }
+
+    public RelasjonsRolleType getRelasjonsRolleType() {
+        return relasjonsRolleType;
     }
 
     public boolean erGjelderFødsel() {
@@ -87,15 +93,16 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
         final var that = (ForeldrepengerOpphørDokumentdata) o;
         return erSøkerDød() == that.erSøkerDød() && erGjelderFødsel() == that.erGjelderFødsel() && getAntallBarn() == that.getAntallBarn()
             && getHalvG() == that.getHalvG() && getKlagefristUker() == that.getKlagefristUker() && Objects.equals(getRelasjonskode(),
-            that.getRelasjonskode()) && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag()) && Objects.equals(getAvslagÅrsaker(),
-            that.getAvslagÅrsaker()) && Objects.equals(getBarnDødsdato(), that.getBarnDødsdato()) && Objects.equals(getOpphørDato(),
-            that.getOpphørDato()) && Objects.equals(getFomStønadsdato(), that.getFomStønadsdato()) && Objects.equals(getTomStønadsdato(),
-            that.getTomStønadsdato()) && Objects.equals(getFelles(), that.getFelles()) && Objects.equals(isEndretDekningsgrad(), that.isEndretDekningsgrad());
+            that.getRelasjonskode()) && Objects.equals(getRelasjonsRolleType(), that.getRelasjonsRolleType()) && Objects.equals(getLovhjemmelForAvslag(),
+            that.getLovhjemmelForAvslag()) && Objects.equals(getAvslagÅrsaker(), that.getAvslagÅrsaker()) && Objects.equals(getBarnDødsdato(),
+            that.getBarnDødsdato()) && Objects.equals(getOpphørDato(), that.getOpphørDato()) && Objects.equals(getFomStønadsdato(),
+            that.getFomStønadsdato()) && Objects.equals(getTomStønadsdato(), that.getTomStønadsdato()) && Objects.equals(getFelles(),
+            that.getFelles()) && Objects.equals(isEndretDekningsgrad(), that.isEndretDekningsgrad());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(),
+        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), getRelasjonsRolleType(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(),
             getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato(), isEndretDekningsgrad());
     }
 
@@ -104,7 +111,7 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private ForeldrepengerOpphørDokumentdata kladd;
+        private final ForeldrepengerOpphørDokumentdata kladd;
 
         private Builder() {
             this.kladd = new ForeldrepengerOpphørDokumentdata();
@@ -120,8 +127,9 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medRelasjonskode(String relasjonskode) {
+        public Builder medRelasjonskode(String relasjonskode, RelasjonsRolleType relasjonsRolleType) {
             this.kladd.relasjonskode = relasjonskode;
+            this.kladd.relasjonsRolleType = relasjonsRolleType;
             return this;
         }
 

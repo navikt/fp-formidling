@@ -5,12 +5,14 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
-    private String relasjonskode;
+    private String relasjonskode; //TODO TFP-6069 fjern etter at fpdokgen bruker relasjonsRolle
+    private RelasjonsRolleType relasjonsRolleType;
     private String mottattDato;
     private boolean gjelderFødsel;
     private boolean barnErFødt;
@@ -23,6 +25,10 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
     public String getRelasjonskode() {
         return relasjonskode;
+    }
+
+    public RelasjonsRolleType getRelasjonsRolleType() {
+        return relasjonsRolleType;
     }
 
     public String getMottattDato() {
@@ -70,16 +76,16 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
             return false;
         }
         var that = (ForeldrepengerAvslagDokumentdata) object;
-        return Objects.equals(felles, that.felles) && Objects.equals(relasjonskode, that.relasjonskode) && Objects.equals(mottattDato,
-            that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(barnErFødt, that.barnErFødt)
-            && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
-            && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag)
-            && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
+        return Objects.equals(felles, that.felles) && Objects.equals(relasjonskode, that.relasjonskode) && Objects.equals(relasjonsRolleType,
+            that.relasjonsRolleType) && Objects.equals(mottattDato, that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel)
+            && Objects.equals(barnErFødt, that.barnErFødt) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
+            && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag) && Objects.equals(
+            gjelderMor, that.gjelderMor) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, antallBarn, halvG, klagefristUker,
+        return Objects.hash(felles, relasjonskode, relasjonsRolleType, mottattDato, gjelderFødsel, barnErFødt, antallBarn, halvG, klagefristUker,
             lovhjemmelForAvslag, gjelderMor, avslåttePerioder);
     }
 
@@ -88,7 +94,7 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private ForeldrepengerAvslagDokumentdata kladd;
+        private final ForeldrepengerAvslagDokumentdata kladd;
 
         private Builder() {
             this.kladd = new ForeldrepengerAvslagDokumentdata();
@@ -99,8 +105,9 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medRelasjonskode(String relasjonskode) {
+        public Builder medRelasjonskode(String relasjonskode, RelasjonsRolleType relasjonsRolle) {
             this.kladd.relasjonskode = relasjonskode;
+            this.kladd.relasjonsRolleType = relasjonsRolle;
             return this;
         }
 

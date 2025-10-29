@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
@@ -13,7 +14,7 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
     private String avslagÅrsak;
     private boolean førstegangsbehandling;
     private int antallBarn;
-    private String relasjonsRolle;
+    private RelasjonsRolleType relasjonsRolle;
     private boolean gjelderFødsel;
     private List<String> vilkårTyper;
     private int klagefristUker;
@@ -32,7 +33,7 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
         return antallBarn;
     }
 
-    public String getRelasjonsRolle() {
+    public RelasjonsRolleType getRelasjonsRolle() {
         return relasjonsRolle;
     }
 
@@ -104,7 +105,7 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public EngangsstønadAvslagDokumentdata.Builder medRelasjonsRolle(String relasjonsRolle) {
+        public EngangsstønadAvslagDokumentdata.Builder medRelasjonsRolle(RelasjonsRolleType relasjonsRolle) {
             this.kladd.relasjonsRolle = relasjonsRolle;
             return this;
         }

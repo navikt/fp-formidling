@@ -13,33 +13,34 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
 
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public class Vedtaksperiode {
     private boolean innvilget;
     private Årsak årsak;
-    @JsonIgnore
-    private StønadskontoType stønadskontoType;
     private String periodeFom;
-    @JsonIgnore
-    private LocalDate periodeFomDate;
     private String periodeTom;
-    @JsonIgnore
-    private LocalDate periodeTomDate;
     private long periodeDagsats;
     private int antallTapteDager;
     private Prosent prioritertUtbetalingsgrad = Prosent.NULL;
-    @JsonIgnore
-    private boolean fullUtbetaling;
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
     private String tidligstMottattDato;
     private boolean erUtbetalingRedusertTilMorsStillingsprosent;
 
+    //Setter felter for å bruke i filter/merge logikk senere
+    @JsonIgnore
+    private StønadskontoType stønadskontoType;
+    @JsonIgnore
+    private LocalDate periodeFomDate;
+    @JsonIgnore
+    private LocalDate periodeTomDate;
+    @JsonIgnore
+    private boolean fullUtbetaling;
     @JsonIgnore
     private Språkkode språkkode;
     @JsonIgnore

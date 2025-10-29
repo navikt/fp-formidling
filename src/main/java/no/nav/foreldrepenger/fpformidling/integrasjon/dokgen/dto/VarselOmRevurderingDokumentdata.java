@@ -12,7 +12,7 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
     private String terminDato;
     private String fristDato;
     private int antallBarn;
-    private String advarselKode;
+    private RevurderingVarslingÅrsak advarselKode;
     private boolean flereOpplysninger;
 
     public String getTerminDato() {
@@ -27,7 +27,7 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
         return antallBarn;
     }
 
-    public String getAdvarselKode() {
+    public RevurderingVarslingÅrsak getAdvarselKode() {
         return advarselKode;
     }
 
@@ -59,7 +59,7 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private VarselOmRevurderingDokumentdata kladd;
+        private final VarselOmRevurderingDokumentdata kladd;
 
         private Builder() {
             this.kladd = new VarselOmRevurderingDokumentdata();
@@ -85,7 +85,7 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medAdvarselKode(String advarselKode) {
+        public Builder medAdvarselKode(RevurderingVarslingÅrsak advarselKode) {
             this.kladd.advarselKode = advarselKode;
             return this;
         }
@@ -98,5 +98,19 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
         public VarselOmRevurderingDokumentdata build() {
             return this.kladd;
         }
+    }
+
+    public enum RevurderingVarslingÅrsak {
+
+        BARNIKKEREG,
+        JOBBFULLTID,
+        IKKEOPPTJENT,
+        UTVANDRET,
+        JOBBUTLAND,
+        IKKEOPPHOLD,
+        JOBB6MND,
+        AKTIVITET,
+        ANNET,
+        UDEFINERT,
     }
 }

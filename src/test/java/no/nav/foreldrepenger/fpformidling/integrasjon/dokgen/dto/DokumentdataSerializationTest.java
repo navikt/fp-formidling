@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata.RevurderingVarslingÅrsak;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata.ny;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -327,12 +328,12 @@ class DokumentdataSerializationTest {
     @Test
     void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() throws IOException {
         // Arrange
-        var dokumentdata = VarselOmRevurderingDokumentdata.ny()
+        var dokumentdata = ny()
             .medFelles(opprettFellesDokumentdata())
             .medTerminDato(formaterDatoNorsk(LocalDate.now().minusDays(10)))
             .medFristDato(formaterDatoNorsk(LocalDate.now()))
             .medAntallBarn(2)
-            .medAdvarselKode(RevurderingVarslingÅrsak.ARBEID_I_UTLANDET.getKode())
+            .medAdvarselKode(RevurderingVarslingÅrsak.JOBBUTLAND)
             .medFlereOpplysninger(true)
             .build();
 

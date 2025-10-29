@@ -9,10 +9,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDo
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class InnsynDokumentdata extends Dokumentdata {
-    private String innsynResultat;
+    private InnsynResultatType innsynResultat;
     private int klagefrist;
 
-    public String getInnsynResultat() {
+    public InnsynResultatType getInnsynResultat() {
         return innsynResultat;
     }
 
@@ -54,7 +54,7 @@ public class InnsynDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medInnsynResultat(String innsynResultat) {
+        public Builder medInnsynResultat(InnsynResultatType innsynResultat) {
             this.kladd.innsynResultat = innsynResultat;
             return this;
         }
@@ -67,5 +67,11 @@ public class InnsynDokumentdata extends Dokumentdata {
         public InnsynDokumentdata build() {
             return this.kladd;
         }
+    }
+
+    public enum InnsynResultatType {
+        INNV,
+        DELV,
+        AVVIST,
     }
 }

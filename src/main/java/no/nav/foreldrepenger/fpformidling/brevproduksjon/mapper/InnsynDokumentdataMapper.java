@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata.InnsynResultatType;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata.ny;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -7,7 +9,6 @@ import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -41,19 +42,19 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), dokumentFelles.getSpråkkode()) : null);
         FritekstDto.fraFritekst(hendelse, behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
-        return InnsynDokumentdata.ny()
+        return ny()
             .medFelles(fellesBuilder.build())
             .medKlagefrist(brevParametere.getKlagefristUker())
-            .medInnsynResultat(map(innsynsBehandling.innsynResultatType()).getKode())
+            .medInnsynResultat(map(innsynsBehandling.innsynResultatType()))
             .build();
     }
 
     private InnsynResultatType map(BrevGrunnlagDto.InnsynBehandling.InnsynResultatType innsynResultatType) {
         return switch (innsynResultatType) {
-            case INNVILGET -> InnsynResultatType.INNVILGET;
-            case DELVIS_INNVILGET -> InnsynResultatType.DELVIS_INNVILGET;
+            case INNVILGET -> InnsynResultatType.INNV;
+            case DELVIS_INNVILGET -> InnsynResultatType.DELV;
             case AVVIST -> InnsynResultatType.AVVIST;
-            case UDEFINERT -> InnsynResultatType.UDEFINERT;
+            case UDEFINERT -> throw new IllegalStateException("Unexpected value: " + innsynResultatType);
         };
     }
 }

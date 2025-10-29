@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -317,7 +316,7 @@ class DokumentdataSerializationTest {
         // Arrange
         var dokumentdata = InnsynDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
-            .medInnsynResultat(InnsynResultatType.INNVILGET.getKode())
+            .medInnsynResultat(InnsynDokumentdata.InnsynResultatType.INNV)
             .medKlagefrist(6)
             .build();
 

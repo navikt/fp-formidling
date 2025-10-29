@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningHjemmel;
 
 class FellesMapperTest {
 
@@ -34,7 +34,7 @@ class FellesMapperTest {
 
     @Test
     void formaterLovhjemlerUdefinert() {
-        var lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
+        var lovhjemmelFraBeregning = BeregningHjemmel.UDEFINERT.getLovRef();
         assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, "");
     }
 
@@ -46,7 +46,7 @@ class FellesMapperTest {
 
     @Test
     void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelUdefinertFraBeregning() {
-        var lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
+        var lovhjemmelFraBeregning = BeregningHjemmel.UDEFINERT.getLovRef();
         assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false,
             " og forvaltningsloven § 35");
     }

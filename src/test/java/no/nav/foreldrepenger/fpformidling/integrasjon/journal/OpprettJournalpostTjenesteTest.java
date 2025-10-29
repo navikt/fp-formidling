@@ -21,8 +21,8 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
@@ -72,10 +72,10 @@ class OpprettJournalpostTjenesteTest {
 
         var genRequest = requestCaptor.getValue();
         assertThat(genRequest.tema()).isEqualTo("FOR");
-        assertThat(genRequest.behandlingstema()).isEqualTo(BehandlingTema.ENGANGSSTØNAD.getOffisiellKode());
+        assertThat(genRequest.behandlingstema()).isEqualTo("ab0327");
         assertThat(genRequest.sak().sakstype().name()).isEqualTo("FAGSAK");
         assertThat(genRequest.sak().fagsakId()).isEqualTo(dokumentFelles.getSaksnummer().getVerdi());
-        assertThat(genRequest.sak().fagsaksystem()).isEqualTo("FS36");
+        assertThat(genRequest.sak().fagsaksystem()).isEqualTo(Fpsak.OFFISIELL_KODE);
         assertThat(genRequest.avsenderMottaker().id()).isEqualTo(MOTTAKER_ID);
         assertThat(genRequest.avsenderMottaker().navn()).isEqualTo(MOTTAKER_NAVN);
         assertThat(genRequest.avsenderMottaker().idType()).isEqualByComparingTo(AvsenderMottaker.AvsenderMottakerIdType.FNR);

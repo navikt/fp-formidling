@@ -96,8 +96,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     private String mapVilkårBrev(VilkårType vilkårType, BrevGrunnlagDto behandling) {
-        if ((VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD.equals(vilkårType) || VilkårType.OMSORGSOVERTAKELSEVILKÅR.equals(vilkårType)
-            || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType)) && !behandling.erRevurdering()) {
+        if ((VilkårType.OMSORGSOVERTAKELSEVILKÅR.equals(vilkårType) || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType)) && !behandling.erRevurdering()) {
             return "FPVK1_4";
         } else {
             var erMedlemskapsvilkåret = VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType);
@@ -114,9 +113,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     private boolean erVilkår213(VilkårType vilkårType) {
-        return vilkårType.equals(VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD) || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType)
-            || VilkårType.OMSORGSVILKÅRET.equals(vilkårType) || VilkårType.FORELDREANSVARSVILKÅRET_2_LEDD.equals(vilkårType)
-            || VilkårType.OMSORGSOVERTAKELSEVILKÅR.equals(vilkårType);
+        return VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType) || VilkårType.OMSORGSOVERTAKELSEVILKÅR.equals(vilkårType);
     }
 
     String mapAvslagsårsakerBrev(Avslagsårsak avslagsårsak, boolean erMor) {

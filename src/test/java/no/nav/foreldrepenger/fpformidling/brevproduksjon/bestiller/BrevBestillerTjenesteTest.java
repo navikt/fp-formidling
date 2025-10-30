@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.tilkjentYtelse;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.BehandlingType;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FagsakYtelseType;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.RelasjonsRolleType;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Verge;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.brevGrunnlag;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.tilkjentYtelse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,7 +41,6 @@ import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
@@ -251,14 +250,13 @@ class BrevBestillerTjenesteTest {
     }
 
     private Personinfo mockPdl(boolean harVerge) {
-        var personinfoSøker = Personinfo.getbuilder(SØKER).medPersonIdent(SØKER_FNR).medNavn(NAVN).medNavBrukerKjønn(NavBrukerKjønn.MANN).build();
+        var personinfoSøker = Personinfo.getbuilder(SØKER).medPersonIdent(SØKER_FNR).medNavn(NAVN).build();
         lenient().when(personAdapter.hentBrukerForAktør(any(), eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
 
         if (harVerge) {
             var personinfoVerge = Personinfo.getbuilder(VERGE)
                 .medPersonIdent(VERGE_FNR)
                 .medNavn("Verge Vergesen")
-                .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                 .build();
             lenient().when(personAdapter.hentBrukerForAktør(any(), eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
         }

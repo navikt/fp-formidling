@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.domene.aktør;
 
 import static java.util.Objects.requireNonNull;
 
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 
@@ -13,7 +12,6 @@ public class Personinfo {
     private String navn;
     private boolean registrertDød;
     private PersonIdent personIdent;
-    private NavBrukerKjønn kjønn;
 
     private Personinfo() {
     }
@@ -30,10 +28,6 @@ public class Personinfo {
         return navn;
     }
 
-    public NavBrukerKjønn getKjønn() {
-        return kjønn;
-    }
-
     public boolean isRegistrertDød() {
         return registrertDød;
     }
@@ -48,7 +42,7 @@ public class Personinfo {
     }
 
     public static class Builder {
-        private Personinfo personinfoMal;
+        private final Personinfo personinfoMal;
 
         private Builder(AktørId aktørId) {
             personinfoMal = new Personinfo();
@@ -69,12 +63,6 @@ public class Personinfo {
             personinfoMal.registrertDød = registrertDød;
             return this;
         }
-
-        public Builder medNavBrukerKjønn(NavBrukerKjønn kjønn) {
-            personinfoMal.kjønn = kjønn;
-            return this;
-        }
-
 
         public Personinfo build() {
             requireNonNull(personinfoMal.aktørId, "Navbruker må ha aktørId"); //$NON-NLS-1$

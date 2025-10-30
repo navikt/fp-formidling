@@ -66,7 +66,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             .medFelles(fellesBuilder.build())
             .medFørstegangsbehandling(behandling.behandlingType() == BehandlingType.FØRSTEGANGSSØKNAD)
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
-            .medRelasjonsRolle(mapRelasjonsRolle(behandling.relasjonsRolleType()).getKode())
+            .medRelasjonsRolle(mapRelasjonsRolle(behandling.relasjonsRolleType()))
             .medVilkårTyper(utledVilkårTilBrev(vilkårTyper, avslagsårsak, behandling))
             .medAntallBarn(familieHendelse.antallBarn())
             .medMedlemskapFom(formaterDato(behandling.behandlingsresultat().medlemskapFom(), dokumentFelles.getSpråkkode()))

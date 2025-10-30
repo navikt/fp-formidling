@@ -82,7 +82,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         var dokumentdataBuilder = ForeldrepengerOpphørDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medErSøkerDød(erSøkerDød)
-            .medRelasjonskode(RELASJONSKODE_TYPE_MAP.get(behandling.relasjonsRolleType()))
+            .medRelasjonskode(RELASJONSKODE_TYPE_MAP.get(behandling.relasjonsRolleType()), KodeverkMapper.mapRelasjonsRolle(behandling.relasjonsRolleType()))
             .medGjelderFødsel(familiehendelse.gjelderFødsel())
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)

@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.behandlingsresultat;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.familieHendelse;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.fritekst;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Behandlingsresultat;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.FamilieHendelse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -61,7 +61,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(avslagDokumentdata.getAntallBarn()).isEqualTo(1);
         assertThat(avslagDokumentdata.getFørstegangsbehandling()).isTrue();
         assertThat(avslagDokumentdata.getGjelderFødsel()).isTrue();
-        assertThat(avslagDokumentdata.getRelasjonsRolle()).isEqualTo(RelasjonsRolleType.MORA.getKode());
+        assertThat(avslagDokumentdata.getRelasjonsRolle()).isEqualTo(RelasjonsRolleType.MORA);
         assertThat(avslagDokumentdata.getVilkårTyper()).hasSize(1);
         assertThat(avslagDokumentdata.getVilkårTyper()).containsExactly("FP_VK_3");
         assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(avslagsfritekst));

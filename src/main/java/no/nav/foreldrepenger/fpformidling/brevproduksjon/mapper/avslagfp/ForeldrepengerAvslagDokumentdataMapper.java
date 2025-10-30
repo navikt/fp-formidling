@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.ForeldrepengerAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
@@ -71,7 +72,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
 
         var dokumentdataBuilder = ForeldrepengerAvslagDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medRelasjonskode(RELASJONSKODE_TYPE_MAP.get(behandling.relasjonsRolleType()))
+            .medRelasjonskode(RELASJONSKODE_TYPE_MAP.get(behandling.relasjonsRolleType()), KodeverkMapper.mapRelasjonsRolle(behandling.relasjonsRolleType()))
             .medMottattDato(formaterDato(behandling.førsteSøknadMottattDato(), språkkode))
             .medGjelderFødsel(familiehendelse.gjelderFødsel())
             .medBarnErFødt(familiehendelse.barnErFødt())

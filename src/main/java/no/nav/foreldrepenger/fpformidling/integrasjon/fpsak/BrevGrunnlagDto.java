@@ -304,7 +304,6 @@ public record BrevGrunnlagDto(UUID uuid, String saksnummer, FagsakYtelseType fag
             ENDRING_I_UTTAK,
             ENDRING_I_FORDELING_AV_YTELSEN,
             INGEN_ENDRING,
-            UDEFINERT
         }
 
         public enum BehandlingResultatType {

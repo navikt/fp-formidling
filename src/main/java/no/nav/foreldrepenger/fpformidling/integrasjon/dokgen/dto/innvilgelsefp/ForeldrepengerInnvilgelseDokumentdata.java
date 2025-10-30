@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Rettigheter;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
@@ -16,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDo
 public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private String behandlingType;
     private String behandlingResultatType;
-    private String konsekvensForInnvilgetYtelse;
+    private KonsekvensForYtelsen konsekvensForInnvilgetYtelse;
     private int dekningsgrad;
     private boolean endretDekningsgrad;
     private boolean harUtbetaling;
@@ -96,7 +97,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return behandlingResultatType;
     }
 
-    public String getKonsekvensForInnvilgetYtelse() {
+    public KonsekvensForYtelsen getKonsekvensForInnvilgetYtelse() {
         return konsekvensForInnvilgetYtelse;
     }
 
@@ -414,7 +415,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medKonsekvensForInnvilgetYtelse(String konsekvensForInnvilgetYtelse) {
+        public Builder medKonsekvensForInnvilgetYtelse(KonsekvensForYtelsen konsekvensForInnvilgetYtelse) {
             this.kladd.konsekvensForInnvilgetYtelse = konsekvensForInnvilgetYtelse;
             return this;
         }

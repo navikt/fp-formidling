@@ -45,12 +45,12 @@ public class FellesMapper {
     }
 
     public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning,
-                                                        String konsekvensForYtelse,
+                                                        KonsekvensForYtelsen konsekvensForYtelse,
                                                         boolean innvilgetRevurdering,
                                                         UUID behandlingUuid) {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
-        } else if (BeregningHjemmel.UDEFINERT.getLovRef().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()
+        } else if (BeregningHjemmel.UDEFINERT.getLovRef().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK
             .equals(konsekvensForYtelse)) {
             LOG.warn("Behandling {} har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, "
                 + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandlingUuid);
@@ -66,7 +66,7 @@ public class FellesMapper {
         return formaterLovhjemlerUttak(hjemler, null, false);
     }
 
-    public static String formaterLovhjemlerUttak(Set<String> hjemler, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+    public static String formaterLovhjemlerUttak(Set<String> hjemler, KonsekvensForYtelsen konsekvensForYtelse, boolean innvilgetRevurdering) {
         var lovHjemmelBuilder = new StringBuilder();
         var forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering,
             konsekvensForYtelse) ? "forvaltningsloven § 35" : null;
@@ -77,12 +77,12 @@ public class FellesMapper {
         return lovHjemmelBuilder.toString();
     }
 
-    private static boolean endringIBeregningEllerInnvilgetRevurdering(boolean innvilgetRevurdering, String konsekvensForYtelse) {
+    private static boolean endringIBeregningEllerInnvilgetRevurdering(boolean innvilgetRevurdering, KonsekvensForYtelsen konsekvensForYtelse) {
         return endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering;
     }
 
-    private static boolean endringIBeregning(String konsekvensForYtelse) {
-        return KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvensForYtelse) || BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK.equals(
+    private static boolean endringIBeregning(KonsekvensForYtelsen konsekvensForYtelse) {
+        return KonsekvensForYtelsen.ENDRING_I_BEREGNING.equals(konsekvensForYtelse) || KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.equals(
             konsekvensForYtelse);
     }
 

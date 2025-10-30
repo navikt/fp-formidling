@@ -51,6 +51,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -135,7 +136,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
         assertThat(dokumentdata.getBehandlingType()).isEqualTo(BehandlingType.REVURDERING.name());
         assertThat(dokumentdata.getBehandlingResultatType()).isEqualTo(Behandlingsresultat.BehandlingResultatType.INNVILGET.name());
-        assertThat(dokumentdata.getKonsekvensForInnvilgetYtelse()).isEqualTo("ENDRING_I_BEREGNING_OG_UTTAK");
+        assertThat(dokumentdata.getKonsekvensForInnvilgetYtelse()).isEqualTo(KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK);
         assertThat(dokumentdata.getDekningsgrad()).isEqualTo(DEKNINGSGRAD);
         assertThat(dokumentdata.getDagsats()).isEqualTo(finnDagsats(tilkjentYtelseFP));
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(tilkjentYtelseFP));
@@ -283,7 +284,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
         var konsekvensForYtelseAAPPraksisendring = dokumentdataMapper.mapKonsekvensForInnvilgetYtelse(
             behandlingAap.behandlingsresultat().konsekvenserForYtelsen(), behandlingAap.behandlingÅrsakTyper());
-        assertThat(konsekvensForYtelseAAPPraksisendring).isEqualTo("ENDRING_AAP_PRAKSISENDRING");
+        assertThat(konsekvensForYtelseAAPPraksisendring).isEqualTo(KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING);
     }
 
     private BrevGrunnlagBuilder opprettBehandling(BehandlingType behandlingType,

@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +52,7 @@ class IngenEndringDokumentdataMapperTest {
         assertThat(ingenEndringDokumentdata.getFelles().getHarVerge()).isTrue();
         assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(ingenEndringDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
-        assertThat(ingenEndringDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(ingenEndringDokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
         assertThat(ingenEndringDokumentdata.getFelles().getErUtkast()).isFalse();
     }
 

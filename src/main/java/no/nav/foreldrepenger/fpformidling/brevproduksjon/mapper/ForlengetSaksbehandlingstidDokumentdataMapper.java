@@ -40,8 +40,17 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
             .medFelles(fellesBuilder.build())
             .medVariantType(mapVariantType(behandlingType, hendelse.getDokumentMal()))
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
-            .medBehandlingsfristUker(behandlingType.getBehandlingstidFristUker())
+            .medBehandlingsfristUker(utledFrist(behandlingType))
             .build();
+    }
+
+    private static int utledFrist(BehandlingType behandlingType) {
+        return switch (behandlingType) {
+            case FØRSTEGANGSSØKNAD, REVURDERING -> 6;
+            case KLAGE -> 12;
+            case ANKE, TILBAKEKREVING_REVURDERING, TILBAKEKREVING -> 0;
+            case INNSYN -> 1;
+        };
     }
 
     private static VariantType mapVariantType(BehandlingType behandlingType, DokumentMal dokumentMal) {

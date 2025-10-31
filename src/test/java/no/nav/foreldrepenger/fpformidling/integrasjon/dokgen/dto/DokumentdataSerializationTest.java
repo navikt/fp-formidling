@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
@@ -364,7 +363,7 @@ class DokumentdataSerializationTest {
             .medHarVerge(true)
             .medSaksnummer("123456789")
             .medMottakerNavn("Mottaker Mottakersen")
-            .medYtelseType(FagsakYtelseType.FORELDREPENGER.getKode())
+            .medYtelseType(FellesDokumentdata.YtelseType.FP)
             .build();
     }
 }

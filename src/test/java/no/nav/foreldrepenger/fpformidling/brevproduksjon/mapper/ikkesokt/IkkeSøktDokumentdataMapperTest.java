@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,7 +65,7 @@ class IkkeSøktDokumentdataMapperTest {
         assertThat(ikkeSøktDokumentdata.getFelles().getHarVerge()).isTrue();
         assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(ikkeSøktDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
-        assertThat(ikkeSøktDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(ikkeSøktDokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
         assertThat(ikkeSøktDokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(ikkeSøktDokumentdata.getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER);

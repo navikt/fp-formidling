@@ -109,7 +109,6 @@ public final class KodeverkMapper {
             case ENDRING_I_UTTAK -> KonsekvensForYtelsen.ENDRING_I_UTTAK;
             case ENDRING_I_FORDELING_AV_YTELSEN -> KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN;
             case INGEN_ENDRING -> KonsekvensForYtelsen.INGEN_ENDRING;
-            case UDEFINERT -> KonsekvensForYtelsen.UDEFINERT;
         };
     }
 

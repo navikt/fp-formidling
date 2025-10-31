@@ -22,7 +22,7 @@ class UndermalInkluderingMapperTest {
 
     @ParameterizedTest
     @MethodSource("inkludereInnvilget")
-    void undermalInnvilgetSkalInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+    void undermalInnvilgetSkalInkluderes(List<Vedtaksperiode> vedtaksperioder, KonsekvensForYtelsen konsekvens) {
         var resultat = skalInkludereInnvilget(vedtaksperioder, konsekvens);
 
         assertThat(resultat).isTrue();
@@ -30,19 +30,19 @@ class UndermalInkluderingMapperTest {
 
     static Stream<Arguments> inkludereInnvilget() {
         return Stream.of(
-            Arguments.of(of(lagPeriode("2010", true), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("1234", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2030", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2030", true), lagPeriode("2030", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2030", true), lagPeriode("4022", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2030", true), lagPeriode("4022", false), lagPeriode("4022", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()));
+            Arguments.of(of(lagPeriode("2010", true), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("1234", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2030", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2030", true), lagPeriode("2030", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2030", true), lagPeriode("4022", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2030", true), lagPeriode("4022", false), lagPeriode("4022", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK));
     }
 
     @ParameterizedTest
     @MethodSource("ikkeInkludereInnvilget")
-    void undermalInnvilgetSkalIkkeInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+    void undermalInnvilgetSkalIkkeInkluderes(List<Vedtaksperiode> vedtaksperioder, KonsekvensForYtelsen konsekvens) {
         var resultat = skalInkludereInnvilget(vedtaksperioder, konsekvens);
 
         assertThat(resultat).isFalse();
@@ -50,34 +50,34 @@ class UndermalInkluderingMapperTest {
 
     static Stream<Arguments> ikkeInkludereInnvilget() {
         return Stream.of(
-            Arguments.of(of(lagPeriode("2010", true), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode()),
-            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode()));
+            Arguments.of(of(lagPeriode("2010", true), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_BEREGNING),
+            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_BEREGNING));
     }
 
 
     @ParameterizedTest
     @MethodSource("testScenarioerSkalIkkeInklAvslag")
-    void undermalAvslagSkalIkkeInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+    void undermalAvslagSkalIkkeInkluderes(List<Vedtaksperiode> vedtaksperioder, KonsekvensForYtelsen konsekvens) {
         var resultat = skalInkludereAvslag(vedtaksperioder, konsekvens);
         assertThat(resultat).isFalse();
     }
 
     static Stream<Arguments> testScenarioerSkalIkkeInklAvslag() {
         return Stream.of(
-            Arguments.of(of(lagPeriode("2010", true),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
-            Arguments.of(of(lagPeriode("2010", false),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode()));
+            Arguments.of(of(lagPeriode("2010", true),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
+            Arguments.of(of(lagPeriode("2010", false),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_BEREGNING));
     }
 
     @ParameterizedTest
     @MethodSource("testScenarioerInklAvslag")
-    void undermalAvslagSkalInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+    void undermalAvslagSkalInkluderes(List<Vedtaksperiode> vedtaksperioder, KonsekvensForYtelsen konsekvens) {
         var resultat = skalInkludereAvslag(vedtaksperioder, konsekvens);
         assertThat(resultat).isTrue();
     }
 
     static Stream<Arguments> testScenarioerInklAvslag() {
         return Stream.of(
-            Arguments.of(of(lagPeriode("2010",false),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2010",false),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK),
             Arguments.of(of(lagPeriode("2010", false), lagPeriode("2010", true)), null)
         );
     }

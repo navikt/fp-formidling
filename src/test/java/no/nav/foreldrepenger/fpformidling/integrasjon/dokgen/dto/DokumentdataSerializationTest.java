@@ -137,7 +137,7 @@ class DokumentdataSerializationTest {
             .medFelles(opprettFellesDokumentdata())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.name())
             .medBehandlingResultatType(Behandlingsresultat.BehandlingResultatType.INNVILGET.name())
-            .medKonsekvensForInnvilgetYtelse(KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name())
+            .medKonsekvensForInnvilgetYtelse(KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK)
             .medDekningsgrad(80)
             .medDagsats(100)
             .medMånedsbeløp(200)

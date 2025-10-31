@@ -410,19 +410,18 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             || familieHendelse.barnErFødt() && originalFamiliehendelse.map(fh -> !fh.barnErFødt()).orElse(false);
     }
 
-    String mapKonsekvensForInnvilgetYtelse(List<Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen,
+    KonsekvensForYtelsen mapKonsekvensForInnvilgetYtelse(List<Behandlingsresultat.KonsekvensForYtelsen> konsekvenserForYtelsen,
                                            List<BrevGrunnlagDto.BehandlingÅrsakType> behandlingÅrsaker) {
         if (konsekvenserForYtelsen.isEmpty()) {
-            return KonsekvensForYtelsen.INGEN_ENDRING.name();
+            return KonsekvensForYtelsen.INGEN_ENDRING;
         } else if (konsekvenserForYtelsen.contains(Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_BEREGNING) && behandlingÅrsaker.stream()
             .anyMatch(ba -> ba.equals(BrevGrunnlagDto.BehandlingÅrsakType.FEIL_PRAKSIS_BG_AAP_KOMBI))) {
-            return KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING.name();
+            return KonsekvensForYtelsen.ENDRING_AAP_PRAKSISENDRING;
         } else if (konsekvenserForYtelsen.contains(Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(
             Behandlingsresultat.KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
-            return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
+            return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK;
         } else {
-            return KodeverkMapper.mapKonsekvensForYtelsen(konsekvenserForYtelsen.getFirst())
-                .getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.kombinasjoner)
+            return KodeverkMapper.mapKonsekvensForYtelsen(konsekvenserForYtelsen.getFirst()); // velger bare den første i listen (finnes ikke koder for andre ev.kombinasjoner)
         }
     }
 

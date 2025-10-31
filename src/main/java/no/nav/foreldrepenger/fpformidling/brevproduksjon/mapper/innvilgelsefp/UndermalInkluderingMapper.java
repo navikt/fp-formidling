@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 import java.util.List;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 
 /**
  * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:
@@ -15,8 +15,8 @@ public final class UndermalInkluderingMapper {
     private UndermalInkluderingMapper() {
     }
 
-    public static boolean skalInkludereInnvilget(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
-        if (KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)) {
+    public static boolean skalInkludereInnvilget(List<Vedtaksperiode> vedtaksperioder, KonsekvensForYtelsen konsekvens) {
+        if (KonsekvensForYtelsen.ENDRING_I_BEREGNING.equals(konsekvens)) {
             return false;
         }
         var innvilgetPerioder = vedtaksperioder.stream().filter(Vedtaksperiode::isInnvilget).toList();
@@ -26,9 +26,9 @@ public final class UndermalInkluderingMapper {
             || harKunEnPeriodeMedOverføring(innvilgetPerioder);
     }
 
-    public static boolean skalInkludereAvslag(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+    public static boolean skalInkludereAvslag(List<Vedtaksperiode> vedtaksperioder, KonsekvensForYtelsen konsekvens) {
         return vedtaksperioder.stream().filter(periode -> !periodeMed4102UtenTapteDager(periode)).anyMatch(Vedtaksperiode::isAvslått)
-            && (!KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens));
+            && (!KonsekvensForYtelsen.ENDRING_I_BEREGNING.equals(konsekvens));
     }
 
     private static boolean periodeMed4102UtenTapteDager(Vedtaksperiode periode) {
@@ -43,8 +43,7 @@ public final class UndermalInkluderingMapper {
         return vedtaksperioder.size() == 1 && vedtaksperioder.get(0).getÅrsak().erOverføring();
     }
 
-    private static boolean erRevurderingMedEndringIUttak(String konsekvens) {
-        return KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode().equals(konsekvens) || KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.getKode()
-            .equals(konsekvens);
+    private static boolean erRevurderingMedEndringIUttak(KonsekvensForYtelsen konsekvens) {
+        return KonsekvensForYtelsen.ENDRING_I_UTTAK.equals(konsekvens) || KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.equals(konsekvens);
     }
 }

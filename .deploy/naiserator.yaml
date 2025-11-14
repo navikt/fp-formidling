@@ -69,7 +69,7 @@ spec:
           - "azp_name"
         groups:
           {{#each groups as |group|}}
-          - id: "{{group}}"
+          - id: "{{group.uuid}}"
           {{/each}}
   {{#if AZURE_IAC_RULES}}
   accessPolicy:

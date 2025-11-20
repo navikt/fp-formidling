@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-parent-app</artifactId>
-        <version>5.0.2</version>
+        <version>5.0.3</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -20,9 +20,9 @@
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
         <!-- Felles artefakter -->
-        <felles.version>7.6.9</felles.version>
+        <felles.version>7.6.10</felles.version>
         <prosesstask.version>5.2.1</prosesstask.version>
-        <kontrakter.version>9.4.6</kontrakter.version>
+        <kontrakter.version>9.4.12</kontrakter.version>
     </properties>
 
     <!-- NB: Unngå å put scope (test, provided) i dependency management. Det har uheldige virkninger ved bruk av import og dependency (bruk composition

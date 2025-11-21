@@ -2,19 +2,10 @@ package no.nav.foreldrepenger.fpformidling.domene.uttak.svp;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
-
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi {
+public enum PeriodeIkkeOppfyltÅrsak {
 
     INGEN("-", null),
     BRUKER_ER_DØD("8304", "14-4"),
@@ -30,21 +21,9 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi {
     OPPTJENINGSVILKÅRET_IKKE_OPPFYLT("8316", "14-4"),
     PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER("8317", "14-4");
 
-    private static final Map<String, PeriodeIkkeOppfyltÅrsak> KODER = new LinkedHashMap<>();
+    private final String kode;
 
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
-    @JsonValue
-    private String kode;
-
-    @JsonIgnore
-    private String lovHjemmel;
+    private final String lovHjemmel;
 
     PeriodeIkkeOppfyltÅrsak(String kode, String lovHjemmel) {
         this.kode = kode;
@@ -55,7 +34,6 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi {
         return Arrays.stream(PeriodeIkkeOppfyltÅrsak.values()).filter(å -> å.kode.equals(kode)).findFirst().orElseThrow();
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

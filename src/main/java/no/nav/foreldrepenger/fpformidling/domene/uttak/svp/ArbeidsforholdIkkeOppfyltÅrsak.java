@@ -1,14 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.domene.uttak.svp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
-
-
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi {
+public enum ArbeidsforholdIkkeOppfyltÅrsak  {
 
     INGEN("-"),
     HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO("8301"),
@@ -17,14 +9,12 @@ public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi {
     ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN("8312"),
     ;
 
-    @JsonValue
-    private String kode;
+    private final String kode;
 
     ArbeidsforholdIkkeOppfyltÅrsak(String kode) {
         this.kode = kode;
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

@@ -5,15 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum VilkårType implements Kodeverdi {
+public enum VilkårType {
 
     FØDSELSVILKÅRET_MOR(VilkårTypeKoder.FP_VK_1,
         Map.of(FagsakYtelseType.ENGANGSTØNAD, "14-17", FagsakYtelseType.FORELDREPENGER, "14-5"), Avslagsårsak.SØKT_FOR_TIDLIG,
@@ -75,12 +69,11 @@ public enum VilkårType implements Kodeverdi {
 
     ;
 
-    private Map<FagsakYtelseType, String> lovReferanser;
+    private final Map<FagsakYtelseType, String> lovReferanser;
 
-    private Set<Avslagsårsak> avslagsårsaker;
+    private final Set<Avslagsårsak> avslagsårsaker;
 
-    @JsonValue
-    private String kode;
+    private final String kode;
 
     VilkårType(String kode, Map<FagsakYtelseType, String> lovReferanser, Avslagsårsak... avslagsårsaker) {
         this.kode = kode;
@@ -107,7 +100,6 @@ public enum VilkårType implements Kodeverdi {
         return Arrays.stream(values()).filter(vt -> vt.getAvslagsårsaker().contains(avslagsårsak)).collect(Collectors.toSet());
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

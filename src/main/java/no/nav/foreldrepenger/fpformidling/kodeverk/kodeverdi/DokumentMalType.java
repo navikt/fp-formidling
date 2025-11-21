@@ -1,10 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
-public enum DokumentMalType implements Kodeverdi {
+public enum DokumentMalType {
 
     FRITEKSTBREV("FRITEK", "Fritekstbrev"),
     FRITEKSTBREV_HTML("FRIHTM", "Fritekstbrev html"),
@@ -76,7 +74,7 @@ public enum DokumentMalType implements Kodeverdi {
     @Deprecated KLAGE_STADFESTET("KGESTA", "Vedtak om stadfestelse i klagesak"), //NOSONAR
     @Deprecated KLAGE_HJEMSENDT("KGEHJE", "Klage hjemsendt/opphevet"), //NOSONAR
 
-    UDEFINERT("-");
+    UDEFINERT("-", null);
 
     private static final Set<DokumentMalType> VEDTAKSBREV = Set.of(ENGANGSSTØNAD_INNVILGELSE, ENGANGSSTØNAD_AVSLAG, FORELDREPENGER_INNVILGELSE,
         FORELDREPENGER_AVSLAG, FORELDREPENGER_OPPHØR, FORELDREPENGER_ANNULLERT, SVANGERSKAPSPENGER_INNVILGELSE, SVANGERSKAPSPENGER_AVSLAG,
@@ -92,14 +90,8 @@ public enum DokumentMalType implements Kodeverdi {
     public static final Set<DokumentMalType> FORLENGET_SAKSBEHANDLINGSTID_BREVMALER = Set.of(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
         DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL, DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, FORLENGET_SAKSBEHANDLINGSTID_MEDL_FORUTGÅENDE);
 
-    private static final Map<String, DokumentMalType> KODER = new LinkedHashMap<>();
-
-    private String kode;
-    private String navn;
-
-    DokumentMalType() {
-        // for hibernate
-    }
+    private final String kode;
+    private final String navn;
 
     DokumentMalType(String kode, String navn) {
         this.kode = kode;
@@ -110,21 +102,8 @@ public enum DokumentMalType implements Kodeverdi {
         return navn;
     }
 
-    DokumentMalType(String kode) {
-        this.kode = kode;
-    }
-
-    @Override
     public String getKode() {
         return kode;
-    }
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
     }
 
     private static class Constants {

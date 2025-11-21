@@ -5,14 +5,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
-
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum Avslagsårsak implements Kodeverdi {
+public enum Avslagsårsak {
 
     SØKT_FOR_TIDLIG("1001"),
     SØKER_ER_MEDMOR("1002"),
@@ -71,7 +64,6 @@ public enum Avslagsårsak implements Kodeverdi {
     public static final Set<Avslagsårsak> IKKE_BARNETS_FAR = Collections.unmodifiableSet(
         new LinkedHashSet<>(Arrays.asList(SØKER_ER_IKKE_BARNETS_FAR_F, SØKER_ER_IKKE_BARNETS_FAR_O)));
 
-    @JsonValue
     private final String kode;
 
     Avslagsårsak(String kode) {
@@ -82,7 +74,6 @@ public enum Avslagsårsak implements Kodeverdi {
         return Arrays.stream(values()).filter(a -> a.kode.equals(kode)).findFirst().orElseThrow();
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

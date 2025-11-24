@@ -81,7 +81,7 @@ public class JettyServer {
     }
 
     void migrerDatabaser() {
-        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 2)) {
+        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 3)) {
             var flyway = Flyway.configure().dataSource(dataSource).locations("classpath:/db/migration/defaultDS").baselineOnMigrate(true);
             if (ENV.isProd() || ENV.isDev()) {
                 flyway.initSql(String.format("SET ROLE \"%s\"", DatasourceUtil.getRole(DatasourceRole.ADMIN)));

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
+
 public class PeriodeResultatÅrsak {
 
     // Her kommer Lovhjemler fra UttakResultatPeriodeDto - søk på bruk av CTOR - lar derfor være å lage full enum her inntil uttak i fpsak enda mer stabilt.
@@ -7,7 +9,7 @@ public class PeriodeResultatÅrsak {
     public static final String PERIODE_ÅRSAK_DISCRIMINATOR = "PERIODE_UTFALL_AARSAK";
 
     // UKJENT
-    public static final PeriodeResultatÅrsak UKJENT = new PeriodeResultatÅrsak("-", "UKJENT");
+    public static final PeriodeResultatÅrsak UKJENT = new PeriodeResultatÅrsak(Fpsak.STANDARDKODE_UDEFINERT, "UKJENT");
 
     // GRADERING avslått
     public static final PeriodeResultatÅrsak FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4501", GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR);

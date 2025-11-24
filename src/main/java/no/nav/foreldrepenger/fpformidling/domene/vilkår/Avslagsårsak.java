@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.domene.vilkår;
 
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -51,7 +53,7 @@ public enum Avslagsårsak {
     SN_FL_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER("1065"),
     SN_FL_HAR_MULIGHET_TIL_Å_TILRETTELEGGE_SITT_VIRKE("1066"),
     INGEN_BEREGNINGSREGLER_TILGJENGELIG_I_LØSNINGEN("1099"),
-    UDEFINERT("-"),
+    UDEFINERT(Fpsak.STANDARDKODE_UDEFINERT),
 
     ;
 
@@ -74,6 +76,7 @@ public enum Avslagsårsak {
         return Arrays.stream(values()).filter(a -> a.kode.equals(kode)).findFirst().orElseThrow();
     }
 
+    // Legg på JsonValue hvis du vil bruke denne mot fpsak / fpdokgen
     public String getKode() {
         return kode;
     }

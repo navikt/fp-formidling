@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 
 public enum VilkårType {
 
@@ -65,7 +66,7 @@ public enum VilkårType {
     /**
      * Brukes i stedet for null der det er optional.
      */
-    UDEFINERT("-", Map.of()),
+    UDEFINERT(Fpsak.STANDARDKODE_UDEFINERT, Map.of()),
 
     ;
 
@@ -100,6 +101,7 @@ public enum VilkårType {
         return Arrays.stream(values()).filter(vt -> vt.getAvslagsårsaker().contains(avslagsårsak)).collect(Collectors.toSet());
     }
 
+    // Legg på JsonValue hvis du vil bruke denne mot fpsak / fpdokgen
     public String getKode() {
         return kode;
     }

@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.V
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger.Aktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.Foreldrepenger.Uttaksperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.KodeverkMapper;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.PeriodeÅrsakDto;
@@ -250,7 +251,7 @@ public final class VedtaksperiodeMapper {
     }
 
     private static boolean erGraderingAvslått(Uttaksperiode uttakPeriode) {
-        return uttakPeriode.graderingAvslagÅrsak() != null && !uttakPeriode.graderingAvslagÅrsak().equals("-");
+        return uttakPeriode.graderingAvslagÅrsak() != null && !uttakPeriode.graderingAvslagÅrsak().equals(Fpsak.STANDARDKODE_UDEFINERT);
     }
 
     private static List<AnnenAktivitet> mapAnnenAktivtetListe(TilkjentYtelsePeriodeDto tilkjentYtelsePeriode, Uttaksperiode uttakPeriode) {

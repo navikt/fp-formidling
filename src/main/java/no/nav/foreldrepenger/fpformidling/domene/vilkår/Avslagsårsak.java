@@ -1,18 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.domene.vilkår;
 
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
-
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum Avslagsårsak implements Kodeverdi {
+public enum Avslagsårsak {
 
     SØKT_FOR_TIDLIG("1001"),
     SØKER_ER_MEDMOR("1002"),
@@ -58,7 +53,7 @@ public enum Avslagsårsak implements Kodeverdi {
     SN_FL_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER("1065"),
     SN_FL_HAR_MULIGHET_TIL_Å_TILRETTELEGGE_SITT_VIRKE("1066"),
     INGEN_BEREGNINGSREGLER_TILGJENGELIG_I_LØSNINGEN("1099"),
-    UDEFINERT("-"),
+    UDEFINERT(Fpsak.STANDARDKODE_UDEFINERT),
 
     ;
 
@@ -71,7 +66,6 @@ public enum Avslagsårsak implements Kodeverdi {
     public static final Set<Avslagsårsak> IKKE_BARNETS_FAR = Collections.unmodifiableSet(
         new LinkedHashSet<>(Arrays.asList(SØKER_ER_IKKE_BARNETS_FAR_F, SØKER_ER_IKKE_BARNETS_FAR_O)));
 
-    @JsonValue
     private final String kode;
 
     Avslagsårsak(String kode) {
@@ -82,7 +76,7 @@ public enum Avslagsårsak implements Kodeverdi {
         return Arrays.stream(values()).filter(a -> a.kode.equals(kode)).findFirst().orElseThrow();
     }
 
-    @Override
+    // Legg på JsonValue hvis du vil bruke denne mot fpsak / fpdokgen
     public String getKode() {
         return kode;
     }

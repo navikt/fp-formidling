@@ -2,43 +2,31 @@ package no.nav.foreldrepenger.fpformidling.domene.klage;
 
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
+public enum KlageAvvistÅrsak {
 
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum KlageAvvistÅrsak implements Kodeverdi {
-
-    KLAGET_FOR_SENT("KLAGET_FOR_SENT", Set.of("31", "33")),
-    KLAGE_UGYLDIG("KLAGE_UGYLDIG", null),
-    IKKE_PAKLAGD_VEDTAK("IKKE_PAKLAGD_VEDTAK", Set.of("28", "33")),
-    KLAGER_IKKE_PART("KLAGER_IKKE_PART", Set.of("28", "33")),
-    IKKE_KONKRET("IKKE_KONKRET", Set.of("32", "33")),
-    IKKE_SIGNERT("IKKE_SIGNERT", Set.of("32", "33")),
-    UDEFINERT("-", null),
+    KLAGET_FOR_SENT,
+    KLAGE_UGYLDIG,
+    IKKE_PAKLAGD_VEDTAK,
+    KLAGER_IKKE_PART,
+    IKKE_KONKRET,
+    IKKE_SIGNERT,
+    UDEFINERT,
     ;
 
-    @JsonValue
-    private final String kode;
-
-    @JsonIgnore
-    private final Set<String> lovHjemmel;
-
-    KlageAvvistÅrsak(String kode, Set<String> lovHjemmel) {
-        this.kode = kode;
-        this.lovHjemmel = lovHjemmel;
-    }
-
-    @Override
+    // Legg på JsonValue hvis du vil bruke denne mot fpsak / fpdokgen
     public String getKode() {
-        return kode;
+        return UDEFINERT.equals(this) ? Fpsak.STANDARDKODE_UDEFINERT : this.name();
     }
 
     public Set<String> getLovHjemmel() {
-        return lovHjemmel != null ? lovHjemmel : Set.of();
+        return switch (this) {
+            case KLAGET_FOR_SENT -> Set.of("31", "33");
+            case IKKE_PAKLAGD_VEDTAK, KLAGER_IKKE_PART -> Set.of("28", "33");
+            case IKKE_KONKRET, IKKE_SIGNERT -> Set.of("32", "33");
+            case KLAGE_UGYLDIG, UDEFINERT -> Set.of();
+        };
     }
 
 

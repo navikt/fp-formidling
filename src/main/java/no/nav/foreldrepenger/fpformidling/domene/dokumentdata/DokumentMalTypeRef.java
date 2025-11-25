@@ -30,7 +30,7 @@ public @interface DokumentMalTypeRef {
 
     class DokumentMalTypeRefLiteral extends AnnotationLiteral<DokumentMalTypeRef> implements DokumentMalTypeRef { //NOSONAR
 
-        private DokumentMalType navn;
+        private final DokumentMalType navn;
 
         public DokumentMalTypeRefLiteral(DokumentMalType dokumentMalKode) {
             this.navn = dokumentMalKode;

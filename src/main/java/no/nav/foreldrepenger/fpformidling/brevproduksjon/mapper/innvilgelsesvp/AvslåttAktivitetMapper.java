@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.ArbeidsforholdIkkeOpp
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AvslåttAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fpsak;
 
 public final class AvslåttAktivitetMapper {
 
@@ -23,7 +24,7 @@ public final class AvslåttAktivitetMapper {
     public static List<AvslåttAktivitet> mapAvslåtteAktiviteter(List<UttakArbeidsforhold> uttakResultatArbeidsforhold,
                                                                 UnaryOperator<String> hentNavn) {
         return uttakResultatArbeidsforhold.stream()
-            .filter(ura -> ura.arbeidsforholdIkkeOppfyltÅrsak() != null && !ura.arbeidsforholdIkkeOppfyltÅrsak().equals("-"))
+            .filter(ura -> ura.arbeidsforholdIkkeOppfyltÅrsak() != null && !ura.arbeidsforholdIkkeOppfyltÅrsak().equals(Fpsak.STANDARDKODE_UDEFINERT))
             .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.arbeidsforholdIkkeOppfyltÅrsak()))
             .map(uttakArbeidsforhold -> opprettSvpAvslagArbeidsforhold(uttakArbeidsforhold, hentNavn))
             .toList();

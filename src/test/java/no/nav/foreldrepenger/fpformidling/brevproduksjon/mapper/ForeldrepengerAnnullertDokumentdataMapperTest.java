@@ -9,6 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerAnnullertDokumentdata;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +64,41 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
         assertThat(dokumentdata.getHarSøktOmNyPeriode()).isTrue();
+        assertThat(dokumentdata.getAnnulleringÅrsak()).isNotNull().isEqualTo(ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.BRUKER_HAR_SØKT_OM_NY_PERIODE);
         assertThat(dokumentdata.getPlanlagtOppstartDato()).isEqualTo(formaterDatoNorsk(NY_STARTDATO));
         assertThat(dokumentdata.getKanBehandlesDato()).isEqualTo(formaterDatoNorsk(NY_STARTDATO.minusWeeks(4)));
+    }
+
+    @Test
+    void skal_mappe_felter_for_brev_til_bruker_med_pleiepenger() {
+        // Arrange
+        var behandling = defaultBuilder()
+            .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.FORELDREPENGER)
+            .foreldrepenger(BrevGrunnlagBuilders.foreldrepenger().build())
+            .behandlingÅrsakTyper(List.of(BrevGrunnlagDto.BehandlingÅrsakType.RE_VEDTAK_PLEIEPENGER))
+            .build();
+        var dokumentFelles = lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
+
+        // Act
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+
+        // Assert
+        assertThat(dokumentdata.getFelles()).isNotNull();
+        assertThat(dokumentdata.getFelles().getSøkerNavn()).isEqualTo(DatamapperTestUtil.SØKERS_NAVN);
+        assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(DatamapperTestUtil.SØKERS_FNR));
+        assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
+        assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
+        assertThat(dokumentdata.getFelles().getHarVerge()).isFalse();
+        assertThat(dokumentdata.getFelles().getErKopi()).isFalse();
+        assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FellesDokumentdata.YtelseType.FP);
+        assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
+
+        assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
+        assertThat(dokumentdata.getHarSøktOmNyPeriode()).isFalse();
+        assertThat(dokumentdata.getAnnulleringÅrsak()).isNotNull().isEqualTo(ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.BRUKER_MOTTAR_PLEIEPENGER);
+        assertThat(dokumentdata.getPlanlagtOppstartDato()).isNull();
+        assertThat(dokumentdata.getKanBehandlesDato()).isNull();
     }
 }

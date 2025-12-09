@@ -13,6 +13,7 @@ public class ForeldrepengerAnnullertDokumentdata extends Dokumentdata {
     private String planlagtOppstartDato;
     private String kanBehandlesDato;
     private int klagefristUker;
+    private AnnulleringÅrsak annulleringÅrsak;
 
     public boolean getHarSøktOmNyPeriode() {
         return harSøktOmNyPeriode;
@@ -30,6 +31,10 @@ public class ForeldrepengerAnnullertDokumentdata extends Dokumentdata {
         return klagefristUker;
     }
 
+    public AnnulleringÅrsak getAnnulleringÅrsak() {
+        return annulleringÅrsak;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -41,12 +46,12 @@ public class ForeldrepengerAnnullertDokumentdata extends Dokumentdata {
         var that = (ForeldrepengerAnnullertDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(harSøktOmNyPeriode, that.harSøktOmNyPeriode) && Objects.equals(
             planlagtOppstartDato, that.planlagtOppstartDato) && Objects.equals(kanBehandlesDato, that.kanBehandlesDato) && Objects.equals(
-            klagefristUker, that.klagefristUker);
+            klagefristUker, that.klagefristUker) && Objects.equals(annulleringÅrsak, that.annulleringÅrsak);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, harSøktOmNyPeriode, planlagtOppstartDato, kanBehandlesDato, klagefristUker);
+        return Objects.hash(felles, harSøktOmNyPeriode, planlagtOppstartDato, kanBehandlesDato, klagefristUker, annulleringÅrsak);
     }
 
     public static Builder ny() {
@@ -85,8 +90,21 @@ public class ForeldrepengerAnnullertDokumentdata extends Dokumentdata {
             return this;
         }
 
+        public Builder medAnnulleringÅrsak(AnnulleringÅrsak annulleringÅrsak) {
+            this.kladd.annulleringÅrsak = annulleringÅrsak;
+            return this;
+        }
+
         public ForeldrepengerAnnullertDokumentdata build() {
             return this.kladd;
         }
+    }
+
+    public enum AnnulleringÅrsak {
+        BRUKER_HAR_SØKT_OM_NY_PERIODE,
+        BRUKER_MOTTAR_PLEIEPENGER,
+        //ANNEN_PART_OVERTAR_UTTAKET, // ikke støttet ennå
+        //MANUELL_SAKSBEHANDLING // ikke støttet ennå
+        ;
     }
 }

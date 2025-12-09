@@ -48,6 +48,7 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
         var dokumentdataBuilder = ForeldrepengerAnnullertDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
+            .medAnnulleringÅrsak(finnÅrsak(behandling))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
         if (harSøktOmNyPeriode) {
@@ -55,5 +56,14 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
             dokumentdataBuilder.medKanBehandlesDato(formaterDato(startdatoUtsatt.minusWeeks(4), språkkode));
         }
         return dokumentdataBuilder.build();
+    }
+
+    private ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak finnÅrsak(BrevGrunnlagDto behandling) {
+        if (behandling.foreldrepenger().nyStartDatoVedUtsattOppstart() != null) {
+            return ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.BRUKER_HAR_SØKT_OM_NY_PERIODE;
+        } else if (behandling.behandlingÅrsakTyper().contains(BrevGrunnlagDto.BehandlingÅrsakType.RE_VEDTAK_PLEIEPENGER)) {
+            return ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.BRUKER_MOTTAR_PLEIEPENGER;
+        }
+        return null;
     }
 }

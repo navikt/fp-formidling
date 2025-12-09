@@ -8,17 +8,24 @@ registries:
 
 updates:
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: ".github/workflows"
     schedule:
-      interval: daily
+      interval: weekly
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 10
+
   - package-ecosystem: maven
     directory: "/"
     registries:
       - maven-github
     schedule:
-      interval: daily
-    open-pull-requests-limit: 20
+      interval: weekly
+    cooldown:
+      default-days: 7
+      exclude:
+        - "no.nav.*"
+    open-pull-requests-limit: 10
     allow:
       - dependency-type: "all"
     groups:

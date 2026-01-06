@@ -22,8 +22,8 @@
         <mockito.version>5.21.0</mockito.version>
 
         <!-- Felles artefakter -->
-        <felles.version>7.6.11</felles.version>
-        <prosesstask.version>5.2.1</prosesstask.version>
+        <felles.version>7.6.12</felles.version>
+        <prosesstask.version>5.2.2</prosesstask.version>
         <kontrakter.version>9.4.17</kontrakter.version>
     </properties>
 

@@ -19,6 +19,8 @@
         <sonar.projectName>fp-formidling</sonar.projectName>
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
+        <mockito.version>5.21.0</mockito.version>
+
         <!-- Felles artefakter -->
         <felles.version>7.6.11</felles.version>
         <prosesstask.version>5.2.1</prosesstask.version>
@@ -33,13 +35,6 @@
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles</artifactId>
                 <version>${felles.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.vedtak.prosesstask</groupId>
-                <artifactId>prosesstask-root</artifactId>
-                <version>${prosesstask.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -71,10 +66,12 @@
         <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-kontekst</artifactId>
+            <version>${prosesstask.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-rest-api</artifactId>
+            <version>${prosesstask.version}</version>
         </dependency>
 
         <dependency>
@@ -248,21 +245,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-testutilities</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

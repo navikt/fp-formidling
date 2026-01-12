@@ -47,8 +47,6 @@ spec:
     enabled: true
   envFrom:
     - secret: fpformidling
-  secureLogs:
-    enabled: true
   observability:
     autoInstrumentation:
       enabled: true

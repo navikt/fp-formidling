@@ -103,8 +103,8 @@ public class ForeldrepengerAnnullertDokumentdata extends Dokumentdata {
     public enum AnnulleringÅrsak {
         BRUKER_HAR_SØKT_OM_NY_PERIODE,
         BRUKER_MOTTAR_PLEIEPENGER,
-        //ANNEN_PART_OVERTAR_UTTAKET, // ikke støttet ennå - men kan sjekke om det gjelder en berørt behandling
-        //MANUELL_SAKSBEHANDLING // ikke støttet ennå
+        ANNEN_PART_OVERTAR_UTTAKET,
+        MANUELL_SAKSBEHANDLING
         ;
     }
 }

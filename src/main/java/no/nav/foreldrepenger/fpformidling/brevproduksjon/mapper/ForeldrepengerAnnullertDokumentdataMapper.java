@@ -63,6 +63,10 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
             return ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.BRUKER_HAR_SØKT_OM_NY_PERIODE;
         } else if (behandling.behandlingÅrsakTyper().contains(BrevGrunnlagDto.BehandlingÅrsakType.RE_VEDTAK_PLEIEPENGER)) {
             return ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.BRUKER_MOTTAR_PLEIEPENGER;
+        } else if (behandling.behandlingÅrsakTyper().contains(BrevGrunnlagDto.BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING)) {
+            return ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.MANUELL_SAKSBEHANDLING;
+        }  else if (behandling.behandlingÅrsakTyper().contains(BrevGrunnlagDto.BehandlingÅrsakType.BERØRT_BEHANDLING)) {
+            return ForeldrepengerAnnullertDokumentdata.AnnulleringÅrsak.ANNEN_PART_OVERTAR_UTTAKET;
         }
         return null;
     }

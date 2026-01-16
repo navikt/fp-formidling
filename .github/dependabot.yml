@@ -8,7 +8,7 @@ registries:
 
 updates:
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: ".github/workflows"
     schedule:
       interval: weekly
     cooldown:
@@ -26,7 +26,7 @@ updates:
       default-days: 7
       exclude:
         - "no.nav.*"
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 10
     allow:
       - dependency-type: "all"
     groups:

@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import no.nav.foreldrepenger.fpformidling.konfig.ApiConfig;
+import no.nav.foreldrepenger.fpformidling.konfig.ForvaltningApiConfig;
 import no.nav.foreldrepenger.fpformidling.konfig.InternalApiConfig;
 import no.nav.foreldrepenger.konfig.Environment;
 
@@ -150,6 +151,8 @@ public class JettyServer {
         handler.addConstraintMapping(pathConstraint(Constraint.ALLOWED, InternalApiConfig.API_URI + "/*"));
         // Slipp gjennom til autentisering i JaxRs / auth-filter
         handler.addConstraintMapping(pathConstraint(Constraint.ALLOWED, ApiConfig.API_URI + "/*"));
+        // Slipp gjennom til autentisering i JaxRs / auth-filter
+        handler.addConstraintMapping(pathConstraint(Constraint.ALLOWED, ForvaltningApiConfig.FORVALTNING_URI + "/*"));
         // Alt annet av paths og metoder forbudt - 403
         handler.addConstraintMapping(pathConstraint(Constraint.FORBIDDEN, "/*"));
         return handler;

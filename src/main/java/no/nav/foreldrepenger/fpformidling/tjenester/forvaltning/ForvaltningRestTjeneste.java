@@ -84,7 +84,7 @@ public class ForvaltningRestTjeneste {
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
         }
 
-        var dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper()
+        var dokumentdata = (Dokumentdata) DefaultJsonMapper.getJsonMapper()
             .readValue(dokgenJsonTilPdfDto.getDokumentdataJson(), Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
         var resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.defaultNorsk(dokgenJsonTilPdfDto.getSpråkKode()),

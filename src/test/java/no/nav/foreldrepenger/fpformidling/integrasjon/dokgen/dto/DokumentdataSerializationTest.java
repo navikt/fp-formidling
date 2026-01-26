@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
@@ -43,7 +43,7 @@ import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 class DokumentdataSerializationTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = DefaultJsonMapper.getObjectMapper();
+    private static final JsonMapper JSON_MAPPER = DefaultJsonMapper.getJsonMapper();
 
     @Test
     void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() throws IOException {
@@ -345,11 +345,11 @@ class DokumentdataSerializationTest {
     }
 
     private String tilJson(Object obj) throws JsonProcessingException {
-        return OBJECT_MAPPER.writeValueAsString(obj);
+        return JSON_MAPPER.writeValueAsString(obj);
     }
 
     private Object fraJson(String json, Class clazz) throws JsonProcessingException {
-        return OBJECT_MAPPER.readValue(json, clazz);
+        return JSON_MAPPER.readValue(json, clazz);
     }
 
     private FellesDokumentdata opprettFellesDokumentdata() {

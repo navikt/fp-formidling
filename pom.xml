@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-parent-app</artifactId>
-        <version>5.2.1</version>
+        <version>5.2.3</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -22,9 +22,9 @@
         <mockito.version>5.21.0</mockito.version>
 
         <!-- Felles artefakter -->
-        <felles.version>7.6.14</felles.version>
-        <prosesstask.version>5.2.2</prosesstask.version>
-        <kontrakter.version>9.4.23</kontrakter.version>
+        <felles.version>7.6.15</felles.version>
+        <prosesstask.version>5.2.3</prosesstask.version>
+        <kontrakter.version>9.4.26</kontrakter.version>
     </properties>
 
     <!-- NB: Unngå å put scope (test, provided) i dependency management. Det har uheldige virkninger ved bruk av import og dependency (bruk composition

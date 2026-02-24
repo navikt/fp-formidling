@@ -169,7 +169,7 @@ public class DokgenBrevproduksjonTjeneste {
                 LOG.info("Genererer HTML ved bruk av gammel dokgen.");
                 html = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
             }
-            LOG.info("Dokument HTML med ble generert.");
+            LOG.info("Dokument HTML ble generert.");
             return html;
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-1", "Klarte ikke å generere HTML for dokument.", e);

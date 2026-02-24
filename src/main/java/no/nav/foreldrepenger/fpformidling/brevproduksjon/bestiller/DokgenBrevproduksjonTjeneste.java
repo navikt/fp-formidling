@@ -224,10 +224,10 @@ public class DokgenBrevproduksjonTjeneste {
                 LOG.info("Genererer pdf ved bruk av gammel dokgen.");
                 pdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
             }
-            LOG.info("Søknad PDF med ble generert.");
+            LOG.info("PDF for dokument ble generert.");
             return pdf;
         } catch (Exception e) {
-            throw new TekniskException("FPFORMIDLING-1", "Klarte ikke å generere pdf for søknad med id %s", e);
+            throw new TekniskException("FPFORMIDLING-1", "Klarte ikke å generere pdf for dokument", e);
         }
     }
 

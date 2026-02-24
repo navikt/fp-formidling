@@ -13,6 +13,6 @@ import jakarta.inject.Qualifier;
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 public @interface NyDokgen {
 
-    class GammelDokgenAnnotationLiteral extends AnnotationLiteral<NyDokgen> implements NyDokgen {
+    class NyDokgenAnnotationLiteral extends AnnotationLiteral<NyDokgen> implements NyDokgen {
     }
 }

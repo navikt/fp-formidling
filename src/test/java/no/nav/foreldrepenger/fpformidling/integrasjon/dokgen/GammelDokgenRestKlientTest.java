@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.v1.NyFpDokgenRestKlient;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,7 @@ import no.nav.vedtak.felles.integrasjon.rest.RestClient;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ExtendWith(MockitoExtension.class)
-class DokgenRestKlientTest {
+class GammelDokgenRestKlientTest {
 
     @Mock
     private RestClient restClient;
@@ -31,7 +33,7 @@ class DokgenRestKlientTest {
 
     @BeforeEach
     void setup() {
-        this.klient = new DokgenRestKlient(restClient);
+        this.klient = new NyFpDokgenRestKlient(restClient);
     }
 
     @ParameterizedTest

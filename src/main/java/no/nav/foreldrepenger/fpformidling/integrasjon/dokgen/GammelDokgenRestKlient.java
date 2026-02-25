@@ -1,32 +1,33 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen;
 
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
-import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
-import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.integrasjon.rest.*;
+import java.util.Objects;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.UriBuilder;
-
-import java.util.Objects;
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.RestClient;
+import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
+import no.nav.vedtak.felles.integrasjon.rest.RestConfig;
+import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
+import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 
 @ApplicationScoped
+@GammelDokgen
 @RestClientConfig(tokenConfig = TokenFlow.NO_AUTH_NEEDED, endpointProperty = "dokgen.rest.base.url", endpointDefault = "http://fpdokgen.teamforeldrepenger")
-public class DokgenRestKlient implements Dokgen {
+public class GammelDokgenRestKlient implements Dokgen {
 
     private final RestClient restClient;
     private final RestConfig restConfig;
 
-
-    public DokgenRestKlient() {
+    public GammelDokgenRestKlient() {
         this(RestClient.client());
     }
 
-    public DokgenRestKlient(RestClient restClient) {
+    public GammelDokgenRestKlient(RestClient restClient) {
         this.restClient = restClient;
-        this.restConfig = RestConfig.forClient(DokgenRestKlient.class);
+        this.restConfig = RestConfig.forClient(GammelDokgenRestKlient.class);
     }
 
     @Override
@@ -43,7 +44,6 @@ public class DokgenRestKlient implements Dokgen {
         return pdf;
     }
 
-    @Override
     public String genererHtml(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         var templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
         var endpoint = UriBuilder.fromUri(restConfig.endpoint()).path(templatePath).path("/create-html-variation-of-pdf").build();
@@ -52,7 +52,7 @@ public class DokgenRestKlient implements Dokgen {
 
         if (html == null || html.isEmpty()) {
             throw new TekniskException("FPFORMIDLING-946543",
-                    String.format("Fikk tomt svar (html) ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode));
+                String.format("Fikk tomt svar (html) ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode));
         }
         return html;
     }

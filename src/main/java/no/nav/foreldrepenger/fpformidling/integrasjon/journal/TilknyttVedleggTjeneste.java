@@ -50,6 +50,6 @@ public class TilknyttVedleggTjeneste {
     }
 
     private TilknyttVedleggRequest lagRequest(JournalpostId journalpostIdFra, String dokumentInfoId) {
-        return new TilknyttVedleggRequest(List.of(new TilknyttVedleggRequest.DokumentTilknytt(journalpostIdFra.getVerdi(), dokumentInfoId)));
+        return new TilknyttVedleggRequest(List.of(new TilknyttVedleggRequest.DokumentTilknytt(journalpostIdFra.getVerdi(), dokumentInfoId, null)), null);
     }
 }

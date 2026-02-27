@@ -27,7 +27,7 @@
     }
   ],
   "envs": {
-    "TOGGLE_BRUK_NY_DOKGEN": "false"
+    "TOGGLE_BRUK_NY_DOKGEN": "true"
   },
   "AZURE_IAC_RULES": [
     {

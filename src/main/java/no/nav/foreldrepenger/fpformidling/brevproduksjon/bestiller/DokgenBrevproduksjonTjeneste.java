@@ -156,7 +156,7 @@ public class DokgenBrevproduksjonTjeneste {
                     html = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
                     var oldhtml = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
                     if ((html.length() != oldhtml.length() && Math.abs(html.length() - oldhtml.length()) > 10) || html.isEmpty()) {
-                        LOG.warn("HTML-lengde fra ny og gammel dokgen er ulik. Ny dokgen lengde: {}, Gammel dokgen lengde: {}",
+                        LOG.info("HTML-lengde fra ny og gammel dokgen er ulik. Ny dokgen lengde: {}, Gammel dokgen lengde: {}",
                             html.length(),
                             oldhtml.length());
                         return oldhtml;
@@ -211,7 +211,7 @@ public class DokgenBrevproduksjonTjeneste {
                     pdf = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
                     var oldpdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
                     if ((pdf.length != oldpdf.length && Math.abs(pdf.length - oldpdf.length) > 10) || pdf.length == 0) {
-                        LOG.warn("PDF-lengde fra ny og gammel dokgen er ulik. Ny dokgen lengde: {}, Gammel dokgen lengde: {}",
+                        LOG.info("PDF-lengde fra ny og gammel dokgen er ulik. Ny dokgen lengde: {}, Gammel dokgen lengde: {}",
                             pdf.length,
                             oldpdf.length);
                         return oldpdf;

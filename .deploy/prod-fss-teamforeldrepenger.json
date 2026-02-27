@@ -26,7 +26,7 @@
       "kommentar": "drift"
     }
   ],
-  "env": {
+  "envs": {
     "TOGGLE_BRUK_NY_DOKGEN": "false"
   },
   "AZURE_IAC_RULES": [

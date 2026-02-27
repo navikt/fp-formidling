@@ -60,10 +60,10 @@ spec:
         - id: elastic
   {{#if envs}}
   env:
-  {{#each envs}}
-    - name: {{@key}}
+    {{#each envs}}
+    - name: "{{@key}}"
       value: "{{this}}"
-  {{/each}}
+    {{/each}}
   {{/if}}
   azure:
     application:

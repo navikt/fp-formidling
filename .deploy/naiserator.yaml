@@ -58,6 +58,13 @@ spec:
       destinations:
         - id: loki
         - id: elastic
+  {{#if envs}}
+  env:
+  {{#each envs}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
+  {{/if}}
   azure:
     application:
       enabled: true

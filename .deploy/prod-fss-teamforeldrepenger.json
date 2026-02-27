@@ -26,6 +26,9 @@
       "kommentar": "drift"
     }
   ],
+  "env": {
+    "TOGGLE_BRUK_NY_DOKGEN": "false"
+  },
   "AZURE_IAC_RULES": [
     {
       "app": "fp-swagger",

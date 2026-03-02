@@ -148,25 +148,20 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private String genererHtml(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
+        String html;
         try {
-            String html;
-            if (Boolean.TRUE.equals(ENV.getRequiredProperty("TOGGLE_BRUK_NY_DOKGEN", Boolean.class))) {
-                try {
-                    LOG.info("Genererer HTML ved bruk av ny dokgen.");
-                    html = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
-                } catch (Exception e) {
-                    LOG.warn("Kall til ny dokgen feilet, prøver å generere HTML med gammel dokgen. Feilmelding: {}", e.getMessage());
-                    html = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
-                }
-            } else {
-                LOG.info("Genererer HTML ved bruk av gammel dokgen.");
+            LOG.info("Genererer HTML ved bruk av ny dokgen.");
+            html = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
+        } catch (Exception exception) {
+            if (ENV.isDev() || ENV.isProd()) {
+                LOG.warn("Kall til ny dokgen feilet, prøver å generere HTML med gammel dokgen. Feilmelding: {}", exception.getMessage());
                 html = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
+            } else {
+                throw exception; // kaster exception lokalt.
             }
-            LOG.info("Dokument HTML ble generert.");
-            return html;
-        } catch (Exception e) {
-            throw new TekniskException("FPFORMIDLING-1", "Klarte ikke å generere HTML for dokument.", e);
         }
+        LOG.info("Dokument HTML ble generert.");
+        return html;
     }
 
     private byte[] genererDokument(DokumentHendelse dokumentHendelse,
@@ -196,25 +191,20 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
+        byte[] pdf;
         try {
-            byte[] pdf;
-            if (Boolean.TRUE.equals(ENV.getRequiredProperty("TOGGLE_BRUK_NY_DOKGEN", Boolean.class))) {
-                try {
-                    LOG.info("Genererer pdf ved bruk av ny dokgen.");
-                    pdf = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
-                } catch (Exception e) {
-                    LOG.warn("Kall til ny dokgen feilet, prøver å generere pdf med gammel dokgen. Feilmelding: {}", e.getMessage());
-                    pdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
-                }
-            } else {
-                LOG.info("Genererer pdf ved bruk av gammel dokgen.");
+            LOG.info("Genererer PDF ved bruk av ny dokgen.");
+            pdf = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
+        } catch (Exception exception) {
+            if (ENV.isDev() || ENV.isProd()) {
+                LOG.warn("Kall til ny dokgen feilet, prøver å generere pdf med gammel dokgen. Feilmelding: {}", exception.getMessage());
                 pdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
+            } else {
+                throw exception; // kaster exception lokalt.
             }
-            LOG.info("PDF for dokument ble generert.");
-            return pdf;
-        } catch (Exception e) {
-            throw new TekniskException("FPFORMIDLING-1", "Klarte ikke å generere pdf for dokument", e);
         }
+        LOG.info("PDF for dokument ble generert.");
+        return pdf;
     }
 
     public String genererJson(DokumentHendelse dokumentHendelse, BrevGrunnlagDto behandling, BestillingType bestillingType) {

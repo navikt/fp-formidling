@@ -154,13 +154,6 @@ public class DokgenBrevproduksjonTjeneste {
                 try {
                     LOG.info("Genererer HTML ved bruk av ny dokgen.");
                     html = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
-                    var oldhtml = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
-                    if ((html.length() != oldhtml.length() && Math.abs(html.length() - oldhtml.length()) > 10) || html.isEmpty()) {
-                        LOG.info("HTML-lengde fra ny og gammel dokgen er ulik. Ny dokgen lengde: {}, Gammel dokgen lengde: {}",
-                            html.length(),
-                            oldhtml.length());
-                        return oldhtml;
-                    }
                 } catch (Exception e) {
                     LOG.warn("Kall til ny dokgen feilet, prøver å generere HTML med gammel dokgen. Feilmelding: {}", e.getMessage());
                     html = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
@@ -209,13 +202,6 @@ public class DokgenBrevproduksjonTjeneste {
                 try {
                     LOG.info("Genererer pdf ved bruk av ny dokgen.");
                     pdf = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
-                    var oldpdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
-                    if ((pdf.length != oldpdf.length && Math.abs(pdf.length - oldpdf.length) > 10) || pdf.length == 0) {
-                        LOG.info("PDF-lengde fra ny og gammel dokgen er ulik. Ny dokgen lengde: {}, Gammel dokgen lengde: {}",
-                            pdf.length,
-                            oldpdf.length);
-                        return oldpdf;
-                    }
                 } catch (Exception e) {
                     LOG.warn("Kall til ny dokgen feilet, prøver å generere pdf med gammel dokgen. Feilmelding: {}", e.getMessage());
                     pdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);

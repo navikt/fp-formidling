@@ -2,7 +2,6 @@
   "minReplicas": "1",
   "maxReplicas": "2",
   "limits": {
-    "cpu": "2000m",
     "mem": "2048Mi"
   },
   "requests": {
@@ -26,9 +25,6 @@
       "kommentar": "drift"
     }
   ],
-  "envs": {
-    "TOGGLE_BRUK_NY_DOKGEN": "true"
-  },
   "AZURE_IAC_RULES": [
     {
       "app": "fp-swagger",

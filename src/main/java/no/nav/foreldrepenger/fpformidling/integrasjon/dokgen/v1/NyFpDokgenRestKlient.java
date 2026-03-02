@@ -14,15 +14,10 @@ import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
 import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @ApplicationScoped
 @NyDokgen
-@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "ny.fpdokgen.url", endpointDefault = "http://fp-dokgen", scopesProperty = "ny.fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fp-dokgen/.default")
+@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "fpdokgen.base.url", endpointDefault = "http://fp-dokgen", scopesProperty = "fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fp-dokgen/.default")
 public class NyFpDokgenRestKlient implements Dokgen {
-
-    private static final Logger LOG = LoggerFactory.getLogger(NyFpDokgenRestKlient.class);
 
     protected static final String API_PATH = "/api";
     private static final String V1_GENERER_PATH = "/v1/dokument/generer";

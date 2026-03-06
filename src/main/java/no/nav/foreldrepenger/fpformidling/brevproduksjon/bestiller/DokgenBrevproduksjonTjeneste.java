@@ -153,11 +153,11 @@ public class DokgenBrevproduksjonTjeneste {
             LOG.info("Genererer HTML ved bruk av ny dokgen.");
             html = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
         } catch (Exception exception) {
-            if (ENV.isDev() || ENV.isProd()) {
+            if (ENV.isProd()) {
                 LOG.warn("Kall til ny dokgen feilet, prøver å generere HTML med gammel dokgen. Feilmelding: {}", exception.getMessage());
                 html = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
             } else {
-                throw exception; // kaster exception lokalt.
+                throw exception;
             }
         }
         LOG.info("Dokument HTML ble generert.");
@@ -196,11 +196,11 @@ public class DokgenBrevproduksjonTjeneste {
             LOG.info("Genererer PDF ved bruk av ny dokgen.");
             pdf = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
         } catch (Exception exception) {
-            if (ENV.isDev() || ENV.isProd()) {
+            if (ENV.isProd()) {
                 LOG.warn("Kall til ny dokgen feilet, prøver å generere pdf med gammel dokgen. Feilmelding: {}", exception.getMessage());
                 pdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
             } else {
-                throw exception; // kaster exception lokalt.
+                throw exception;
             }
         }
         LOG.info("PDF for dokument ble generert.");

@@ -104,7 +104,7 @@ class BrevBestillerTjenesteTest {
     void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)));
         var dokumentFellesDataMapper = new DokumentMottakereUtleder(personAdapter, virksomhetTjeneste);
-        var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, nyDokgenRestKlient, gammelDokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
+        var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, nyDokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
         tjeneste = new BrevBestillerTjeneste(fpsakRestKlient, dokgenBrevproduksjonTjeneste);
     }
 

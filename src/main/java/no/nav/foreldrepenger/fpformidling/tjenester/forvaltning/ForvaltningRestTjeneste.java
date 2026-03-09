@@ -5,8 +5,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.UUID;
 import java.util.function.Function;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.v1.NyDokgen;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +64,7 @@ public class ForvaltningRestTjeneste {
     }
 
     @Inject
-    public ForvaltningRestTjeneste(@NyDokgen Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste, BrevBestillerTjeneste brevBestillerTjeneste) {
+    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste, BrevBestillerTjeneste brevBestillerTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.taskTjeneste = taskTjeneste;

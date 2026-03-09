@@ -5,7 +5,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokument
 
 /**
  * Brukes til generering av dokumenter.
- * Swagger dokumentasjon: <a href="https://fpdokgen.dev.intern.nav.no/swagger-ui/index.html">Swagger API dokumentasjon i dev.</a>
  */
 public interface Dokgen {
 

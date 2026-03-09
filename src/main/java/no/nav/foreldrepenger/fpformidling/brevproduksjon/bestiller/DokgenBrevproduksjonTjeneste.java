@@ -24,9 +24,6 @@ import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.GammelDokgen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.v1.NyDokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -48,7 +45,6 @@ public class DokgenBrevproduksjonTjeneste {
 
     private DokumentMottakereUtleder dokumentMottakereUtleder;
     private Dokgen nyDokgenKlient;
-    private Dokgen gammelDokgenKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     private ProsessTaskTjeneste taskTjeneste;
@@ -59,14 +55,12 @@ public class DokgenBrevproduksjonTjeneste {
 
     @Inject
     public DokgenBrevproduksjonTjeneste(DokumentMottakereUtleder dokumentMottakereUtleder,
-                                        @NyDokgen Dokgen nyDokgenKlient,
-                                        @GammelDokgen Dokgen gammelDokgenKlient,
+                                        Dokgen nyDokgenKlient,
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskTjeneste taskTjeneste) {
         this.dokumentMottakereUtleder = dokumentMottakereUtleder;
         this.nyDokgenKlient = nyDokgenKlient;
-        this.gammelDokgenKlient = gammelDokgenKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
         this.taskTjeneste = taskTjeneste;
@@ -135,7 +129,10 @@ public class DokgenBrevproduksjonTjeneste {
 
         String brev;
         try {
-            brev = genererHtml(dokumentdataMapper.getTemplateNavn(), dokumentFelles.getSpråkkode(), dokumentdata);
+            String maltype = dokumentdataMapper.getTemplateNavn();
+            Språkkode språkkode = dokumentFelles.getSpråkkode();
+            LOG.trace("Genererer HTML.");
+            brev = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
             LOG.info("Dokument av type {} i behandling id {} ble generert for overstyring (HTML).", dokumentMalType.getKode(), behandling.uuid());
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
@@ -145,23 +142,6 @@ public class DokgenBrevproduksjonTjeneste {
                     behandling.uuid(), bestillingType), e);
         }
         return brev;
-    }
-
-    private String genererHtml(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
-        String html;
-        try {
-            LOG.info("Genererer HTML ved bruk av ny dokgen.");
-            html = nyDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
-        } catch (Exception exception) {
-            if (ENV.isProd()) {
-                LOG.warn("Kall til ny dokgen feilet, prøver å generere HTML med gammel dokgen. Feilmelding: {}", exception.getMessage());
-                html = gammelDokgenKlient.genererHtml(maltype, språkkode, dokumentdata);
-            } else {
-                throw exception;
-            }
-        }
-        LOG.info("Dokument HTML ble generert.");
-        return html;
     }
 
     private byte[] genererDokument(DokumentHendelse dokumentHendelse,
@@ -176,7 +156,10 @@ public class DokgenBrevproduksjonTjeneste {
 
         byte[] brev;
         try {
-            brev = genererPdf(dokumentdataMapper.getTemplateNavn(), dokumentFelles.getSpråkkode(), dokumentdata);
+            String maltype = dokumentdataMapper.getTemplateNavn();
+            Språkkode språkkode = dokumentFelles.getSpråkkode();
+            LOG.trace("Genererer PDF.");
+            brev = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOG.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
@@ -188,23 +171,6 @@ public class DokgenBrevproduksjonTjeneste {
             LOG.info("Dokument av type {} i behandling id {} ble generert.", dokumentMalType.getKode(), behandling.uuid());
         }
         return brev;
-    }
-
-    private byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
-        byte[] pdf;
-        try {
-            LOG.info("Genererer PDF ved bruk av ny dokgen.");
-            pdf = nyDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
-        } catch (Exception exception) {
-            if (ENV.isProd()) {
-                LOG.warn("Kall til ny dokgen feilet, prøver å generere pdf med gammel dokgen. Feilmelding: {}", exception.getMessage());
-                pdf = gammelDokgenKlient.genererPdf(maltype, språkkode, dokumentdata);
-            } else {
-                throw exception;
-            }
-        }
-        LOG.info("PDF for dokument ble generert.");
-        return pdf;
     }
 
     public String genererJson(DokumentHendelse dokumentHendelse, BrevGrunnlagDto behandling, BestillingType bestillingType) {

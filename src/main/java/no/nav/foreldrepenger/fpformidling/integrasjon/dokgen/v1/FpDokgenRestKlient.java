@@ -15,9 +15,8 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ApplicationScoped
-@NyDokgen
 @RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "fpdokgen.base.url", endpointDefault = "http://fp-dokgen", scopesProperty = "fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fp-dokgen/.default")
-public class NyFpDokgenRestKlient implements Dokgen {
+public class FpDokgenRestKlient implements Dokgen {
 
     protected static final String API_PATH = "/api";
     private static final String V1_GENERER_PATH = "/v1/dokument/generer";
@@ -25,13 +24,13 @@ public class NyFpDokgenRestKlient implements Dokgen {
     private final RestClient restClient;
     private final RestConfig restConfig;
 
-    public NyFpDokgenRestKlient() {
+    public FpDokgenRestKlient() {
         this(RestClient.client());
     }
 
-    public NyFpDokgenRestKlient(RestClient restClient) {
+    public FpDokgenRestKlient(RestClient restClient) {
         this.restClient = restClient;
-        this.restConfig = RestConfig.forClient(NyFpDokgenRestKlient.class);
+        this.restConfig = RestConfig.forClient(FpDokgenRestKlient.class);
     }
 
     @Override
@@ -53,6 +52,7 @@ public class NyFpDokgenRestKlient implements Dokgen {
     @Override
     public String genererHtml(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         var endpoint = UriBuilder.fromUri(restConfig.endpoint()).path(API_PATH).path(V1_GENERER_PATH).path("/html").build();
+        // PDF styling brukes for å sikre at html-en som genereres er optimalisert for å kunne konverteres til PDF senere. HTML styling er aldri brukt og kunne vurderes fjernet.
         var requestDto = new NyDokgenRequest(maltype, mapSpråk(språkkode), NyDokgenRequest.CssStyling.PDF, DefaultJsonMapper.toJson(dokumentdata));
 
         var request = RestRequest.newPOSTJson(requestDto, endpoint, restConfig)

@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.v1;
 
 import jakarta.validation.constraints.NotNull;
 
-public record NyDokgenRequest(@NotNull String malNavn, Språk språk, @NotNull CssStyling cssStyling, @NotNull String inputData) {
+public record FpDokgenRequest(@NotNull String malNavn, Språk språk, @NotNull CssStyling cssStyling, @NotNull String inputData) {
 
     public enum Språk {
         BOKMÅL,

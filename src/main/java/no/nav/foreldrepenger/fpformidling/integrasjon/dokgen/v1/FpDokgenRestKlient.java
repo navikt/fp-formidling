@@ -15,7 +15,7 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ApplicationScoped
-@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "fpdokgen.base.url", endpointDefault = "http://fp-dokgen", scopesProperty = "fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fp-dokgen/.default")
+@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "fpdokgen.base.url", endpointDefault = "https://fp-dokgen.intern.nav.no/fpdokgen", scopesProperty = "fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fp-dokgen/.default")
 public class FpDokgenRestKlient implements Dokgen {
 
     protected static final String API_PATH = "/api";
@@ -36,7 +36,7 @@ public class FpDokgenRestKlient implements Dokgen {
     @Override
     public byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         var endpoint = UriBuilder.fromUri(restConfig.endpoint()).path(API_PATH).path(V1_GENERER_PATH).path("/pdf").build();
-        var requestDto = new NyDokgenRequest(maltype, mapSpråk(språkkode), NyDokgenRequest.CssStyling.PDF, DefaultJsonMapper.toJson(dokumentdata));
+        var requestDto = new FpDokgenRequest(maltype, mapSpråk(språkkode), FpDokgenRequest.CssStyling.PDF, DefaultJsonMapper.toJson(dokumentdata));
 
         var request = RestRequest.newPOSTJson(requestDto, endpoint, restConfig)
             .header(HttpHeaders.ACCEPT, "application/pdf");
@@ -53,7 +53,7 @@ public class FpDokgenRestKlient implements Dokgen {
     public String genererHtml(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         var endpoint = UriBuilder.fromUri(restConfig.endpoint()).path(API_PATH).path(V1_GENERER_PATH).path("/html").build();
         // PDF styling brukes for å sikre at html-en som genereres er optimalisert for å kunne konverteres til PDF senere. HTML styling er aldri brukt og kunne vurderes fjernet.
-        var requestDto = new NyDokgenRequest(maltype, mapSpråk(språkkode), NyDokgenRequest.CssStyling.PDF, DefaultJsonMapper.toJson(dokumentdata));
+        var requestDto = new FpDokgenRequest(maltype, mapSpråk(språkkode), FpDokgenRequest.CssStyling.PDF, DefaultJsonMapper.toJson(dokumentdata));
 
         var request = RestRequest.newPOSTJson(requestDto, endpoint, restConfig)
             .header(HttpHeaders.ACCEPT, "text/html");
@@ -67,12 +67,12 @@ public class FpDokgenRestKlient implements Dokgen {
         return html;
     }
 
-    private NyDokgenRequest.Språk mapSpråk(Språkkode språkkode) {
+    private FpDokgenRequest.Språk mapSpråk(Språkkode språkkode) {
         return switch (språkkode) {
-            case NB -> NyDokgenRequest.Språk.BOKMÅL;
-            case NN -> NyDokgenRequest.Språk.NYNORSK;
-            case EN -> NyDokgenRequest.Språk.ENGELSK;
-            case null -> NyDokgenRequest.Språk.BOKMÅL;
+            case NB -> FpDokgenRequest.Språk.BOKMÅL;
+            case NN -> FpDokgenRequest.Språk.NYNORSK;
+            case EN -> FpDokgenRequest.Språk.ENGELSK;
+            case null -> FpDokgenRequest.Språk.BOKMÅL;
         };
     }
 }

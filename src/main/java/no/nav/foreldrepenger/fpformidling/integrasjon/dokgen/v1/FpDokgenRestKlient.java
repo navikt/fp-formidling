@@ -15,7 +15,7 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ApplicationScoped
-@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "fpdokgen.base.url", endpointDefault = "https://fp-dokgen.intern.nav.no/fpdokgen", scopesProperty = "fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fp-dokgen/.default")
+@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, endpointProperty = "fpdokgen.base.url", endpointDefault = "https://fpdokgen.intern.nav.no/fpdokgen", scopesProperty = "fpdokgen.scopes", scopesDefault = "api://prod-gcp.teamforeldrepenger.fpdokgen/.default")
 public class FpDokgenRestKlient implements Dokgen {
 
     protected static final String API_PATH = "/api";

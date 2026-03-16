@@ -57,6 +57,22 @@ spec:
       destinations:
         - id: loki
         - id: elastic
+  gcp:
+    sqlInstances:
+      - type: {{db.dbVersion}}
+        databases:
+          - name: fpformidling
+            envVarPrefix: DB
+        tier: {{db.dbTier}}
+        diskAutoresize: {{db.dbDiskAutoresize}}
+        highAvailability: {{db.dbHighAvailability}}
+        pointInTimeRecovery: {{db.dbPointInTimeRecovery}}
+        collation: nb_NO.UTF8
+        retainedBackups: {{db.dbRetainedBackups}}
+        autoBackupHour: 2
+        maintenance:
+          day: 1
+          hour: 4
   azure:
     application:
       enabled: true

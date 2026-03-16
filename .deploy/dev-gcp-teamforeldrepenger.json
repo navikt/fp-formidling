@@ -9,6 +9,14 @@
     "cpu": "100m",
     "mem": "512Mi"
   },
+  "db": {
+    "dbVersion": "POSTGRES_18",
+    "dbTier": "db-f1-micro",
+    "dbDiskAutoresize": "false",
+    "dbHighAvailability": "false",
+    "dbPointInTimeRecovery": "false",
+    "dbRetainedBackups": "1"
+  },
   "ingresses": [
     "https://fpformidling.intern.dev.nav.no"
   ],

@@ -12,6 +12,14 @@
   "ingresses": [
     "https://fpformidling.intern.nav.no"
   ],
+  "db": {
+    "dbVersion": "POSTGRES_18",
+    "dbTier": "db-custom-1-3840",
+    "dbDiskAutoresize": "true",
+    "dbHighAvailability": "false",
+    "dbPointInTimeRecovery": "true",
+    "dbRetainedBackups": "14"
+  },
   "groups": [
     {
       "uuid": "73107205-17ec-4a07-a56e-e0a8542f90c9",

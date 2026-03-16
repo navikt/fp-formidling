@@ -1,4 +1,5 @@
 {
+  "environment": "dev-fss",
   "minReplicas": "1",
   "maxReplicas": "2",
   "limits": {

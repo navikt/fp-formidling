@@ -68,24 +68,29 @@ spec:
           {{#each groups as |group|}}
           - id: "{{group.uuid}}"
           {{/each}}
-  {{#if AZURE_IAC_RULES}}
   accessPolicy:
     outbound:
       rules:
         - application: logging
           namespace: nais-system
+        - application: pdl-api
+          namespace: pdl
+          cluster: {{environment}}
+        - application: dokdistfordeling
+          namespace: teamdokumenthandtering
+          cluster: {{environment}}
+        - application: dokarkiv
+          namespace: teamdokumenthandtering
+          cluster: {{environment}}
+        - application: oppgave
+          namespace: oppgavehandtering
+          cluster: {{environment}}
+        - application: ereg-services
+          namespace: arbeidsforhold
+          cluster: {{environment}}
+
     inbound:
       rules:
-      {{#each AZURE_IAC_RULES}}
-        - application: {{app}}
-          namespace: {{namespace}}
-          cluster: {{cluster}}
-          {{#if scopes}}
-          permissions:
-            scopes:
-            {{#each scopes}}
-            - "{{this}}"
-            {{/each}}
-          {{/if}}
-      {{/each}}
-  {{/if}}
+        - application: fp-swagger
+        - application: fpsak
+          cluster: {{environment}}

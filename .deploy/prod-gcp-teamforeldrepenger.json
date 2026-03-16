@@ -1,5 +1,5 @@
 {
-  "environment": "prod-fss",
+  "environment": "prod-gcp",
   "minReplicas": "2",
   "maxReplicas": "3",
   "limits": {
@@ -10,7 +10,7 @@
     "mem": "1024Mi"
   },
   "ingresses": [
-    "https://fpformidling.prod-fss-pub.nais.io"
+    "https://fpformidling.intern.nav.no"
   ],
   "groups": [
     {

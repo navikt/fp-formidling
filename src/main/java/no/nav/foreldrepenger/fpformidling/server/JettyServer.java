@@ -3,8 +3,11 @@ package no.nav.foreldrepenger.fpformidling.server;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import org.eclipse.jetty.ee11.cdi.CdiDecoratingListener;
 import org.eclipse.jetty.ee11.cdi.CdiServletContainerInitializer;
@@ -23,11 +26,14 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.FlywayException;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import no.nav.foreldrepenger.fpformidling.konfig.ApiConfig;
 import no.nav.foreldrepenger.fpformidling.konfig.ForvaltningApiConfig;
@@ -59,8 +65,7 @@ public class JettyServer {
 
     void bootStrap() throws Exception {
         konfigurerLogging();
-        konfigurerJndi();
-        migrerDatabaser();
+        migrer(setupDataSource());
         start();
     }
 
@@ -73,21 +78,40 @@ public class JettyServer {
         SLF4JBridgeHandler.install();
     }
 
-    private static void konfigurerJndi() throws NamingException {
-        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource(DatasourceRole.USER, 10));
+
+    private static DataSource setupDataSource() throws NamingException {
+        var dataSource = dataSource();
+        new EnvEntry("jdbc/defaultDS", dataSource);
+        return dataSource;
     }
 
-    private static void migrerDatabaser() {
-        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 3)) {
-            var flyway = Flyway.configure().dataSource(dataSource).locations("classpath:/db/migration/defaultDS").baselineOnMigrate(true);
-            if (ENV.isProd() || ENV.isDev()) {
-                flyway.initSql(String.format("SET ROLE \"%s\"", DatasourceUtil.getRole(DatasourceRole.ADMIN)));
-            }
-            flyway.load().migrate();
-        } catch (FlywayException e) {
-            LOG.error("Feil under migrering av databasen.");
-            throw e;
-        }
+    private static DataSource dataSource() {
+        var config = new HikariConfig();
+        config.setJdbcUrl(ENV.getRequiredProperty("DB_JDBC_URL"));
+        config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(2));
+        config.setMinimumIdle(1);
+        config.setMaximumPoolSize(16);
+        config.setInitializationFailTimeout(TimeUnit.SECONDS.toMillis(30));
+        config.setConnectionTestQuery("select 1");
+        config.setDriverClassName("org.postgresql.Driver");
+        config.setAutoCommit(false);
+
+        // optimaliserer inserts for postgres
+        var dsProperties = new Properties();
+        dsProperties.setProperty("reWriteBatchedInserts", "true");
+        dsProperties.setProperty("logServerErrorDetail", "false"); // skrur av batch exceptions som lekker statements i åpen logg
+        config.setDataSourceProperties(dsProperties);
+
+        return new HikariDataSource(config);
+    }
+
+    private static FluentConfiguration flywayConfig(DataSource dataSource) {
+        return Flyway.configure().dataSource(dataSource).locations("classpath:/db/migration/defaultDS").baselineOnMigrate(true);
+    }
+
+    private static void migrer(DataSource dataSource) {
+        var flyway = flywayConfig(dataSource);
+        flyway.load().migrate();
     }
 
     private void start() throws Exception {

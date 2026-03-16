@@ -69,6 +69,6 @@ class DatasourceUtil {
     }
 
     private static String mountPath() {
-        return "postgresql/" + (ENV.isProd() ? "prod-fss" : "preprod-fss");
+        return "postgresql/" + (ENV.isProd() ? "prod-gcp" : "dev-gcp");
     }
 }

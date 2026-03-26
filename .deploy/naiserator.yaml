@@ -82,21 +82,12 @@ spec:
       rules:
         - application: logging
           namespace: nais-system
-        - application: pdl-api
-          namespace: pdl
-          cluster: {{environment}}-fss
-        - application: dokdistfordeling
-          namespace: teamdokumenthandtering
-          cluster: {{environment}}-fss
-        - application: dokarkiv
-          namespace: teamdokumenthandtering
-          cluster: {{environment}}-fss
-        - application: oppgave
-          namespace: oppgavehandtering
-          cluster: {{environment}}-fss
-        - application: ereg-services
-          namespace: arbeidsforhold
-          cluster: {{environment}}-fss
+      external:
+        - host: pdl-api.{{environment}}-fss-pub.nais.io
+        - host: dokdistfordeling.{{environment}}-fss-pub.nais.io
+        - host: dokarkiv.{{environment}}-fss-pub.nais.io
+        - host: oppgave.{{environment}}-fss-pub.nais.io
+        - host: ereg-services.{{environment}}-fss-pub.nais.io
     inbound:
       rules:
         - application: fp-swagger

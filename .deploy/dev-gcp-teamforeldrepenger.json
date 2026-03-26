@@ -1,5 +1,5 @@
 {
-  "environment": "dev-gcp",
+  "environment": "dev",
   "minReplicas": "1",
   "maxReplicas": "2",
   "limits": {
@@ -32,21 +32,6 @@
     {
       "uuid": "f1b82579-c5b5-4617-9673-8ace5ff67f63",
       "kommentar": "drift"
-    }
-  ],
-  "AZURE_IAC_RULES": [
-    {
-      "app": "fp-swagger",
-      "namespace": "teamforeldrepenger",
-      "cluster": "dev-gcp",
-      "scopes": [
-        "swagger"
-      ]
-    },
-    {
-      "app": "fpsak",
-      "namespace": "teamforeldrepenger",
-      "cluster": "dev-fss"
     }
   ]
 }

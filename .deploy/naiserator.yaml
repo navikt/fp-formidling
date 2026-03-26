@@ -84,22 +84,27 @@ spec:
           namespace: nais-system
         - application: pdl-api
           namespace: pdl
-          cluster: {{environment}}
+          cluster: {{environment}}-fss
         - application: dokdistfordeling
           namespace: teamdokumenthandtering
-          cluster: {{environment}}
+          cluster: {{environment}}-fss
         - application: dokarkiv
           namespace: teamdokumenthandtering
-          cluster: {{environment}}
+          cluster: {{environment}}-fss
         - application: oppgave
           namespace: oppgavehandtering
-          cluster: {{environment}}
+          cluster: {{environment}}-fss
         - application: ereg-services
           namespace: arbeidsforhold
-          cluster: {{environment}}
-
+          cluster: {{environment}}-fss
     inbound:
       rules:
         - application: fp-swagger
+          namespace: teamforeldrepenger
+          cluster: {{environment}}-gcp
+          permissions:
+            scopes:
+              - "swagger"
         - application: fpsak
-          cluster: {{environment}}
+          namespace: teamforeldrepenger
+          cluster: {{environment}}-fss

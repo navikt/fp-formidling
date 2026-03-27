@@ -42,21 +42,30 @@ spec:
     requests:
       cpu: "{{requests.cpu}}"
       memory: "{{requests.mem}}"
-  vault:
-    enabled: true
-  envFrom:
-    - secret: fpformidling
   observability:
     autoInstrumentation:
       enabled: true
       runtime: java
-      destinations:
-        - id: "grafana-lgtm"
-        - id: "elastic-apm"
     logging:
       destinations:
         - id: loki
         - id: elastic
+  gcp:
+    sqlInstances:
+      - type: {{db.dbVersion}}
+        databases:
+          - name: fpformidling
+            envVarPrefix: DB
+        tier: {{db.dbTier}}
+        diskAutoresize: {{db.dbDiskAutoresize}}
+        highAvailability: {{db.dbHighAvailability}}
+        pointInTimeRecovery: {{db.dbPointInTimeRecovery}}
+        collation: nb_NO.UTF8
+        retainedBackups: {{db.dbRetainedBackups}}
+        autoBackupHour: 2
+        maintenance:
+          day: 1
+          hour: 4
   azure:
     application:
       enabled: true
@@ -68,24 +77,29 @@ spec:
           {{#each groups as |group|}}
           - id: "{{group.uuid}}"
           {{/each}}
-  {{#if AZURE_IAC_RULES}}
   accessPolicy:
     outbound:
       rules:
         - application: logging
           namespace: nais-system
+        - application: fpdokgen
+          namespace: teamforeldrepenger
+      external:
+        - host: pdl-api.{{environment}}-fss-pub.nais.io
+        - host: dokdistfordeling.{{environment}}-fss-pub.nais.io
+        - host: dokarkiv.{{environment}}-fss-pub.nais.io
+        - host: oppgave.{{environment}}-fss-pub.nais.io
+        - host: ereg-services.{{environment}}-fss-pub.nais.io
+        - host: fpsak-api.{{environment}}-fss-pub.nais.io
+        - host: fptilgang.{{environment}}-fss-pub.nais.io
     inbound:
       rules:
-      {{#each AZURE_IAC_RULES}}
-        - application: {{app}}
-          namespace: {{namespace}}
-          cluster: {{cluster}}
-          {{#if scopes}}
+        - application: fp-swagger
+          namespace: teamforeldrepenger
+          cluster: {{environment}}-gcp
           permissions:
             scopes:
-            {{#each scopes}}
-            - "{{this}}"
-            {{/each}}
-          {{/if}}
-      {{/each}}
-  {{/if}}
+              - "swagger"
+        - application: fpsak
+          namespace: teamforeldrepenger
+          cluster: {{environment}}-fss

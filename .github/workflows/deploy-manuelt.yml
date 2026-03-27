@@ -23,5 +23,5 @@ jobs:
     with:
       gar: true
       image: ${{ inputs.image }}
-      cluster: ${{ inputs.environment }}-fss
+      cluster: ${{ inputs.environment }}-gcp
     secrets: inherit

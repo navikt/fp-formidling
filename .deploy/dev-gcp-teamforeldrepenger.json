@@ -1,4 +1,5 @@
 {
+  "environment": "dev",
   "minReplicas": "1",
   "maxReplicas": "2",
   "limits": {
@@ -8,8 +9,16 @@
     "cpu": "100m",
     "mem": "512Mi"
   },
+  "db": {
+    "dbVersion": "POSTGRES_18",
+    "dbTier": "db-f1-micro",
+    "dbDiskAutoresize": "false",
+    "dbHighAvailability": "false",
+    "dbPointInTimeRecovery": "false",
+    "dbRetainedBackups": "1"
+  },
   "ingresses": [
-    "https://fpformidling.dev-fss-pub.nais.io"
+    "https://fpformidling.intern.dev.nav.no"
   ],
   "groups": [
     {
@@ -23,21 +32,6 @@
     {
       "uuid": "f1b82579-c5b5-4617-9673-8ace5ff67f63",
       "kommentar": "drift"
-    }
-  ],
-  "AZURE_IAC_RULES": [
-    {
-      "app": "fp-swagger",
-      "namespace": "teamforeldrepenger",
-      "cluster": "dev-gcp",
-      "scopes": [
-        "swagger"
-      ]
-    },
-    {
-      "app": "fpsak",
-      "namespace": "teamforeldrepenger",
-      "cluster": "dev-fss"
     }
   ]
 }

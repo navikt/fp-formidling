@@ -25,8 +25,8 @@ jobs:
       pull-requests: read
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-no-db.yml@main
     with:
-      build-image: ${{ github.ref_name == 'migrer-til-gcp' }} # default: true
-      push-image: ${{ github.ref_name == 'migrer-til-gcp' }} # default: false
+      build-image: ${{ github.ref_name == 'master' }} # default: true
+      push-image: ${{ github.ref_name == 'master' }} # default: false
     secrets: inherit
 
   verdikjede:
@@ -34,7 +34,7 @@ jobs:
     permissions:
        contents: read
        id-token: write
-    if: github.ref_name == 'migrer-til-gcp'
+    if: github.ref_name == 'master'
     needs: build-app
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
@@ -44,7 +44,7 @@ jobs:
 
   notify:
     name: Notify
-    if: github.ref_name == 'migrer-til-gcp' && (success() || failure()) && !contains(needs.*.result, 'skipped')
+    if: github.ref_name == 'master' && (success() || failure()) && !contains(needs.*.result, 'skipped')
     needs: [build-app, verdikjede]
     uses: navikt/fp-autotest/.github/workflows/report-and-notify.yml@master
     with:
@@ -56,7 +56,7 @@ jobs:
     name: Deploy dev
     permissions:
       id-token: write
-    if: github.ref_name == 'migrer-til-gcp'
+    if: github.ref_name == 'master'
     needs: [build-app, verdikjede]
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
@@ -65,15 +65,15 @@ jobs:
       cluster: dev-gcp
     secrets: inherit
 
-#  deploy-prod:
-#    name: Deploy prod
-#    permissions:
-#      id-token: write
-#    if: github.ref_name == 'migrer-til-gcp'
-#    needs: [build-app, verdikjede, deploy-dev]
-#    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
-#    with:
-#      gar: true
-#      image: ${{ needs.build-app.outputs.build-version }}
-#      cluster: prod-fss
-#    secrets: inherit
+  deploy-prod:
+    name: Deploy prod
+    permissions:
+      id-token: write
+    if: github.ref_name == 'master'
+    needs: [build-app, verdikjede, deploy-dev]
+    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
+    with:
+      gar: true
+      image: ${{ needs.build-app.outputs.build-version }}
+      cluster: prod-gcp
+    secrets: inherit

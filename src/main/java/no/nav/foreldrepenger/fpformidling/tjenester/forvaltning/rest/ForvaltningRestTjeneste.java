@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.tjenester.forvaltning;
+package no.nav.foreldrepenger.fpformidling.tjenester.forvaltning.rest;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 

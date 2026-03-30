@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.tjenester.forvaltning;
+package no.nav.foreldrepenger.fpformidling.tjenester.forvaltning.rest;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.QueryParam;

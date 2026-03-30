@@ -14,7 +14,7 @@ import org.glassfish.jersey.server.ServerProperties;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
-import no.nav.foreldrepenger.fpformidling.tjenester.forvaltning.ForvaltningRestTjeneste;
+import no.nav.foreldrepenger.fpformidling.tjenester.forvaltning.rest.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 import no.nav.vedtak.openapi.OpenApiUtils;

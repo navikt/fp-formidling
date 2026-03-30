@@ -99,7 +99,7 @@ spec:
           cluster: {{environment}}-gcp
           permissions:
             scopes:
-              - "swagger"
+              - swagger
         - application: fpsak
           namespace: teamforeldrepenger
           cluster: {{environment}}-fss

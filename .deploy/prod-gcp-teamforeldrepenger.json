@@ -3,11 +3,11 @@
   "minReplicas": "2",
   "maxReplicas": "3",
   "limits": {
-    "mem": "2048Mi"
+    "mem": "1250Mi"
   },
   "requests": {
-    "cpu": "200m",
-    "mem": "1024Mi"
+    "cpu": "100m",
+    "mem": "1000Mi"
   },
   "ingresses": [
     "https://fpformidling.intern.nav.no"

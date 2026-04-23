@@ -67,10 +67,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
 
     private RevurderingVarslingÅrsak utledAdvarselkode(DokumentHendelse hendelse) {
         if (hendelse.getRevurderingÅrsak() == null) {
-            if (harFritekst(hendelse)) {
-                return RevurderingVarslingÅrsak.ANNET;
-            }
-            return null;
+            return RevurderingVarslingÅrsak.ANNET;
         }
         return switch (hendelse.getRevurderingÅrsak()) {
             case BARN_IKKE_REGISTRERT_FOLKEREGISTER -> RevurderingVarslingÅrsak.BARNIKKEREG;
@@ -86,8 +83,14 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     }
 
     private boolean utledFlereOpplysninger(DokumentHendelse hendelse, RevurderingVarslingÅrsak advarselKode, FagsakYtelseType ytelseType) {
-        return !RevurderingVarslingÅrsak.JOBBFULLTID.equals(advarselKode) && (harFritekst(hendelse)
-            || !FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType));
+        if (RevurderingVarslingÅrsak.JOBBFULLTID.equals(advarselKode)) {
+            return false;
+        }
+        // ANNET-varianten viser alltid flereOpplysninger uavhengig av ytelsestype
+        if (RevurderingVarslingÅrsak.ANNET.equals(advarselKode)) {
+            return true;
+        }
+        return harFritekst(hendelse) || !FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType);
     }
 
     private boolean harFritekst(DokumentHendelse hendelse) {

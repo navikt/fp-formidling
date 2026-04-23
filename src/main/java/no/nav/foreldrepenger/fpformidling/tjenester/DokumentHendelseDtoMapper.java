@@ -20,6 +20,7 @@ public final class DokumentHendelseDtoMapper {
                 .medBehandlingUuid(dokumentBestillingHtmlDto.behandlingUuid())
                 .medBestillingUuid(UUID.randomUUID())
                 .medDokumentMal(mapDokumentMal(dokumentBestillingHtmlDto.dokumentMal()))
+                .medRevurderingÅrsak(mapRevurderingÅrsak(dokumentBestillingHtmlDto.revurderingÅrsak()))
                 .build();
     }
 

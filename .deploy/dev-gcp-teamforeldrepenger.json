@@ -1,13 +1,13 @@
 {
   "environment": "dev",
   "minReplicas": "1",
-  "maxReplicas": "2",
+  "maxReplicas": "1",
   "limits": {
-    "mem": "1000Mi"
+    "mem": "800Mi"
   },
   "requests": {
-    "cpu": "50m",
-    "mem": "800Mi"
+    "cpu": "30m",
+    "mem": "640Mi"
   },
   "db": {
     "dbVersion": "POSTGRES_18",

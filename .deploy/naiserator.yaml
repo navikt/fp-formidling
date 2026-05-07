@@ -24,6 +24,12 @@ spec:
     periodSeconds: 10
     failureThreshold: 20
     timeout: 3
+  startup:
+    path: /fpformidling/internal/health/isReady
+    initialDelay: 10
+    periodSeconds: 10
+    failureThreshold: 20
+    timeout: 3
   preStopHook:
     http:
       path: /fpformidling/internal/health/preStop
@@ -35,8 +41,8 @@ spec:
     max: {{maxReplicas}}
     scalingStrategy:
       cpu:
-        thresholdPercentage: 80
-      scaleUpStabilizationWindowSeconds: 60
+        thresholdPercentage: 60
+      scaleUpStabilizationWindowSeconds: 30
   resources:
     limits:
       memory: "{{limits.mem}}"

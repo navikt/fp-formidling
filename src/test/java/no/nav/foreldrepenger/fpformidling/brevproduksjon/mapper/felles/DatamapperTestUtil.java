@@ -84,7 +84,7 @@ public class DatamapperTestUtil {
         return DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
-            .medDokumentMal(DokumentMal.FRITEKSTBREV)
+            .medDokumentMal(DokumentMal.FRITEKSTBREV_HTML)
             .medFritekst(FRITEKST);
     }
 

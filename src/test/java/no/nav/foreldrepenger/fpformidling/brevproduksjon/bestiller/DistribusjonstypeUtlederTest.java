@@ -25,7 +25,6 @@ class DistribusjonstypeUtlederTest {
         assertThat(utledFor(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR)).isEqualTo(VEDTAK);
         assertThat(utledFor(DokumentMalType.KLAGE_AVVIST)).isEqualTo(VEDTAK);
         assertThat(utledFor(DokumentMalType.KLAGE_OMGJORT)).isEqualTo(VEDTAK);
-        assertThat(utledFor(DokumentMalType.FRITEKSTBREV)).isEqualTo(VEDTAK);
     }
 
     @Test

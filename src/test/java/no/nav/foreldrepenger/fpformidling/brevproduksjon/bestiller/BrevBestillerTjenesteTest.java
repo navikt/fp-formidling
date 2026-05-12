@@ -167,7 +167,7 @@ class BrevBestillerTjenesteTest {
     @Test
     void skal_utlede_riktig_dokument_type_hvis_fritekst_er_valgt() {
         // Arrange
-        var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID(), DokumentMal.FRITEKSTBREV, DokumentMal.FORELDREPENGER_INNVILGELSE);
+        var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID(), DokumentMal.FRITEKSTBREV_HTML, DokumentMal.FORELDREPENGER_INNVILGELSE);
         var behandling = mock(BrevGrunnlagDto.class);
         when(fpsakRestKlient.hentBrevGrunnlag(any())).thenReturn(behandling);
 

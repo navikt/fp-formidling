@@ -4,7 +4,6 @@ import java.util.Set;
 
 public enum DokumentMalType {
 
-    FRITEKSTBREV("FRITEK", "Fritekstbrev"),
     FRITEKSTBREV_HTML("FRIHTM", "Fritekstbrev html"),
     ENGANGSSTØNAD_INNVILGELSE("INNVES", "Vedtak om innvilgelse av engangsstønad"),
     ENGANGSSTØNAD_AVSLAG("AVSLES", "Avslag engangsstønad"),

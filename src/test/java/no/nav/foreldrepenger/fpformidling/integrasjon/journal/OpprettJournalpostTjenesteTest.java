@@ -64,7 +64,7 @@ class OpprettJournalpostTjenesteTest {
         var unikBestillingsId = dokumentHendelse.getBestillingUuid().toString() + "-" + 1;
 
         // Act
-        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.FRITEKSTBREV, dokumentFelles,
+        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.FRITEKSTBREV_HTML, dokumentFelles,
             dokumentHendelse, true, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
 
         // Assert
@@ -113,7 +113,7 @@ class OpprettJournalpostTjenesteTest {
         return DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
-            .medDokumentMal(DokumentMal.FRITEKSTBREV)
+            .medDokumentMal(DokumentMal.FRITEKSTBREV_HTML)
             .medFritekst(FRITEKST);
     }
 }

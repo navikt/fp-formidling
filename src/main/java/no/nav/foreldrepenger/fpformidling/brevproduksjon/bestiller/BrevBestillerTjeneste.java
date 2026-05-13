@@ -54,7 +54,7 @@ public class BrevBestillerTjeneste {
 
     private DokumentMalType utledDokumentType(DokumentHendelse dokumentHendelse) {
         var dokumentMal = dokumentHendelse.getDokumentMal();
-        if (DokumentMal.FRITEKSTBREV.equals(dokumentMal) || DokumentMal.FRITEKSTBREV_HTML.equals(dokumentMal)) {
+        if (DokumentMal.FRITEKSTBREV_HTML.equals(dokumentMal)) {
             return mapDokumentMalType(dokumentHendelse.getJournalførSom());
         }
         return mapDokumentMalType(dokumentMal);
@@ -62,7 +62,6 @@ public class BrevBestillerTjeneste {
 
     private DokumentMalType mapDokumentMalType(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
-            case FRITEKSTBREV -> DokumentMalType.FRITEKSTBREV;
             case FRITEKSTBREV_HTML -> DokumentMalType.FRITEKSTBREV_HTML;
             case KLAGE_AVVIST -> DokumentMalType.KLAGE_AVVIST;
             case KLAGE_OMGJORT -> DokumentMalType.KLAGE_OMGJORT;
@@ -89,8 +88,6 @@ public class BrevBestillerTjeneste {
             case FORLENGET_SAKSBEHANDLINGSTID_TIDLIG -> DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG;
             case ENDRING_UTBETALING -> DokumentMalType.ENDRING_UTBETALING;
             case FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER -> DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER;
-            case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV -> DokumentMalType.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV;
-            case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_FORLENGET_SAKSBEHANDLINGSTID -> DokumentMalType.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_FORLENGET_SAKSBEHANDLINGSTID;
             case null -> throw new NullPointerException("Ugyldig dokument mal type.");
         };
     }

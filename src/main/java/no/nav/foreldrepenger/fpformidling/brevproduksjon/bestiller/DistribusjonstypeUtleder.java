@@ -9,7 +9,7 @@ class DistribusjonstypeUtleder {
     }
 
     static Distribusjonstype utledFor(DokumentMalType dokumentMal) {
-        if (DokumentMalType.erVedtaksBrev(dokumentMal) || DokumentMalType.FRITEKSTBREV.equals(dokumentMal)) {
+        if (DokumentMalType.erVedtaksBrev(dokumentMal)) {
             return Distribusjonstype.VEDTAK;
         } else if (DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_BREVMALER.contains(dokumentMal)
             || DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER.equals(dokumentMal)) {

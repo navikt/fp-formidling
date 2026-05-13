@@ -48,7 +48,6 @@ public final class DokumentHendelseDtoMapper {
 
     public static no.nav.foreldrepenger.fpformidling.typer.DokumentMal mapDokumentMal(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
-            case FRITEKSTBREV -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV;
             case FRITEKSTBREV_HTML -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV_HTML;
             case ENGANGSSTØNAD_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_INNVILGELSE;
             case ENGANGSSTØNAD_AVSLAG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_AVSLAG;
@@ -57,8 +56,6 @@ public final class DokumentHendelseDtoMapper {
             case FORELDREPENGER_OPPHØR -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_OPPHØR;
             case FORELDREPENGER_ANNULLERT -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_ANNULLERT;
             case FORELDREPENGER_INFO_TIL_ANNEN_FORELDER -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER;
-            case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV;
-            case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_FORLENGET_SAKSBEHANDLINGSTID -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_FORLENGET_SAKSBEHANDLINGSTID;
             case SVANGERSKAPSPENGER_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.SVANGERSKAPSPENGER_INNVILGELSE;
             case SVANGERSKAPSPENGER_OPPHØR -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.SVANGERSKAPSPENGER_OPPHØR;
             case SVANGERSKAPSPENGER_AVSLAG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.SVANGERSKAPSPENGER_AVSLAG;

@@ -104,6 +104,6 @@ class FritekstTest {
         return DokumentHendelse.builder()
             .medBehandlingUuid(UUID.randomUUID())
             .medBestillingUuid(UUID.randomUUID())
-            .medDokumentMal(DokumentMal.FRITEKSTBREV);
+            .medDokumentMal(DokumentMal.FRITEKSTBREV_HTML);
     }
 }

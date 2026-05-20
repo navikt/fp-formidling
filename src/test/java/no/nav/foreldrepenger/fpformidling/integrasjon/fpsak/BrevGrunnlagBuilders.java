@@ -995,14 +995,8 @@ public class BrevGrunnlagBuilders {
     }
 
     public static class FritekstBuilder {
-        private String overskrift;
         private String brødtekst;
         private String avslagsarsakFritekst;
-
-        public FritekstBuilder overskrift(String overskrift) {
-            this.overskrift = overskrift;
-            return this;
-        }
 
         public FritekstBuilder brødtekst(String brødtekst) {
             this.brødtekst = brødtekst;
@@ -1015,7 +1009,7 @@ public class BrevGrunnlagBuilders {
         }
 
         public Behandlingsresultat.Fritekst build() {
-            return new Behandlingsresultat.Fritekst(overskrift, brødtekst, avslagsarsakFritekst);
+            return new Behandlingsresultat.Fritekst(brødtekst, avslagsarsakFritekst);
         }
     }
 

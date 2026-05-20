@@ -106,7 +106,6 @@ class EngangsstønadAvslagDokumentdataMapperTest {
                 .behandlingResultatType(Behandlingsresultat.BehandlingResultatType.AVSLÅTT)
                 .avslagsårsak(avslagsårsak.getKode())
                 .fritekst(fritekst()
-                    .overskrift("avslag")
                     .avslagsarsakFritekst(avslagsfritekst)
                     .build())
                 .vilkårTyper(List.of(vilkårType))

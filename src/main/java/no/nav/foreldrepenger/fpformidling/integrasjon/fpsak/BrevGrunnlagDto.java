@@ -271,7 +271,7 @@ public record BrevGrunnlagDto(UUID uuid, String saksnummer, FagsakYtelseType fag
     public record Behandlingsresultat(String medlemskapOpphørsårsak, LocalDate medlemskapFom, BehandlingResultatType behandlingResultatType,
                                       String avslagsårsak, Fritekst fritekst, Skjæringstidspunkt skjæringstidspunkt, boolean endretDekningsgrad,
                                       LocalDate opphørsdato, List<KonsekvensForYtelsen> konsekvenserForYtelsen, List<VilkårType> vilkårTyper) {
-        public record Fritekst(String overskrift, String brødtekst, String avslagsarsakFritekst) {
+        public record Fritekst(String brødtekst, String avslagsarsakFritekst) {
         }
 
         public record Skjæringstidspunkt(LocalDate dato, boolean utenMinsterett) {

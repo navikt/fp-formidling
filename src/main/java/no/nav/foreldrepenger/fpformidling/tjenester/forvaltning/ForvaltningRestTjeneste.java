@@ -141,7 +141,6 @@ public class ForvaltningRestTjeneste {
             .medBestillingUuid(nyBestillingUuid)
             .medDokumentMal(originalHendelse.getDokumentMal())
             .medFritekst(originalHendelse.getFritekst())
-            .medTittel(originalHendelse.getTittel())
             .medRevurderingÅrsak(originalHendelse.getRevurderingÅrsak())
             .build();
     }

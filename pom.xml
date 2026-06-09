@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-parent-app</artifactId>
-        <version>5.3.3</version>
+        <version>5.3.4</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -22,8 +22,8 @@
         <mockito.version>5.21.0</mockito.version>
 
         <!-- Felles artefakter -->
-        <felles.version>7.8.2</felles.version>
-        <prosesstask.version>5.2.6</prosesstask.version>
+        <felles.version>7.8.3</felles.version>
+        <prosesstask.version>5.2.7</prosesstask.version>
         <kontrakter.version>9.4.34</kontrakter.version>
     </properties>
 

@@ -12,6 +12,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import no.nav.foreldrepenger.fpformidling.tjenester.BrevRestTjeneste;
+import no.nav.vedtak.server.rest.AuthenticationFilter;
 import no.nav.vedtak.server.rest.FpRestJackson2Feature;
 
 @ApplicationPath(ApiConfig.API_URI)
@@ -22,6 +23,7 @@ public class ApiConfig extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>(getAllClasses());
+        classes.add(AuthenticationFilter.class);
         classes.add(FpRestJackson2Feature.class);
         return Collections.unmodifiableSet(classes);
     }

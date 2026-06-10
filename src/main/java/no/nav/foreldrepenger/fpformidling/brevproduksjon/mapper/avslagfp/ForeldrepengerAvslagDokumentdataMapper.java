@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
@@ -38,13 +37,6 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.MORA, "MOR");
         RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.FARA, "FAR");
         RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.MEDMOR, "MEDMOR");
-    }
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public ForeldrepengerAvslagDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
     }
 
     @Override
@@ -78,7 +70,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
             .medBarnErFødt(familiehendelse.barnErFødt())
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)
-            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medKlagefristUker(BrevParametere.getKlagefristUker())
             .medGjelderMor(behandling.relasjonsRolleType() == RelasjonsRolleType.MORA);
 
         mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder, språkkode);

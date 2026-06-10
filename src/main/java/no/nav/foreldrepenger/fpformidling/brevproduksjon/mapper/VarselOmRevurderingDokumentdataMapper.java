@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
@@ -23,13 +22,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.VARSEL_OM_REVURDERING)
 public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevMapperUtil brevMapperUtil;
-
-    @Inject
-    public VarselOmRevurderingDokumentdataMapper(BrevMapperUtil brevMapperUtil) {
-        this.brevMapperUtil = brevMapperUtil;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -55,7 +47,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         return ny()
             .medFelles(fellesBuilder.build())
             .medTerminDato(finnTermindato(familieHendelse, språkkode).orElse(null))
-            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode))
+            .medFristDato(formaterDato(BrevMapperUtil.getSvarFrist(), språkkode))
             .medAntallBarn(familieHendelse.antallBarn())
             .medAdvarselKode(advarselKode)
             .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.fagsakYtelseType())).build();

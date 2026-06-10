@@ -58,12 +58,10 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
 
     private static final Logger LOG = LoggerFactory.getLogger(ForeldrepengerInnvilgelseDokumentdataMapper.class);
-    private final BrevParametere brevParametere;
     private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public ForeldrepengerInnvilgelseDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        this.brevParametere = brevParametere;
+    public ForeldrepengerInnvilgelseDokumentdataMapper(ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
@@ -168,7 +166,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medHarVarierendeDagsats(harVarierendeDagsats(vedtaksperioder))
             .medMedlemskapOpphørsårsak(behandling.behandlingsresultat().medlemskapOpphørsårsak())
             .medStarterMedFullUtbetaling(starterMedFullUtbetaling(vedtaksperioder))
-            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medKlagefristUker(BrevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttak, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
                 FellesMapper.formaterLovhjemlerForBeregning(KodeverkMapper.mapBeregningHjemmel(beregningsgrunnlag.hjemmel()).getLovRef(),

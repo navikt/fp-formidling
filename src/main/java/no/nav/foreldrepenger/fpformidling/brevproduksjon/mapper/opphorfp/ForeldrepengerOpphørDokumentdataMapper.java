@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
@@ -44,13 +43,6 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.MORA, "MOR");
         RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.FARA, "FAR");
         RELASJONSKODE_TYPE_MAP.put(RelasjonsRolleType.MEDMOR, "MEDMOR");
-    }
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public ForeldrepengerOpphørDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
     }
 
     @Override
@@ -87,7 +79,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)
             .medEndretDekningsgrad(behandlingsresultat.endretDekningsgrad())
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
         var vilkårTyper = behandling.behandlingsresultat().vilkårTyper().stream().map(KodeverkMapper::mapVilkårType).toList();
         var årsakListe = mapAvslagårsaker(vilkårTyper, behandlingsresultat, dokumentdataBuilder, uttaksperioder);

@@ -39,12 +39,10 @@ import no.nav.vedtak.exception.TekniskException;
 @DokumentMalTypeRef(DokumentMalType.SVANGERSKAPSPENGER_AVSLAG)
 public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataMapper {
 
-    private final BrevParametere brevParametere;
     private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public SvangerskapspengerAvslagDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        this.brevParametere = brevParametere;
+    public SvangerskapspengerAvslagDokumentdataMapper(ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
@@ -84,7 +82,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
             .medMottattDato(formaterDato(behandling.førsteSøknadMottattDato(), språkkode))
             .medAntallArbeidsgivere(antallArbeidsgivere)
             .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
         var vilkårTyper = behandling.behandlingsresultat().vilkårTyper()
             .stream().map(KodeverkMapper::mapVilkårType)

@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
@@ -19,13 +18,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.INNHENTE_OPPLYSNINGER)
 public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevMapperUtil brevMapperUtil;
-
-    @Inject
-    public InnhenteOpplysningerDokumentdataMapper(BrevMapperUtil brevMapperUtil) {
-        this.brevMapperUtil = brevMapperUtil;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -51,7 +43,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medKlage(behandling.erKlage())
             .medSøknadDato(finnSøknadDato(behandling, dokumentFelles))
-            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), språkkode)).build();
+            .medFristDato(formaterDato(BrevMapperUtil.getSvarFrist(), språkkode)).build();
     }
 
     private String finnSøknadDato(BrevGrunnlagDto behandling, DokumentFelles dokumentFelles) {

@@ -35,12 +35,10 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @DokumentMalTypeRef(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE)
 public class SvangerskapspengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
-    private final BrevParametere brevParametere;
     private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public SvangerskapspengerInnvilgelseDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        this.brevParametere = brevParametere;
+    public SvangerskapspengerInnvilgelseDokumentdataMapper(ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
@@ -84,7 +82,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             .medStønadsperiodeTom(formaterDato(UtbetalingsperiodeMapper.finnSisteStønadsdato(alleUtbetalingsperioder), språkkode))
             .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
             .medMottattDato(formaterDato(mottattDatoSøknad, språkkode))
-            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medKlagefristUker(BrevParametere.getKlagefristUker())
             .medAntallUtbetalingsperioder(alleUtbetalingsperioder.size())
             .medAktiviteterOgUtbetalingsperioder(utbetalingsPerioderPerAktvivitet)
             .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.uttakArbeidsforhold(), språkkode, hentArbeidsgiverNavn))

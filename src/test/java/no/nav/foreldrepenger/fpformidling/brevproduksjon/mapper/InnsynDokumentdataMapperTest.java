@@ -6,20 +6,17 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagD
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.InnsynBehandling.InnsynDokument;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
@@ -34,12 +31,11 @@ class InnsynDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         var dokument1 = new InnsynDokument("124", "1");
         var dokument2 = new InnsynDokument("125", "2");
         innsynDokumentList = List.of(dokument1, dokument2);
 
-        innsynDokumentdataMapper = new InnsynDokumentdataMapper(brevParametere);
+        innsynDokumentdataMapper = new InnsynDokumentdataMapper();
     }
 
     @Test

@@ -40,7 +40,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(FagsakYtelseType.FORELDREPENGER);
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).medDokumentMal(DokumentMal.ENGANGSSTØNAD_AVSLAG).build();
 
-        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere());
+        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper();
     }
 
     @Test

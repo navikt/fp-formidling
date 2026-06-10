@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -17,13 +16,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_ANNULLERT)
 public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public ForeldrepengerAnnullertDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -49,7 +41,7 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
             .medFelles(fellesBuilder.build())
             .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
             .medAnnulleringÅrsak(finnÅrsak(behandling))
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
         if (harSøktOmNyPeriode) {
             dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt, språkkode));

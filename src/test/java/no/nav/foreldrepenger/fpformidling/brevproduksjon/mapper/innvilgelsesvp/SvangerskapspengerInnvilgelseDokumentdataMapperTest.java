@@ -20,14 +20,12 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
@@ -77,8 +75,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentdataMapper = new SvangerskapspengerInnvilgelseDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
+        dokumentdataMapper = new SvangerskapspengerInnvilgelseDokumentdataMapper(arbeidsgiverTjeneste);
 
         when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(ARBEIDSGIVER1_ORGNR)).thenReturn(ARBEIDSGIVER1_NAVN);
         when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(ARBEIDSGIVER2_ORGNR)).thenReturn(ARBEIDSGIVER2_NAVN);

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -32,13 +31,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.ENGANGSSTØNAD_AVSLAG)
 public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public EngangsstønadAvslagDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -70,7 +62,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             .medVilkårTyper(utledVilkårTilBrev(vilkårTyper, avslagsårsak, behandling))
             .medAntallBarn(familieHendelse.antallBarn())
             .medMedlemskapFom(formaterDato(behandling.behandlingsresultat().medlemskapFom(), dokumentFelles.getSpråkkode()))
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
         utledAvslagsgrunnHvisMedlVilkår(vilkårTyper, avslagsårsak, isSkjæringstidspunktPassert(familieHendelse),
             familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);

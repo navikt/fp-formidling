@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -25,13 +24,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.KLAGE_AVVIST)
 public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public KlageAvvistDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -54,7 +46,7 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
             .medFelles(fellesBuilder.build())
             .medGjelderTilbakekreving(gjelderTilbakekreving(klage))
             .medLovhjemler(getLovhjemler(klage, dokumentFelles.getSpråkkode()))
-            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medKlagefristUker(BrevParametere.getKlagefristUker())
             .medAvvistGrunner(avvistGrunner);
 
         return dokumentdataBuilder.build();

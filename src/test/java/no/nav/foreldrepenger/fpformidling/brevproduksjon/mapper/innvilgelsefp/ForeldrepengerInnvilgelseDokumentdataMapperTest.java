@@ -40,7 +40,6 @@ import static org.mockito.Mockito.mock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +48,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
@@ -97,8 +95,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
+        dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(arbeidsgiverTjeneste);
 
         lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(ARBEIDSGIVER_ORGNR)).thenReturn(ARBEIDSGIVER_NAVN);
     }

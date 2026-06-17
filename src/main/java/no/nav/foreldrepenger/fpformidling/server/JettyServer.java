@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import no.nav.vedtak.log.metrics.MetricsUtil;
+
 import org.eclipse.jetty.ee11.cdi.CdiDecoratingListener;
 import org.eclipse.jetty.ee11.cdi.CdiServletContainerInitializer;
 import org.eclipse.jetty.ee11.servlet.DefaultServlet;
@@ -71,6 +73,7 @@ public class JettyServer {
     private static void konfigurerLogging() {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
+        MetricsUtil.scrape(); // TODO erstatt med kommende init
     }
 
 

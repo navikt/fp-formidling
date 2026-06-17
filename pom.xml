@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-parent-app</artifactId>
-        <version>5.3.4</version>
+        <version>5.3.5</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -22,9 +22,9 @@
         <mockito.version>5.21.0</mockito.version>
 
         <!-- Felles artefakter -->
-        <felles.version>7.8.3</felles.version>
+        <felles.version>7.8.4</felles.version>
         <prosesstask.version>5.2.7</prosesstask.version>
-        <kontrakter.version>9.4.36</kontrakter.version>
+        <kontrakter.version>9.4.37</kontrakter.version>
     </properties>
 
     <!-- NB: Unngå å put scope (test, provided) i dependency management. Det har uheldige virkninger ved bruk av import og dependency (bruk composition
@@ -154,10 +154,6 @@
         </dependency>
 
         <!-- Server -->
-        <dependency>
-            <groupId>org.eclipse.jetty.ee11</groupId>
-            <artifactId>jetty-ee11-plus</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.ee11</groupId>
             <artifactId>jetty-ee11-servlet</artifactId>

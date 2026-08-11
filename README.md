@@ -19,7 +19,6 @@ Applikasjonen bestiller brev basert på hendelser via et REST-grensesnitt.
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
 
 * Anja Gøtesen Aalerud (anja.gotesen.aalerud@nav.no)
-* Michal J. Sladek (michal.sladek@nav.no)
 
 ### Henvendelser for NAV-ansatte
 

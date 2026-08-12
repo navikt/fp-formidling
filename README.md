@@ -16,7 +16,7 @@ Applikasjonen bestiller brev basert på hendelser via et REST-grensesnitt.
 
 ## Henvendelser
 
-Spørsmål knyttet til koden eller prosjektet kan gjøres ved bruk av Issue her på GitHub. 
+Spørsmål knyttet til koden eller prosjektet kan gjøres ved bruk av Issue her på GitHub.
 
 ### Henvendelser for NAV-ansatte
 

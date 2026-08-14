@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagBuilders.BrevGrunnlagBuilder;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +52,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
         var avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";
 
-        var avslagESFB = opprettBrevGrunnlag(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, familieHendelse, vilkårType);
+        var avslagESFB = opprettBrevGrunnlag(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, familieHendelse, vilkårType).build();
 
         //Act
         var avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
@@ -67,12 +68,23 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(avslagsfritekst));
     }
 
+    @Test
+    void mapTilDokumentdata_avslag_på_opplysningsplikt_uten_familiehendelse_eller_relasjonsrolle_mappes_ok() {
+        var brevGrunnlag = opprettBrevGrunnlag(Avslagsårsak.MANGLENDE_DOKUMENTASJON, null, null,
+            Behandlingsresultat.VilkårType.SØKERSOPPLYSNINGSPLIKT).relasjonsRolleType(null).build();
+
+        var dokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, brevGrunnlag, false);
+
+        assertThat(dokumentdata.getAvslagÅrsak()).isEqualTo(Avslagsårsak.MANGLENDE_DOKUMENTASJON.name());
+        assertThat(dokumentdata.getVilkårTyper()).containsExactly("FP_VK_34");
+        assertThat(dokumentdata.getGjelderFødsel()).isTrue();
+        assertThat(dokumentdata.getAntallBarn()).isEqualTo(1);
+        assertThat(dokumentdata.getRelasjonsRolle()).isEqualTo(RelasjonsRolleType.MORA);
+        assertThat(dokumentdata.getMedlemskapFom()).isNull();
+    }
+
     private static FamilieHendelse getFamilieHendelse() {
-        return familieHendelse()
-            .barn(List.of())
-            .termindato(LocalDate.now())
-            .antallBarn(1)
-            .build();
+        return familieHendelse().barn(List.of()).termindato(LocalDate.now()).antallBarn(1).build();
     }
 
     @Test
@@ -86,7 +98,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     void mapVilkårTIlBrev_skal_mappe_riktig_vilkår_string() {
         var vilkårFraBehandling = List.of(VilkårType.FØDSELSVILKÅRET_MOR);
         var fbbehandling = opprettBrevGrunnlag(Avslagsårsak.SØKER_ER_MEDMOR, null, getFamilieHendelse(),
-            Behandlingsresultat.VilkårType.FØDSELSVILKÅRET_MOR);
+            Behandlingsresultat.VilkårType.FØDSELSVILKÅRET_MOR).build();
 
         var vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
 
@@ -94,22 +106,18 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(vilkårTilBrev.getFirst()).isEqualTo("FPVK1_4");
     }
 
-    private BrevGrunnlagDto opprettBrevGrunnlag(Avslagsårsak avslagsårsak,
-                                                String avslagsfritekst,
-                                                FamilieHendelse familieHendelse,
-                                                Behandlingsresultat.VilkårType vilkårType) {
+    private BrevGrunnlagBuilder opprettBrevGrunnlag(Avslagsårsak avslagsårsak,
+                                                    String avslagsfritekst,
+                                                    FamilieHendelse familieHendelse,
+                                                    Behandlingsresultat.VilkårType vilkårType) {
         return DatamapperTestUtil.defaultBuilder()
             .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.ENGANGSTØNAD)
             .behandlingType(BrevGrunnlagDto.BehandlingType.FØRSTEGANGSSØKNAD)
             .familieHendelse(familieHendelse)
-            .behandlingsresultat(behandlingsresultat()
-                .behandlingResultatType(Behandlingsresultat.BehandlingResultatType.AVSLÅTT)
+            .behandlingsresultat(behandlingsresultat().behandlingResultatType(Behandlingsresultat.BehandlingResultatType.AVSLÅTT)
                 .avslagsårsak(avslagsårsak.getKode())
-                .fritekst(fritekst()
-                    .avslagsarsakFritekst(avslagsfritekst)
-                    .build())
+                .fritekst(fritekst().avslagsarsakFritekst(avslagsfritekst).build())
                 .vilkårTyper(List.of(vilkårType))
-                .build())
-            .build();
+                .build());
     }
 }

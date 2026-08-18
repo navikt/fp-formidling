@@ -7,15 +7,11 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagD
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
@@ -43,10 +39,8 @@ import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 class DokumentdataSerializationTest {
 
-    private static final JsonMapper JSON_MAPPER = DefaultJsonMapper.getJsonMapper();
-
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() {
         // Arrange
         var arbeidsforhold1 = Arbeidsforhold.ny()
             .medArbeidsgiverNavn("Arbeidsgiver 1")
@@ -182,7 +176,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad() {
         // Arrange
         var dokumentdata = EngangsstønadAvslagDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -201,7 +195,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad_forutgående() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad_forutgående() {
         // Arrange
         var dokumentdata = EngangsstønadAvslagDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -220,7 +214,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() {
         // Arrange
         var dokumentdata = EngangsstønadInnvilgelseDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -239,7 +233,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_forlenget_saksbehandlingstid() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_forlenget_saksbehandlingstid() {
         // Arrange
         var dokumentdata = ForlengetSaksbehandlingstidDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -253,7 +247,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_henleggelse() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_henleggelse() {
         // Arrange
         var dokumentdata = HenleggelseDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -268,7 +262,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_ikke_søkt() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_ikke_søkt() {
         // Arrange
         var dokumentdata = IkkeSøktDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -281,7 +275,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() {
         // Arrange
         var dokumentdata = ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -294,7 +288,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_innhente_opplysninger() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innhente_opplysninger() {
         // Arrange
         var dokumentdata = InnhenteOpplysningerDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -312,7 +306,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_innsyn() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innsyn() {
         // Arrange
         var dokumentdata = InnsynDokumentdata.ny()
             .medFelles(opprettFellesDokumentdata())
@@ -325,7 +319,7 @@ class DokumentdataSerializationTest {
     }
 
     @Test
-    void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() {
         // Arrange
         var dokumentdata = ny()
             .medFelles(opprettFellesDokumentdata())
@@ -340,16 +334,16 @@ class DokumentdataSerializationTest {
         assertEquals(dokumentdata, utførTest(dokumentdata));
     }
 
-    private Object utførTest(Object object) throws IOException {
+    private Object utførTest(Object object) {
         return fraJson(tilJson(object), object.getClass());
     }
 
-    private String tilJson(Object obj) throws JsonProcessingException {
-        return JSON_MAPPER.writeValueAsString(obj);
+    private String tilJson(Object obj) {
+        return DefaultJsonMapper.toJson(obj);
     }
 
-    private Object fraJson(String json, Class clazz) throws JsonProcessingException {
-        return JSON_MAPPER.readValue(json, clazz);
+    private Object fraJson(String json, Class<?> clazz) {
+        return DefaultJsonMapper.fromJson(json, clazz);
     }
 
     private FellesDokumentdata opprettFellesDokumentdata() {

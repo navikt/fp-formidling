@@ -16,9 +16,9 @@ import no.nav.foreldrepenger.fpformidling.tjenester.forvaltning.ForvaltningRestT
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 import no.nav.vedtak.openapi.OpenApiUtils;
-import no.nav.vedtak.server.rest.ForvaltningAuthorizationFilter;
 import no.nav.vedtak.server.rest.AuthenticationFilter;
-import no.nav.vedtak.server.rest.FpRestJackson2Feature;
+import no.nav.vedtak.server.rest.ForvaltningAuthorizationFilter;
+import no.nav.vedtak.server.rest.FpRestJacksonFeature;
 
 @ApplicationPath(ForvaltningApiConfig.API_URL)
 public class ForvaltningApiConfig extends Application {
@@ -37,7 +37,7 @@ public class ForvaltningApiConfig extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>(getAllClasses());
         classes.add(AuthenticationFilter.class);
-        classes.add(FpRestJackson2Feature.class);
+        classes.add(FpRestJacksonFeature.class);
         classes.add(ForvaltningAuthorizationFilter.class);
         classes.add(OpenApiResource.class);
         return Collections.unmodifiableSet(classes);

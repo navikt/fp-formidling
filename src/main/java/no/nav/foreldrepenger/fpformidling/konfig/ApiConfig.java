@@ -13,7 +13,7 @@ import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import no.nav.foreldrepenger.fpformidling.tjenester.BrevRestTjeneste;
 import no.nav.vedtak.server.rest.AuthenticationFilter;
-import no.nav.vedtak.server.rest.FpRestJackson2Feature;
+import no.nav.vedtak.server.rest.FpRestJacksonFeature;
 
 @ApplicationPath(ApiConfig.API_URI)
 public class ApiConfig extends Application {
@@ -24,7 +24,7 @@ public class ApiConfig extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>(getAllClasses());
         classes.add(AuthenticationFilter.class);
-        classes.add(FpRestJackson2Feature.class);
+        classes.add(FpRestJacksonFeature.class);
         return Collections.unmodifiableSet(classes);
     }
 

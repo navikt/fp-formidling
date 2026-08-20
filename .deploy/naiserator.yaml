@@ -41,7 +41,9 @@ spec:
     max: {{maxReplicas}}
     scalingStrategy:
       cpu:
-        thresholdPercentage: 50
+        thresholdPercentage: 66
+      scaleUpStabilizationWindowSeconds: 60
+      scaleDownStabilizationWindowSeconds: 1800
   resources:
     limits:
       memory: "{{limits.mem}}"

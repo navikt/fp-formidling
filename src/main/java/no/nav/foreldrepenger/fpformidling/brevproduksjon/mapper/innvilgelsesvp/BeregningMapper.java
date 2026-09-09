@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Frilanser;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SelvstendigNæringsdrivende;
@@ -128,7 +127,7 @@ public final class BeregningMapper {
         beregningsgrunnlag.aktivitetstatusListe()
             .forEach(bgAktivitetStatus -> andeler.addAll(
                 finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, bgpsaList).stream()
-                    .filter(BeregningsgrunnlagMapper::harInntektsgrunnlag)
+                    .filter(BeregningMapper::harInntektsgrunnlag)
                     .toList()));
         return andeler;
     }
@@ -143,6 +142,12 @@ public final class BeregningMapper {
 
     private static boolean dagsatsErNull(BeregningsgrunnlagAndelDto andel) {
         return andel.dagsats() == null || andel.dagsats() == 0;
+    }
+
+    // Andeler uten hverken gjeldendeGrunnlagPrÅr eller bruttoPrÅr kan ikke gi et inntektsbeløp og filtreres derfor bort
+    // i stedet for å feile hele brevgenereringen
+    private static boolean harInntektsgrunnlag(BeregningsgrunnlagAndelDto andel) {
+        return andel.gjeldendeGrunnlagPrÅr() != null || andel.bruttoPrÅr() != null;
     }
 
 }

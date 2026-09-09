@@ -126,11 +126,4 @@ public final class BeregningsgrunnlagMapper {
         }
         return andel.gjeldendeGrunnlagPrÅr() != null ? andel.gjeldendeGrunnlagPrÅr() : andel.bruttoPrÅr();
     }
-
-    // Andeler uten hverken gjeldendeGrunnlagPrÅr eller bruttoPrÅr kan ikke gi et inntektsbeløp og filtreres derfor bort
-    // i stedet for å feile hele brevgenereringen
-    public static boolean harInntektsgrunnlag(BeregningsgrunnlagAndelDto andel) {
-        return andel.gjeldendeGrunnlagPrÅr() != null || andel.bruttoPrÅr() != null;
-    }
-
 }

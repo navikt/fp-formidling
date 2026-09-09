@@ -30,8 +30,8 @@ public final class BeregningsgrunnlagMapper {
     private BeregningsgrunnlagMapper() {
     }
 
-    public static List<BeregningsgrunnlagAndelDto> finnAktivitetStatuserForAndeler(AktivitetStatusDto bgAktivitetStatus,
-                                                                                   List<BeregningsgrunnlagAndelDto> andeler) {
+    public static List<BeregningsgrunnlagAndelDto> finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(AktivitetStatusDto bgAktivitetStatus,
+                                                                                                        List<BeregningsgrunnlagAndelDto> andeler) {
         List<BeregningsgrunnlagAndelDto> resultatListe;
 
         if (AktivitetStatusDto.KUN_YTELSE.equals(bgAktivitetStatus)) {
@@ -61,6 +61,10 @@ public final class BeregningsgrunnlagMapper {
                         return rl;
                     }).toList();
                 }
+            } else {
+                //Tilkommet andeler er ikke en del av beregningen så fjerner de fra listen
+                //Utelukker listen med DP og AAP siden vi her bruker tilkomne andeler til å beregne riktig dagsats
+                resultatListe = resultatListe.stream().filter(andel -> !andel.erTilkommetAndel()).toList();
             }
         }
 
@@ -75,7 +79,7 @@ public final class BeregningsgrunnlagMapper {
     private static BeregningsgrunnlagAndelDto kopiMedNyDagsats(BeregningsgrunnlagAndelDto original, long nyDagsats) {
         return new BeregningsgrunnlagAndelDto(nyDagsats, original.aktivitetStatus(), original.bruttoPrÅr(), original.avkortetPrÅr(),
             original.erNyIArbeidslivet(), original.arbeidsforholdType(), original.beregningsperiodeFom(), original.beregningsperiodeTom(),
-            original.arbeidsforhold(), original.erTilkommetAndel());
+            original.arbeidsforhold(), original.erTilkommetAndel(), original.gjeldendeGrunnlagPrÅr());
     }
 
     public static boolean erKombinertStatus(AktivitetStatusDto as) {
@@ -109,6 +113,24 @@ public final class BeregningsgrunnlagMapper {
 
     public static BeregningsgrunnlagPeriodeDto finnFørstePeriode(BeregningsgrunnlagDto beregningsgrunnlag) {
         return beregningsgrunnlag.beregningsgrunnlagperioder().getFirst();
+    }
+
+    public static BigDecimal getMånedsinntekt(BeregningsgrunnlagAndelDto andel) {
+        return getÅrsinntekt(andel).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
+    }
+
+    public static BigDecimal getÅrsinntekt(BeregningsgrunnlagAndelDto andel) {
+        //gjeldendeGrunnlagPrÅr inneholder beregnet grunnlag per år (av fpsak), eller det som er fastsatt av saksbehandler (overstyrtPerÅr)
+        if (andel.gjeldendeGrunnlagPrÅr() == null && andel.bruttoPrÅr() == null) {
+            throw new IllegalStateException("BeregningsgrunnlagAndelDto mangler både gjeldendeGrunnlagPrÅr og bruttoPrÅr, kan ikke beregne årsinntekt");
+        }
+        return andel.gjeldendeGrunnlagPrÅr() != null ? andel.gjeldendeGrunnlagPrÅr() : andel.bruttoPrÅr();
+    }
+
+    // Andeler uten hverken gjeldendeGrunnlagPrÅr eller bruttoPrÅr kan ikke gi et inntektsbeløp og filtreres derfor bort
+    // i stedet for å feile hele brevgenereringen
+    public static boolean harInntektsgrunnlag(BeregningsgrunnlagAndelDto andel) {
+        return andel.gjeldendeGrunnlagPrÅr() != null || andel.bruttoPrÅr() != null;
     }
 
 }

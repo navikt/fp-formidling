@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import static java.lang.Boolean.TRUE;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnFørstePeriode;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getMånedsinntekt;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getÅrsinntekt;
@@ -126,7 +126,7 @@ public final class BeregningMapper {
         List<BeregningsgrunnlagAndelDto> andeler = new ArrayList<>();
         beregningsgrunnlag.aktivitetstatusListe()
             .forEach(bgAktivitetStatus -> andeler.addAll(
-                finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, bgpsaList).stream()
+                finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, bgpsaList).stream()
                     .filter(BeregningMapper::harInntektsgrunnlag)
                     .toList()));
         return andeler;

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnFørstePeriode;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getMånedsinntekt;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getÅrsinntekt;
@@ -70,7 +70,7 @@ public final class BeregningsgrunnlagMapper {
                                                                   AktivitetStatusDto bgAktivitetStatus,
                                                                   UnaryOperator<String> hentNavn) {
         var builder = BeregningsgrunnlagRegel.ny();
-        var filtrertListe = finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, andeler);
+        var filtrertListe = finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, andeler);
         builder.medAktivitetStatus(mapAktivitetStatus(bgAktivitetStatus));
         var mapped = filtrertListe.stream().map(a -> lagBeregningsgrunnlagAndel(a, hentNavn)).toList();
         builder.medAndelListe(mapped);

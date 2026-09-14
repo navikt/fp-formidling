@@ -68,9 +68,9 @@ class BeregningsgrunnlagMapperTest {
 
     @Test
     void skal_identifsere_statuser() {
-        var arbeidstakerAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(AktivitetStatusDto.ARBEIDSTAKER,
+        var arbeidstakerAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(AktivitetStatusDto.ARBEIDSTAKER,
             beregningsgrunnlag.beregningsgrunnlagperioder().get(0).beregningsgrunnlagandeler());
-        var frilansAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(AktivitetStatusDto.FRILANSER,
+        var frilansAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(AktivitetStatusDto.FRILANSER,
             beregningsgrunnlag.beregningsgrunnlagperioder().get(0).beregningsgrunnlagandeler());
 
         assertThat(arbeidstakerAndeler).hasSize(1);
@@ -83,27 +83,27 @@ class BeregningsgrunnlagMapperTest {
     @Test
     void skal_matche_aap() {
         var bgAktivitetStatus = AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER;
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
     }
 
     @Test
     void skal_matche_alt_på_kun_ytelse() {
         var bgAktivitetStatus = AktivitetStatusDto.KUN_YTELSE;
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
     }
 
     @Test
     void skal_kaste_exception_matcher_ikke() {
         var bgAktivitetStatus = AktivitetStatusDto.FRILANSER;
         var bgpsaListe = List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN());
-        assertThrows(IllegalStateException.class, () -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus, bgpsaListe));
+        assertThrows(IllegalStateException.class, () -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, bgpsaListe));
     }
 
     @Test
     void skal_matche_AT_SN() {
         var bgAktivitetStatus = AktivitetStatusDto.KOMBINERT_AT_SN;
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommetAndel(bgAktivitetStatus,
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus,
             List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
     }
 

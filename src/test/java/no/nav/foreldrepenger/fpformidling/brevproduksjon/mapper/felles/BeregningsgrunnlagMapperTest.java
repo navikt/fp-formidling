@@ -48,29 +48,29 @@ class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagAndelDto lagBgpsaAap() {
         return new BeregningsgrunnlagAndelDto(STANDARD_PERIODE_DAGSATS, AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER, BRUTTO_PR_ÅR, null, false,
-            OpptjeningAktivitetDto.ARBEIDSAVKLARING, PERIODE_FOM, PERIODE_TOM, null, false);
+            OpptjeningAktivitetDto.ARBEIDSAVKLARING, PERIODE_FOM, PERIODE_TOM, null, false, BRUTTO_PR_ÅR);
     }
 
     private BeregningsgrunnlagAndelDto lagBgpsaBruttoFrilanser() {
         return new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.FRILANSER, BRUTTO_PR_ÅR, null, false, OpptjeningAktivitetDto.FRILANS,
-            PERIODE_FOM, PERIODE_TOM, null, false);
+            PERIODE_FOM, PERIODE_TOM, null, false, BRUTTO_PR_ÅR);
     }
 
     private BeregningsgrunnlagAndelDto lagBgpsaSN() {
         return new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, null, AVKORTET_PR_ÅR, false,
-            OpptjeningAktivitetDto.NÆRING, PERIODE_FOM, PERIODE_TOM, null, false);
+            OpptjeningAktivitetDto.NÆRING, PERIODE_FOM, PERIODE_TOM, null, false, null);
     }
 
     private BeregningsgrunnlagAndelDto lagBgpsaAvkortetArbeidstaker() {
         return new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, null, AVKORTET_PR_ÅR, false, OpptjeningAktivitetDto.ARBEID,
-            PERIODE_FOM, PERIODE_TOM, new BgAndelArbeidsforholdDto("123", null, BigDecimal.ZERO, BigDecimal.ZERO), false);
+            PERIODE_FOM, PERIODE_TOM, new BgAndelArbeidsforholdDto("123", null, BigDecimal.ZERO, BigDecimal.ZERO), false, BRUTTO_PR_ÅR);
     }
 
     @Test
     void skal_identifsere_statuser() {
-        var arbeidstakerAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(AktivitetStatusDto.ARBEIDSTAKER,
+        var arbeidstakerAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(AktivitetStatusDto.ARBEIDSTAKER,
             beregningsgrunnlag.beregningsgrunnlagperioder().get(0).beregningsgrunnlagandeler());
-        var frilansAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(AktivitetStatusDto.FRILANSER,
+        var frilansAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(AktivitetStatusDto.FRILANSER,
             beregningsgrunnlag.beregningsgrunnlagperioder().get(0).beregningsgrunnlagandeler());
 
         assertThat(arbeidstakerAndeler).hasSize(1);
@@ -83,27 +83,27 @@ class BeregningsgrunnlagMapperTest {
     @Test
     void skal_matche_aap() {
         var bgAktivitetStatus = AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER;
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
     }
 
     @Test
     void skal_matche_alt_på_kun_ytelse() {
         var bgAktivitetStatus = AktivitetStatusDto.KUN_YTELSE;
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
     }
 
     @Test
     void skal_kaste_exception_matcher_ikke() {
         var bgAktivitetStatus = AktivitetStatusDto.FRILANSER;
         var bgpsaListe = List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN());
-        assertThrows(IllegalStateException.class, () -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe));
+        assertThrows(IllegalStateException.class, () -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, bgpsaListe));
     }
 
     @Test
     void skal_matche_AT_SN() {
         var bgAktivitetStatus = AktivitetStatusDto.KOMBINERT_AT_SN;
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus,
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus,
             List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
     }
 

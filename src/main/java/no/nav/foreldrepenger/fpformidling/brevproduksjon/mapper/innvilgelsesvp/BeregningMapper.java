@@ -1,8 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import static java.lang.Boolean.TRUE;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnFørstePeriode;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getMånedsinntekt;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getÅrsinntekt;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper.formaterLovhjemlerForBeregning;
 import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto.ARBEIDSTAKER;
 import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto.FRILANSER;
@@ -13,7 +15,6 @@ import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodev
 import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -58,7 +59,7 @@ public final class BeregningMapper {
             if (SN_STATUSER.contains(andel.aktivitetStatus())) {
                 resultat = SelvstendigNæringsdrivende.ny(resultat)
                     .medNyoppstartet(TRUE.equals(andel.erNyIArbeidslivet()))
-                    .leggTilÅrsinntekt(andel.bruttoPrÅr())
+                    .leggTilÅrsinntekt(getÅrsinntekt(andel))
                     .medSistLignedeÅr(getSisteLignedeÅr(andel))
                     .medInntektLavereAtSn(AktivitetStatusDto.KOMBINERT_AT_SN.equals(andel.aktivitetStatus()) && dagsatsErNull(andel))
                     .medInntektLavereAtFlSn(AktivitetStatusDto.KOMBINERT_AT_FL_SN.equals(andel.aktivitetStatus()) && dagsatsErNull(andel))
@@ -125,20 +126,14 @@ public final class BeregningMapper {
         List<BeregningsgrunnlagAndelDto> andeler = new ArrayList<>();
         beregningsgrunnlag.aktivitetstatusListe()
             .forEach(bgAktivitetStatus -> andeler.addAll(
-                finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaList).stream().filter(andel -> getBgBruttoPrÅr(andel) != null).toList()));
+                finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, bgpsaList).stream()
+                    .filter(BeregningMapper::harInntektsgrunnlag)
+                    .toList()));
         return andeler;
-    }
-
-    private static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagAndelDto andel) {
-        return andel.avkortetPrÅr() != null ? andel.avkortetPrÅr() : andel.bruttoPrÅr();
     }
 
     private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {
         return Optional.ofNullable(andel.arbeidsforhold()).map(a -> hentNavn.apply(a.arbeidsgiverIdent()));
-    }
-
-    private static BigDecimal getMånedsinntekt(BeregningsgrunnlagAndelDto andel) {
-        return andel.bruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
     }
 
     private static int getSisteLignedeÅr(BeregningsgrunnlagAndelDto andel) {
@@ -147,6 +142,12 @@ public final class BeregningMapper {
 
     private static boolean dagsatsErNull(BeregningsgrunnlagAndelDto andel) {
         return andel.dagsats() == null || andel.dagsats() == 0;
+    }
+
+    // Andeler uten hverken gjeldendeGrunnlagPrÅr eller bruttoPrÅr kan ikke gi et inntektsbeløp og filtreres derfor bort
+    // i stedet for å feile hele brevgenereringen
+    private static boolean harInntektsgrunnlag(BeregningsgrunnlagAndelDto andel) {
+        return andel.gjeldendeGrunnlagPrÅr() != null || andel.bruttoPrÅr() != null;
     }
 
 }

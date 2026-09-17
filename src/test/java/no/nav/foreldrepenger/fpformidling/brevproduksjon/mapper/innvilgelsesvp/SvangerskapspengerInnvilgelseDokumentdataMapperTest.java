@@ -140,7 +140,8 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private BeregningsgrunnlagPeriodeDto lagBeregningsgrunnlagPeriode1() {
         var andel = new BeregningsgrunnlagAndelDto(DAGSATS_PERIODE1, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG),
             null, false, OpptjeningAktivitetDto.ARBEID, PERIODE1_FOM, PERIODE1_TOM,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.valueOf(NATURALYTELSE_TILKOMMET), BigDecimal.ZERO), false);
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.valueOf(NATURALYTELSE_TILKOMMET), BigDecimal.ZERO), false,
+            BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG));
 
         return new BeregningsgrunnlagPeriodeDto(DAGSATS_PERIODE1, BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG), null, List.of(), PERIODE1_FOM,
             PERIODE1_TOM, List.of(andel));
@@ -149,7 +150,8 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private BeregningsgrunnlagPeriodeDto lagBeregningsgrunnlagPeriode2() {
         var andel = new BeregningsgrunnlagAndelDto(DAGSATS_PERIODE2, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG),
             null, false, OpptjeningAktivitetDto.ARBEID, PERIODE2_FOM, PERIODE2_TOM,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.valueOf(NATURALYTELSE_BORTFALT), BigDecimal.ZERO), false);
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.valueOf(NATURALYTELSE_BORTFALT), BigDecimal.ZERO), false,
+            BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG));
 
         return new BeregningsgrunnlagPeriodeDto(DAGSATS_PERIODE2, BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG), null, List.of(), PERIODE2_FOM,
             PERIODE2_TOM, List.of(andel));
@@ -158,7 +160,8 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private BeregningsgrunnlagPeriodeDto lagBeregningsgrunnlagPeriode3() {
         var andel = new BeregningsgrunnlagAndelDto(DAGSATS_PERIODE3, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG),
             null, false, OpptjeningAktivitetDto.ARBEID, PERIODE3_FOM, PERIODE3_TOM,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false);
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false,
+            BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG));
 
         return new BeregningsgrunnlagPeriodeDto(DAGSATS_PERIODE3, BigDecimal.valueOf(BRUTTO_BERENINGSGRUNNLAG), null, List.of(), PERIODE3_FOM,
             PERIODE3_TOM, List.of(andel));

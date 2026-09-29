@@ -201,8 +201,7 @@ class VedtaksperiodeMapperTest {
         var tilkjentYtelsePerioder = of(tyPeriode);
 
         var bgPeriode = new BeregningsgrunnlagPeriodeDto(620L, null, null, List.of(), beregningPer.getFomDato(), beregningPer.getTomDato(), List.of(new BeregningsgrunnlagAndelDto(620L,
-            AktivitetStatusDto.KOMBINERT_AT_FL, null, null, false, null, tidsperiodeTilkjent1.getFomDato(), tidsperiodeTilkjent1.getTomDato(), null, false,
-            null)));
+            AktivitetStatusDto.KOMBINERT_AT_FL, null, null, false, null, tidsperiodeTilkjent1.getFomDato(), tidsperiodeTilkjent1.getTomDato(), null, false)));
         var beregningsgrunnlagPerioder = of(bgPeriode);
 
         var uttakResultatPeriodeAktivitet = new Foreldrepenger.Aktivitet(Foreldrepenger.TrekkontoType.FELLESPERIODE, BigDecimal.TEN,

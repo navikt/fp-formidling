@@ -24,16 +24,17 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         Set<String> saksnummer = new HashSet<>(dataAttributter.getVerdier(StandardAbacAttributtType.SAKSNUMMER));
         Set<UUID> uuids = dataAttributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
         var behandlingUuids = new HashSet<>(uuids);
+
         if (behandlingUuids.size() > 1) {
             throw new IllegalArgumentException("Støtter ikke request med to ulike behandlinger. Må utvides");
         }
 
-        var builder = AppRessursData.builder()
-            .medFagsakStatus(PipFagsakStatus.UNDER_BEHANDLING)
-            .medBehandlingStatus(PipBehandlingStatus.UTREDES);
+        var builder = AppRessursData.builder().medFagsakStatus(PipFagsakStatus.UNDER_BEHANDLING).medBehandlingStatus(PipBehandlingStatus.UTREDES);
+
         behandlingUuids.stream().findFirst().ifPresent(builder::medBehandling);
         saksnummer.stream().findFirst().ifPresent(builder::medLoggSaksnummer);
         behandlingUuids.stream().findFirst().ifPresent(builder::medLoggBehandling);
+
         return builder.build();
     }
 }

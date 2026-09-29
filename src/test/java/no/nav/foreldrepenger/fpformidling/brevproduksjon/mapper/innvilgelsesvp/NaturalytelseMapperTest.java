@@ -170,8 +170,7 @@ class NaturalytelseMapperTest {
                                                         List<PeriodeÅrsakDto> periodeÅrsaker,
                                                         boolean inkluderePeriode2) {
         var andel = new BeregningsgrunnlagAndelDto(DAGSATS, AktivitetStatusDto.ARBEIDSTAKER, null, null, false, OpptjeningAktivitetDto.ARBEID,
-            PERIODE1_FOM, PERIODE2_TOM, new BgAndelArbeidsforholdDto(orgnr, null, naturalytelseBortfaller, naturalytelseTilkommer), false,
-            null);
+            PERIODE1_FOM, PERIODE2_TOM, new BgAndelArbeidsforholdDto(orgnr, null, naturalytelseBortfaller, naturalytelseTilkommer), false);
         var periode1 = new BeregningsgrunnlagPeriodeDto(DAGSATS, null, null, periodeÅrsaker, PERIODE1_FOM, PERIODE1_TOM, List.of(andel));
         var periode2 = new BeregningsgrunnlagPeriodeDto(DAGSATS, null, null, periodeÅrsaker, PERIODE2_FOM, PERIODE2_TOM, List.of(andel));
 

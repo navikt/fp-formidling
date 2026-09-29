@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnFørstePeriode;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getMånedsinntekt;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.getÅrsinntekt;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -70,7 +68,7 @@ public final class BeregningsgrunnlagMapper {
                                                                   AktivitetStatusDto bgAktivitetStatus,
                                                                   UnaryOperator<String> hentNavn) {
         var builder = BeregningsgrunnlagRegel.ny();
-        var filtrertListe = finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, andeler);
+        var filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, andeler);
         builder.medAktivitetStatus(mapAktivitetStatus(bgAktivitetStatus));
         var mapped = filtrertListe.stream().map(a -> lagBeregningsgrunnlagAndel(a, hentNavn)).toList();
         builder.medAndelListe(mapped);
@@ -132,7 +130,7 @@ public final class BeregningsgrunnlagMapper {
         builder.medDagsats(ikkeRedusertDagsatsAAP != null ? ikkeRedusertDagsatsAAP.longValue() : andel.dagsats());
         builder.medEtterlønnSluttpakke(OpptjeningAktivitetDto.ETTERLØNN_SLUTTPAKKE.equals(andel.arbeidsforholdType()));
         builder.medMånedsinntekt(getMånedsinntekt(andel).longValue());
-        builder.medÅrsinntekt(getÅrsinntekt(andel).longValue());
+        builder.medÅrsinntekt(andel.bruttoPrÅr().longValue());
 
         if (AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.aktivitetStatus())) {
             builder.medSistLignedeÅr(andel.beregningsperiodeTom() == null ? 0 : andel.beregningsperiodeTom().getYear());
@@ -142,6 +140,10 @@ public final class BeregningsgrunnlagMapper {
         }
 
         return builder.build();
+    }
+
+    private static BigDecimal getMånedsinntekt(BeregningsgrunnlagAndelDto andel) {
+        return andel.bruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
     }
 
     private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {

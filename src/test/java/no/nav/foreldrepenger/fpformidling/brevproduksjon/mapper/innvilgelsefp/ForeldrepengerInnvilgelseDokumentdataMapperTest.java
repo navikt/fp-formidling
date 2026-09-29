@@ -343,8 +343,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     private BeregningsgrunnlagPeriodeDto lagBeregningsgrunnlagPeriode(AktivitetStatusDto aktivitetStatus) {
         var andel = new BeregningsgrunnlagAndelDto(DAGSATS, aktivitetStatus, BigDecimal.valueOf(BRUTTO_BEREGNINGSGRUNNLAG), null, false,
             OpptjeningAktivitetDto.ARBEID, LocalDate.now(), PERIODE_TOM,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false,
-            BigDecimal.valueOf(BRUTTO_BEREGNINGSGRUNNLAG));
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false);
 
         return new BeregningsgrunnlagPeriodeDto(DAGSATS, BigDecimal.valueOf(BRUTTO_BEREGNINGSGRUNNLAG), BigDecimal.valueOf(30000), List.of(),
             LocalDate.now(), PERIODE_TOM, List.of(andel));

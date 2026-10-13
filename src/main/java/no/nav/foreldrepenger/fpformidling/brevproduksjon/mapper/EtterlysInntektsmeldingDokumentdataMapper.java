@@ -67,6 +67,6 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
 
     private ArbeidsforholdInntektsmelding map(ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto is) {
         return new ArbeidsforholdInntektsmelding(is.arbeidsgiverIdent(), arbeidsgiverTjeneste.hentArbeidsgiverNavn(is.arbeidsgiverIdent()),
-            is.stillingsprosent(), is.erInntektsmeldingMottatt());
+            is.erInntektsmeldingMottatt());
     }
 }

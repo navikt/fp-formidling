@@ -55,7 +55,6 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverIdent()).isEqualTo(imStatus.arbeidsgiverIdent());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
-        assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().stillingsprosent()).isEqualTo(imStatus.stillingsprosent());
     }
 
     @Test
@@ -78,7 +77,6 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverIdent()).isEqualTo(imStatus.arbeidsgiverIdent());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
-        assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().stillingsprosent()).isEqualTo(imStatus.stillingsprosent());
     }
 
 }

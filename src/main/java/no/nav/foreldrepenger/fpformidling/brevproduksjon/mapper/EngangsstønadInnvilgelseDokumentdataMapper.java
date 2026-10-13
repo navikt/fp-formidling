@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
@@ -23,13 +22,6 @@ import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngan
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE)
 public class EngangsstønadInnvilgelseDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public EngangsstønadInnvilgelseDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -54,7 +46,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
             .medFørstegangsbehandling(behandling.erFørstegangssøknad())
             .medMedhold(BehandlingMapper.erMedhold(behandling))
             .medInnvilgetBeløp(BrevMapperUtil.formaterBeløp(tilkjentYtelse.beregnetTilkjentYtelse()))
-            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medKlagefristUker(BrevParametere.getKlagefristUker())
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medFbEllerMedhold(erFBellerMedhold(behandling))
             .medErEndretSats(false);

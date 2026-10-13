@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -55,10 +53,9 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         var arbeidsgiverTjeneste = mock(ArbeidsgiverTjeneste.class);
         when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(any())).thenReturn(ARBEIDSGIVER_1_NAVN);
-        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
+        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(arbeidsgiverTjeneste);
     }
 
     @Test

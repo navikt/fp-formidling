@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import no.nav.foreldrepenger.fpformidling.felles.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
@@ -37,9 +36,6 @@ public class DokumentHendelse extends BaseEntitet {
     @Enumerated(EnumType.STRING)
     @Column(name = "journalfoer_som")
     private DokumentMal journalførSom;
-
-    @Transient
-    private String tittel;
 
     @Column
     private String fritekst;
@@ -68,10 +64,6 @@ public class DokumentHendelse extends BaseEntitet {
         return bestillingUuid;
     }
 
-    public String getTittel() {
-        return tittel;
-    }
-
     public String getFritekst() {
         return fritekst;
     }
@@ -91,7 +83,7 @@ public class DokumentHendelse extends BaseEntitet {
     @Override
     public String toString() {
         return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMal="
-                + dokumentMal + ", tittel='" + tittel + '\'' + ", fritekst='" + (
+                + dokumentMal + ", fritekst='" + (
                 fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingÅrsak=" + revurderingÅrsak
                 + ", journalførSom=" + journalførSom +'}';
     }
@@ -121,11 +113,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medBestillingUuid(UUID bestillingUuid) {
             this.kladd.bestillingUuid = bestillingUuid;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medTittel(String tittel) {
-            this.kladd.tittel = tittel;
             return this;
         }
 

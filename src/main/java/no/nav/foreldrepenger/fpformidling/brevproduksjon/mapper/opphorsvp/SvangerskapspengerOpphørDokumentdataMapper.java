@@ -28,12 +28,10 @@ import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagyt
 @DokumentMalTypeRef(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR)
 public class SvangerskapspengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
-    private final BrevParametere brevParametere;
     private final ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public SvangerskapspengerOpphørDokumentdataMapper(BrevParametere brevParametere, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
-        this.brevParametere = brevParametere;
+    public SvangerskapspengerOpphørDokumentdataMapper(ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
@@ -63,7 +61,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
             .medFelles(fellesBuilder.build())
             .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
             .medErSøkerDød(BrevMapperUtil.erDød(dokumentFelles))
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
         var tilkjentPerioder = tilkjentYtelse.map(TilkjentYtelseDagytelseDto::perioder).orElse(List.of());
         mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,

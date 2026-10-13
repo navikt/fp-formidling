@@ -9,17 +9,14 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto.KlageBehandling;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
@@ -32,15 +29,11 @@ class KlageOmgjortDokumentdataMapperTest {
 
     private static final String FRITEKST_TIL_BREV = "FRITEKST";
 
-    @Mock
-    private BrevParametere brevParametere;
-
     private KlageOmgjortDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     void before() {
-        when(brevParametere.getKlagefristUker()).thenReturn(6);
-        dokumentdataMapper = new KlageOmgjortDokumentdataMapper(brevParametere);
+        dokumentdataMapper = new KlageOmgjortDokumentdataMapper();
     }
 
     @Test

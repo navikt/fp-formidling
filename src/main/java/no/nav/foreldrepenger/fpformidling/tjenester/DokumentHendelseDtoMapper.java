@@ -31,7 +31,6 @@ public final class DokumentHendelseDtoMapper {
             .medDokumentMal(mapDokumentMal(forhåndsvisDto.dokumentMal()))
             .medRevurderingÅrsak(mapRevurderingÅrsak(forhåndsvisDto.revurderingÅrsak()))
             .medFritekst(forhåndsvisDto.fritekst())
-            .medTittel(forhåndsvisDto.tittel())
             .build();
     }
 

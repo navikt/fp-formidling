@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDo
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -20,13 +19,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.INNSYN_SVAR)
 public class InnsynDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public InnsynDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -44,7 +36,7 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
 
         return ny()
             .medFelles(fellesBuilder.build())
-            .medKlagefrist(brevParametere.getKlagefristUker())
+            .medKlagefrist(BrevParametere.getKlagefristUker())
             .medInnsynResultat(map(innsynsBehandling.innsynResultatType()))
             .build();
     }

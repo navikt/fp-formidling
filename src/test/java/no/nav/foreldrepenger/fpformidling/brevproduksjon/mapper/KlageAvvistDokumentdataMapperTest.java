@@ -12,14 +12,12 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
@@ -35,8 +33,7 @@ class KlageAvvistDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
-        dokumentdataMapper = new KlageAvvistDokumentdataMapper(brevParametere);
+        dokumentdataMapper = new KlageAvvistDokumentdataMapper();
     }
 
     @Test

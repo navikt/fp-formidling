@@ -4,27 +4,17 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Locale;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
-@ApplicationScoped
 public class BrevMapperUtil {
-    private BrevParametere brevParametere;
 
-    BrevMapperUtil() {
-        // CDI
+    private BrevMapperUtil() {
     }
 
-    @Inject
-    public BrevMapperUtil(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
-
-    public LocalDate getSvarFrist() {
-        return LocalDate.now().plusDays(brevParametere.getSvarfristDager());
+    public static LocalDate getSvarFrist() {
+        return LocalDate.now().plus(BrevParametere.getSvarfrist());
     }
 
     public static String formaterPersonnummer(String personnummer) {

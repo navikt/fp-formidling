@@ -47,17 +47,21 @@ class BeregningMapperTest {
         var beregningsperiodeTom = LocalDate.now().plusDays(20);
         var andel1 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false,
             OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false);
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1));
         var andel2 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null, false,
             OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Skal sorteres først
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false,
+            BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)); // Skal sorteres først
         var andel3 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, null, null, false,
             OpptjeningAktivitetDto.NÆRING, beregningsperiodeFom, beregningsperiodeTom,
-            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false); // Ignoreres
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false, null); // Ignoreres
+        var andel4 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null, false,
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom,
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER2_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), true, null); // Ignoreres fordi tilkommet
 
         var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L,
             BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(), beregningsperiodeFom,
-            beregningsperiodeTom, List.of(andel1, andel2, andel3));
+            beregningsperiodeTom, List.of(andel1, andel2, andel3, andel4));
 
         var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE),
             null, null, List.of(beregningsgrunnlagPeriode), false, false);
@@ -75,6 +79,53 @@ class BeregningMapperTest {
             BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
     }
 
+    @Test
+    void skal_mappe_selvstendig_næringsdrivende_med_bruttoPrÅr_lik_null() {
+        // Arrange
+        var beregningsperiodeFom = LocalDate.now().minusDays(20);
+        var beregningsperiodeTom = LocalDate.now().plusDays(20);
+        var gjeldendeGrunnlagPrÅr = BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1);
+
+        var andel = new BeregningsgrunnlagAndelDto(300L, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, null, null, false,
+            OpptjeningAktivitetDto.NÆRING, beregningsperiodeFom, beregningsperiodeTom, null, false, gjeldendeGrunnlagPrÅr);
+
+        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(300L, gjeldendeGrunnlagPrÅr, null, List.of(), beregningsperiodeFom,
+            beregningsperiodeTom, List.of(andel));
+
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE), null, null,
+            List.of(beregningsgrunnlagPeriode), false, false);
+
+        // Act
+        var resultat = BeregningMapper.mapSelvstendigNæringsdrivende(beregningsgrunnlag);
+
+        // Assert
+        assertThat(resultat.getÅrsinntekt().getVerdi()).isEqualTo(gjeldendeGrunnlagPrÅr.longValue());
+    }
+
+    @Test
+    void skal_filtrere_bort_andel_uten_inntektsgrunnlag_i_stedet_for_aa_feile() {
+        // Arrange
+        var beregningsperiodeFom = LocalDate.now().minusDays(20);
+        var beregningsperiodeTom = LocalDate.now().plusDays(20);
+
+        // Andel mangler både bruttoPrÅr og gjeldendeGrunnlagPrÅr - skal filtreres bort
+        var andelUtenInntekt = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, null, null, false,
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom,
+            new BgAndelArbeidsforholdDto(ARBEIDSGIVER1_ORGNR, null, BigDecimal.ZERO, BigDecimal.ZERO), false, null);
+
+        var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L, null, null, List.of(), beregningsperiodeFom, beregningsperiodeTom,
+            List.of(andelUtenInntekt));
+
+        var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(AktivitetStatusDto.ARBEIDSTAKER), null, null, List.of(beregningsgrunnlagPeriode),
+            false, false);
+
+        // Act
+        var resultat = BeregningMapper.mapArbeidsforhold(beregningsgrunnlag, HENT_NAVN);
+
+        // Assert
+        assertThat(resultat).isEmpty();
+    }
+
 
     @Test
     void er_militær() {
@@ -83,9 +134,10 @@ class BeregningMapperTest {
         var beregningsperiodeTom = LocalDate.now().plusDays(20);
 
         var andel1 = new BeregningsgrunnlagAndelDto(500L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false,
-            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom, null, false);
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom, null, false, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1));
         var andel2 = new BeregningsgrunnlagAndelDto(1000L, AktivitetStatusDto.MILITÆR_ELLER_SIVIL, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2),
-            null, false, OpptjeningAktivitetDto.MILITÆR_ELLER_SIVILTJENESTE, beregningsperiodeFom, beregningsperiodeTom, null, false);
+            null, false, OpptjeningAktivitetDto.MILITÆR_ELLER_SIVILTJENESTE, beregningsperiodeFom, beregningsperiodeTom, null, false,
+            BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2));
 
         var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L,
             BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(), beregningsperiodeFom,
@@ -105,9 +157,10 @@ class BeregningMapperTest {
         var beregningsperiodeTom = LocalDate.now().plusDays(20);
 
         var andel1 = new BeregningsgrunnlagAndelDto(500L, AktivitetStatusDto.ARBEIDSTAKER, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1), null, false,
-            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom, null, false);
+            OpptjeningAktivitetDto.ARBEID, beregningsperiodeFom, beregningsperiodeTom, null, false, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1));
         var andel2 = new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.MILITÆR_ELLER_SIVIL, BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2), null,
-            false, OpptjeningAktivitetDto.MILITÆR_ELLER_SIVILTJENESTE, beregningsperiodeFom, beregningsperiodeTom, null, false);
+            false, OpptjeningAktivitetDto.MILITÆR_ELLER_SIVILTJENESTE, beregningsperiodeFom, beregningsperiodeTom, null, false,
+            BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2));
 
         var beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriodeDto(0L,
             BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).add(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2)), null, List.of(), beregningsperiodeFom,

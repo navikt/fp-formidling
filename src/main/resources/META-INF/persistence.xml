@@ -6,7 +6,6 @@
     <!-- Hibernate persistence unit. -->
     <persistence-unit name="pu-default" transaction-type="RESOURCE_LOCAL">
         <provider>no.nav.vedtak.felles.jpa.VLPersistenceUnitProvider</provider>
-        <non-jta-data-source>jdbc/defaultDS</non-jta-data-source>
 
         <properties>
             <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>

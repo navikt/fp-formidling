@@ -16,13 +16,11 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
@@ -51,9 +49,8 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(any())).thenReturn(ARBEIDSGIVER_1);
-        dokumentdataMapper = new SvangerskapspengerAvslagDokumentdataMapper(brevParametere, arbeidsgiverTjeneste);
+        dokumentdataMapper = new SvangerskapspengerAvslagDokumentdataMapper(arbeidsgiverTjeneste);
     }
 
     @Test

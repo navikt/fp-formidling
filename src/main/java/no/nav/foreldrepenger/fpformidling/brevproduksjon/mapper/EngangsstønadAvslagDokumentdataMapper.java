@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -21,6 +20,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
@@ -32,13 +32,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.ENGANGSSTØNAD_AVSLAG)
 public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMapper {
-
-    private final BrevParametere brevParametere;
-
-    @Inject
-    public EngangsstønadAvslagDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -57,23 +50,41 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fraFritekst(hendelse, behandling.behandlingsresultat().fritekst()).ifPresent(fellesBuilder::medFritekst);
 
-        var familieHendelse = behandling.familieHendelse();
-
         var avslagsårsak = Avslagsårsak.fraKode(behandling.behandlingsresultat().avslagsårsak());
         var vilkårTyper = behandling.behandlingsresultat().vilkårTyper().stream().map(KodeverkMapper::mapVilkårType).toList();
+        var erAvslagPåOpplysningsplikt = avslagsårsak == Avslagsårsak.MANGLENDE_DOKUMENTASJON
+            && vilkårTyper.contains(VilkårType.SØKERSOPPLYSNINGSPLIKT);
+
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
-            .medAvslagsÅrsak(mapAvslagsårsakerBrev(avslagsårsak, BrevGrunnlagDto.RelasjonsRolleType.MORA.equals(behandling.relasjonsRolleType())))
             .medFelles(fellesBuilder.build())
             .medFørstegangsbehandling(behandling.behandlingType() == BehandlingType.FØRSTEGANGSSØKNAD)
-            .medGjelderFødsel(familieHendelse.gjelderFødsel())
-            .medRelasjonsRolle(mapRelasjonsRolle(behandling.relasjonsRolleType()))
             .medVilkårTyper(utledVilkårTilBrev(vilkårTyper, avslagsårsak, behandling))
-            .medAntallBarn(familieHendelse.antallBarn())
-            .medMedlemskapFom(formaterDato(behandling.behandlingsresultat().medlemskapFom(), dokumentFelles.getSpråkkode()))
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
-        utledAvslagsgrunnHvisMedlVilkår(vilkårTyper, avslagsårsak, isSkjæringstidspunktPassert(familieHendelse),
-            familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
+        if (erAvslagPåOpplysningsplikt) {
+            // Avslag kan skje før søknadsopplysninger, familiehendelse og relasjonsrolle er registrert.
+            // Verdiene kreves av dokgen, men brukes ikke i denne brevteksten.
+            return dokumentdataBuilder.medAvslagsÅrsak(avslagsårsak.name())
+                .medGjelderFødsel(true)
+                .medRelasjonsRolle(RelasjonsRolleType.MORA)
+                .medAntallBarn(1)
+                .build();
+        }
+
+        var familieHendelse = behandling.familieHendelse();
+        if (familieHendelse == null || behandling.relasjonsRolleType() == null) {
+            throw new IllegalStateException("Familiehendelse eller relasjonsrolle mangler for engangsstønad-avslag");
+        }
+
+        var gjelderFødsel = familieHendelse.gjelderFødsel();
+        dokumentdataBuilder.medAvslagsÅrsak(mapAvslagsårsakerBrev(avslagsårsak,
+                BrevGrunnlagDto.RelasjonsRolleType.MORA.equals(behandling.relasjonsRolleType())))
+            .medGjelderFødsel(gjelderFødsel)
+            .medRelasjonsRolle(mapRelasjonsRolle(behandling.relasjonsRolleType()))
+            .medAntallBarn(familieHendelse.antallBarn())
+            .medMedlemskapFom(formaterDato(behandling.behandlingsresultat().medlemskapFom(), dokumentFelles.getSpråkkode()));
+        utledAvslagsgrunnHvisMedlVilkår(vilkårTyper, avslagsårsak, isSkjæringstidspunktPassert(familieHendelse), gjelderFødsel)
+            .ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
         return dokumentdataBuilder.build();
     }

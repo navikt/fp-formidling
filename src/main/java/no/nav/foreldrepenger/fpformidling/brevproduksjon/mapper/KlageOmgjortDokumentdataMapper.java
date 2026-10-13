@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.F
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -19,17 +18,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.KLAGE_OMGJORT)
 public class KlageOmgjortDokumentdataMapper implements DokumentdataMapper {
-
-    private BrevParametere brevParametere;
-
-    KlageOmgjortDokumentdataMapper() {
-        //CDI
-    }
-
-    @Inject
-    public KlageOmgjortDokumentdataMapper(BrevParametere brevParametere) {
-        this.brevParametere = brevParametere;
-    }
 
     @Override
     public String getTemplateNavn() {
@@ -50,7 +38,7 @@ public class KlageOmgjortDokumentdataMapper implements DokumentdataMapper {
         var dokumentdataBuilder = KlageOmgjortDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medGjelderTilbakekreving(gjelderTilbakekreving(klage))
-            .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medKlagefristUker(BrevParametere.getKlagefristUker());
 
         return dokumentdataBuilder.build();
     }

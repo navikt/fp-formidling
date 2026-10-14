@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,7 +35,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
 
     @Test
     void test_map_fagtype_foreldrepenger() {
-        var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", BigDecimal.valueOf(100), false);
+        var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", false);
         var inntektsmeldingerStatus = new ArbeidsforholdInntektsmeldingerDto(List.of(imStatus));
         var behandling = DatamapperTestUtil.defaultBuilder()
             .inntektsmeldingerStatus(inntektsmeldingerStatus)
@@ -55,12 +54,11 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverIdent()).isEqualTo(imStatus.arbeidsgiverIdent());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
-        assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().stillingsprosent()).isEqualTo(imStatus.stillingsprosent());
     }
 
     @Test
     void test_map_fagtype_svangerskapspenger() {
-        var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", BigDecimal.valueOf(100), false);
+        var imStatus = new ArbeidsforholdInntektsmeldingerDto.ArbeidsforholdInntektsmeldingDto("12345679", false);
         var inntektsmeldingerStatus = List.of(imStatus);
         var behandling = DatamapperTestUtil.defaultBuilder()
             .fagsakYtelseType(BrevGrunnlagDto.FagsakYtelseType.SVANGERSKAPSPENGER)
@@ -78,7 +76,6 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().erInntektsmeldingMottatt()).isEqualTo(imStatus.erInntektsmeldingMottatt());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverIdent()).isEqualTo(imStatus.arbeidsgiverIdent());
         assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().arbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
-        assertThat(dokumentdata.getInntektsmeldingerStatus().getFirst().stillingsprosent()).isEqualTo(imStatus.stillingsprosent());
     }
 
 }

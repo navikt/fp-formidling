@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.lagBeregningsgrunnlagAndel;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
 import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto.ARBEIDSTAKER;
@@ -13,6 +14,7 @@ import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodev
 import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto.MILITÆR_ELLER_SIVIL;
 import static no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,7 +36,10 @@ class BeregningsgrunnlagMapperTest {
     private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(542987.4);
     private static final BigDecimal FRILANSER_BRUTTO_PR_ÅR = BigDecimal.valueOf(95406.6);
     private static final BigDecimal ARBEIDSTAKER_BRUTTO_PR_ÅR = BigDecimal.valueOf(1000000);
-    private static final BigDecimal GJELDENDE_GRUNNLAG_PR_ÅR = BigDecimal.valueOf(1000000);
+    private static final BigDecimal DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR = BigDecimal.valueOf(260_520);
+    private static final BigDecimal LAVT_GJELDENDE_GRUNNLAG_PR_ÅR = BigDecimal.valueOf(6_240);
+    private static final BigDecimal SELVSTENDIG_GJELDENDE_GRUNNLAG_PR_ÅR = BigDecimal.valueOf(254_232);
+    private static final BigDecimal ARBEIDSTAKER_TILKOMMET_TEST_GJELDENDE_GRUNNLAG_PR_ÅR = BigDecimal.valueOf(611_000);
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(50_000);
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
     private static final long FRILANSER_DAGSATS = 200L;
@@ -117,6 +122,16 @@ class BeregningsgrunnlagMapperTest {
     }
 
     @Test
+    void skal_kaste_exception_når_dagsats_mangler() {
+        var andel = new BeregningsgrunnlagAndelDto(null, ARBEIDSTAKER, ARBEIDSTAKER_BRUTTO_PR_ÅR, null, null, null, BER_PERIODE_FOM,
+            BER_PERIODE_TOM, null, false, ARBEIDSTAKER_BRUTTO_PR_ÅR);
+
+        assertThatThrownBy(() -> lagBeregningsgrunnlagAndel(andel, HENT_NAVN))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("BeregningsgrunnlagAndelDto mangler dagsats, kan ikke mappe beregningsgrunnlag");
+    }
+
+    @Test
     void skal_mappe_regelListe_for_dagpenger_med_tilkommet_arbforhold() {
         // Arrange
 
@@ -133,6 +148,9 @@ class BeregningsgrunnlagMapperTest {
         assertThat(regler.getFirst().getAndelListe()).hasSize(1);
         assertThat(regler.getFirst().getAndelListe().getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
         assertThat(regler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(1002);
+        assertThat(regler.getFirst().getAndelListe().getFirst().getÅrsinntekt()).isEqualTo(DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR.longValue());
+        assertThat(regler.getFirst().getAndelListe().getFirst().getMånedsinntekt()).isEqualTo(
+            DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
 
     }
 
@@ -140,7 +158,8 @@ class BeregningsgrunnlagMapperTest {
     void skal_mappe_regelListe_med_for_dagpenger_uten_tilkommet_arbforhold() {
         // Arrange
         var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(DAGPENGER), null, null,
-            List.of(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatusDto.DAGPENGER, 1002, AktivitetStatusDto.ARBEIDSTAKER))),
+            List.of(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatusDto.DAGPENGER, 1002, DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR,
+                AktivitetStatusDto.ARBEIDSTAKER, 24, LAVT_GJELDENDE_GRUNNLAG_PR_ÅR))),
             false, false);
 
 
@@ -153,6 +172,9 @@ class BeregningsgrunnlagMapperTest {
         assertThat(regler.getFirst().getAndelListe()).hasSize(1);
         assertThat(regler.getFirst().getAndelListe().getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
         assertThat(regler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(1002);
+        assertThat(regler.getFirst().getAndelListe().getFirst().getÅrsinntekt()).isEqualTo(DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR.longValue());
+        assertThat(regler.getFirst().getAndelListe().getFirst().getMånedsinntekt()).isEqualTo(
+            DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
 
     }
 
@@ -161,8 +183,9 @@ class BeregningsgrunnlagMapperTest {
         // Arrange
         var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(SELVSTENDIG_NÆRINGSDRIVENDE, ARBEIDSTAKER), null, null, List.of(
             lagBeregningsgrunnlagPeriode(
-                of(lagBgpsandel(BigDecimal.valueOf(254232), null, 978, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, false, GJELDENDE_GRUNNLAG_PR_ÅR),
-                    lagBgpsandel(BigDecimal.valueOf(0), null, 24, AktivitetStatusDto.ARBEIDSTAKER, false, GJELDENDE_GRUNNLAG_PR_ÅR)))), false, false);
+                of(lagBgpsandel(SELVSTENDIG_GJELDENDE_GRUNNLAG_PR_ÅR, null, 978, AktivitetStatusDto.SELVSTENDIG_NÆRINGSDRIVENDE, false,
+                        SELVSTENDIG_GJELDENDE_GRUNNLAG_PR_ÅR),
+                    lagBgpsandel(BigDecimal.ZERO, null, 24, AktivitetStatusDto.ARBEIDSTAKER, false, LAVT_GJELDENDE_GRUNNLAG_PR_ÅR)))), false, false);
 
         // Act
         var regler = tilRegelListe(beregningsgrunnlag);
@@ -217,7 +240,8 @@ class BeregningsgrunnlagMapperTest {
     void beregningsgrunnlag_med_militærstatus_med_dagsats_skal_ignorere_andre_statuser() {
         // Arrange
         var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(ARBEIDSTAKER, MILITÆR_ELLER_SIVIL), null, null, List.of(
-            lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatusDto.MILITÆR_ELLER_SIVIL, 1002, AktivitetStatusDto.ARBEIDSTAKER))),
+            lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatusDto.MILITÆR_ELLER_SIVIL, 1002,
+                DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR, AktivitetStatusDto.ARBEIDSTAKER, 24, LAVT_GJELDENDE_GRUNNLAG_PR_ÅR))),
             false, false);
 
         // Act
@@ -233,8 +257,8 @@ class BeregningsgrunnlagMapperTest {
     void beregningsgrunnlag_med_militærstatus_uten_dagsats_skal_fungere_som_før() {
         // Arrange
         var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(ARBEIDSTAKER, MILITÆR_ELLER_SIVIL), null, null, List.of(
-            lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatusDto.MILITÆR_ELLER_SIVIL, 0, AktivitetStatusDto.ARBEIDSTAKER))), false,
-            false);
+            lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatusDto.MILITÆR_ELLER_SIVIL, 0, BigDecimal.ZERO,
+                AktivitetStatusDto.ARBEIDSTAKER, 24, LAVT_GJELDENDE_GRUNNLAG_PR_ÅR))), false, false);
 
         // Act
         var beregningsgrunnlagRegler = tilRegelListe(beregningsgrunnlag);
@@ -252,7 +276,8 @@ class BeregningsgrunnlagMapperTest {
         // Arrange
         var beregningsgrunnlag = new BeregningsgrunnlagDto(List.of(ARBEIDSTAKER), null, null, List.of(
             lagBeregningsgrunnlagPeriode(of(lagBgpsandel(ARBEIDSTAKER_BRUTTO_PR_ÅR, BigDecimal.ZERO, 0L, ARBEIDSTAKER, true, null),
-                lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 2350, ARBEIDSTAKER, false, GJELDENDE_GRUNNLAG_PR_ÅR)))), false,
+                lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 2350, ARBEIDSTAKER, false,
+                    ARBEIDSTAKER_TILKOMMET_TEST_GJELDENDE_GRUNNLAG_PR_ÅR)))), false,
             false);
 
         // Act
@@ -261,9 +286,12 @@ class BeregningsgrunnlagMapperTest {
         // Assert
         assertThat(beregningsgrunnlagRegler).hasSize(1);
         assertThat(beregningsgrunnlagRegler.getFirst().getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe()).hasSize(1);
         assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe().getFirst().getDagsats()).isEqualTo(2350);
-        assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe().getFirst().getMånedsinntekt()).isEqualTo((GJELDENDE_GRUNNLAG_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue()));
-        assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe().getFirst().getÅrsinntekt()).isEqualTo(GJELDENDE_GRUNNLAG_PR_ÅR.longValue());
+        assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe().getFirst().getMånedsinntekt()).isEqualTo(
+            ARBEIDSTAKER_TILKOMMET_TEST_GJELDENDE_GRUNNLAG_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
+        assertThat(beregningsgrunnlagRegler.getFirst().getAndelListe().getFirst().getÅrsinntekt())
+            .isEqualTo(ARBEIDSTAKER_TILKOMMET_TEST_GJELDENDE_GRUNNLAG_PR_ÅR.longValue());
     }
 
 
@@ -272,20 +300,25 @@ class BeregningsgrunnlagMapperTest {
     }
 
     private List<BeregningsgrunnlagAndelDto> lagBraListeFrilanser() {
-        return of(lagBgpsandel(FRILANSER_BRUTTO_PR_ÅR, null, FRILANSER_DAGSATS, AktivitetStatusDto.FRILANSER, false, FRILANSER_BRUTTO_PR_ÅR), lagBgpsaAvkortetArbeidstaker());
+        return of(lagBgpsandel(FRILANSER_BRUTTO_PR_ÅR, null, FRILANSER_DAGSATS, AktivitetStatusDto.FRILANSER, false, FRILANSER_BRUTTO_PR_ÅR),
+            lagBgpsaAvkortetArbeidstaker());
     }
 
     private List<BeregningsgrunnlagAndelDto> lagBraListeFor2Statuser(AktivitetStatusDto aktivitetStatus1,
                                                                      long dagsats,
-                                                                     AktivitetStatusDto aktivitetStatus2) {
-        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, dagsats, aktivitetStatus1, false, GJELDENDE_GRUNNLAG_PR_ÅR),
-            lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 24, aktivitetStatus2, false, GJELDENDE_GRUNNLAG_PR_ÅR));
+                                                                     BigDecimal gjeldendeGrunnlagPrÅr1,
+                                                                     AktivitetStatusDto aktivitetStatus2,
+                                                                     long dagsats2,
+                                                                     BigDecimal gjeldendeGrunnlagPrÅr2) {
+        return of(        lagBgpsandel(gjeldendeGrunnlagPrÅr1, AVKORTET_PR_ÅR, dagsats, aktivitetStatus1, false, gjeldendeGrunnlagPrÅr1),
+            lagBgpsandel(gjeldendeGrunnlagPrÅr2, AVKORTET_PR_ÅR, dagsats2, aktivitetStatus2, false, gjeldendeGrunnlagPrÅr2));
 
     }
 
     private List<BeregningsgrunnlagAndelDto> lagBraListeDPOgTilkommetArbforhold() {
-        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 978, AktivitetStatusDto.DAGPENGER, false, GJELDENDE_GRUNNLAG_PR_ÅR),
-            lagBgpsandel(BigDecimal.valueOf(0), AVKORTET_PR_ÅR, 24, AktivitetStatusDto.ARBEIDSTAKER, true, GJELDENDE_GRUNNLAG_PR_ÅR));
+        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 978, AktivitetStatusDto.DAGPENGER, false,
+                DAGPENGER_GJELDENDE_GRUNNLAG_PR_ÅR),
+            lagBgpsandel(BigDecimal.ZERO, AVKORTET_PR_ÅR, 24, AktivitetStatusDto.ARBEIDSTAKER, true, LAVT_GJELDENDE_GRUNNLAG_PR_ÅR));
 
     }
 
@@ -302,6 +335,6 @@ class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagAndelDto lagBgpsaAvkortetArbeidstaker() {
         return new BeregningsgrunnlagAndelDto(ARBEIDSTAKER_DAGSATS, ARBEIDSTAKER, ARBEIDSTAKER_BRUTTO_PR_ÅR, AVKORTET_PR_ÅR, null, null,
-            BER_PERIODE_FOM, BER_PERIODE_TOM, null, false, GJELDENDE_GRUNNLAG_PR_ÅR);
+            BER_PERIODE_FOM, BER_PERIODE_TOM, null, false, ARBEIDSTAKER_BRUTTO_PR_ÅR);
     }
 }

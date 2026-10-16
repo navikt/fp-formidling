@@ -61,6 +61,11 @@ class BeregningsgrunnlagMapperTest {
             OpptjeningAktivitetDto.NÆRING, PERIODE_FOM, PERIODE_TOM, null, false, null);
     }
 
+    private BeregningsgrunnlagAndelDto lagBgpsa(AktivitetStatusDto status, boolean erTilkommet) {
+        return new BeregningsgrunnlagAndelDto(0L, status, BRUTTO_PR_ÅR, null, false, null, PERIODE_FOM, PERIODE_TOM, null, erTilkommet,
+            BRUTTO_PR_ÅR);
+    }
+
     private BeregningsgrunnlagAndelDto lagBgpsaAvkortetArbeidstaker() {
         return new BeregningsgrunnlagAndelDto(0L, AktivitetStatusDto.ARBEIDSTAKER, null, AVKORTET_PR_ÅR, false, OpptjeningAktivitetDto.ARBEID,
             PERIODE_FOM, PERIODE_TOM, new BgAndelArbeidsforholdDto("123", null, BigDecimal.ZERO, BigDecimal.ZERO), false, BRUTTO_PR_ÅR);
@@ -91,6 +96,18 @@ class BeregningsgrunnlagMapperTest {
         var bgAktivitetStatus = AktivitetStatusDto.KUN_YTELSE;
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
+        var tilkommet = lagBgpsa(AktivitetStatusDto.ARBEIDSTAKER, true);
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus, List.of(tilkommet)))
+            .containsExactly(tilkommet);
+    }
+
+    @Test
+    void skal_fjerne_tilkommet_andel_for_vanlig_status() {
+        var ordinærAndel = lagBgpsa(AktivitetStatusDto.ARBEIDSTAKER, false);
+        var tilkommetAndel = lagBgpsa(AktivitetStatusDto.ARBEIDSTAKER, true);
+
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(AktivitetStatusDto.ARBEIDSTAKER,
+            List.of(ordinærAndel, tilkommetAndel))).containsExactly(ordinærAndel);
     }
 
     @Test
@@ -105,6 +122,17 @@ class BeregningsgrunnlagMapperTest {
         var bgAktivitetStatus = AktivitetStatusDto.KOMBINERT_AT_SN;
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(bgAktivitetStatus,
             List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
+    }
+
+    @Test
+    void skal_fjerne_andeler_utenfor_kombinert_status_og_tilkommet() {
+        var arbeidstaker = lagBgpsaAvkortetArbeidstaker();
+        var selvstendig = lagBgpsaSN();
+        var frilanser = lagBgpsaBruttoFrilanser();
+        var tilkommetArbeidstaker = lagBgpsa(AktivitetStatusDto.ARBEIDSTAKER, true);
+
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndelerOgFjernTilkommet(AktivitetStatusDto.KOMBINERT_AT_SN,
+            List.of(arbeidstaker, selvstendig, frilanser, tilkommetArbeidstaker))).containsExactly(arbeidstaker, selvstendig);
     }
 
     @Test

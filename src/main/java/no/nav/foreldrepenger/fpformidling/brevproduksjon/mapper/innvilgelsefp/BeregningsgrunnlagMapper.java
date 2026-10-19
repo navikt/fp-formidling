@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.Akt
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.OpptjeningAktivitetDto;
 
 public final class BeregningsgrunnlagMapper {
-    private static final List<AktivitetStatusDto> STATUSER_MED_TILKOMMET_ARBEIDSFORHOLD_SPESIALHÅNDTERING =
+    private static final List<AktivitetStatusDto> STATUSER_SOM_MÅ_BEREGNE_DAGSATS_FRA_ÅRSINNTEKT =
         List.of(AktivitetStatusDto.DAGPENGER, AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER);
 
     private BeregningsgrunnlagMapper() {
@@ -127,7 +127,7 @@ public final class BeregningsgrunnlagMapper {
         var builder = BeregningsgrunnlagAndel.ny();
 
         builder.medAktivitetStatus(mapAktivitetStatus(andel.aktivitetStatus()));
-        if (STATUSER_MED_TILKOMMET_ARBEIDSFORHOLD_SPESIALHÅNDTERING.contains(andel.aktivitetStatus())) {
+        if (STATUSER_SOM_MÅ_BEREGNE_DAGSATS_FRA_ÅRSINNTEKT.contains(andel.aktivitetStatus())) {
             builder.medDagsats(getÅrsinntekt(andel).divide(BigDecimal.valueOf(260), 0, RoundingMode.HALF_UP).longValue());
         } else {
             builder.medDagsats(andel.dagsats());

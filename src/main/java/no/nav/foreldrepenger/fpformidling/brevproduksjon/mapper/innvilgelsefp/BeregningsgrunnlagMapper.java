@@ -24,6 +24,8 @@ import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.Akt
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.OpptjeningAktivitetDto;
 
 public final class BeregningsgrunnlagMapper {
+    private static final List<AktivitetStatusDto> STATUSER_SOM_MÅ_BEREGNE_DAGSATS_FRA_ÅRSINNTEKT =
+        List.of(AktivitetStatusDto.DAGPENGER, AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER);
 
     private BeregningsgrunnlagMapper() {
     }
@@ -119,17 +121,17 @@ public final class BeregningsgrunnlagMapper {
     }
 
     public static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagAndelDto andel, UnaryOperator<String> hentNavn) {
+        if (andel.dagsats() == null) {
+            throw new IllegalStateException("BeregningsgrunnlagAndelDto mangler dagsats, kan ikke mappe beregningsgrunnlag");
+        }
         var builder = BeregningsgrunnlagAndel.ny();
 
         builder.medAktivitetStatus(mapAktivitetStatus(andel.aktivitetStatus()));
-
-        BigDecimal ikkeRedusertDagsatsAAP = null;
-        //Dersom andelen er arbeidsavklaringspenger, kan dagsatsen være redusert hvis bruker har 80% foreldrepenger, men det er brutto dagsats som skal vises i brevet under beregningskapittelet
-        if (AktivitetStatusDto.ARBEIDSAVKLARINGSPENGER.equals(andel.aktivitetStatus())) {
-            var bgBruttoPrÅr = andel.bruttoPrÅr();
-            ikkeRedusertDagsatsAAP = bgBruttoPrÅr != null && bgBruttoPrÅr.compareTo(BigDecimal.ZERO) > 0 ? bgBruttoPrÅr.divide(BigDecimal.valueOf(260), 0, RoundingMode.HALF_UP) : null;
+        if (STATUSER_SOM_MÅ_BEREGNE_DAGSATS_FRA_ÅRSINNTEKT.contains(andel.aktivitetStatus())) {
+            builder.medDagsats(getÅrsinntekt(andel).divide(BigDecimal.valueOf(260), 0, RoundingMode.HALF_UP).longValue());
+        } else {
+            builder.medDagsats(andel.dagsats());
         }
-        builder.medDagsats(ikkeRedusertDagsatsAAP != null ? ikkeRedusertDagsatsAAP.longValue() : andel.dagsats());
         builder.medEtterlønnSluttpakke(OpptjeningAktivitetDto.ETTERLØNN_SLUTTPAKKE.equals(andel.arbeidsforholdType()));
         builder.medMånedsinntekt(getMånedsinntekt(andel).longValue());
         builder.medÅrsinntekt(getÅrsinntekt(andel).longValue());

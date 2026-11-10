@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-parent-app</artifactId>
-        <version>5.4.2</version>
+        <version>5.5.0</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -22,8 +22,8 @@
         <mockito.version>5.21.0</mockito.version>
 
         <!-- Felles artefakter -->
-        <felles.version>7.9.5</felles.version>
-        <prosesstask.version>5.3.0</prosesstask.version>
+        <felles.version>7.10.1</felles.version>
+        <prosesstask.version>5.3.1</prosesstask.version>
         <kontrakter.version>9.4.41</kontrakter.version>
     </properties>
 
@@ -133,6 +133,10 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>

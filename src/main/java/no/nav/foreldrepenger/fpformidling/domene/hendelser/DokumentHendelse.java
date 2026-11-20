@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import no.nav.foreldrepenger.fpformidling.felles.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
@@ -23,10 +24,12 @@ public class DokumentHendelse extends BaseEntitet {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_HENDELSE")
     private Long id;
 
-    @Column(name = "behandling_uuid")
+    @NotNull
+    @Column(name = "behandling_uuid", nullable = false)
     private UUID behandlingUuid;
 
-    @Column(name = "bestilling_uuid")
+    @NotNull
+    @Column(name = "bestilling_uuid", nullable = false)
     private UUID bestillingUuid;
 
     @Enumerated(EnumType.STRING)

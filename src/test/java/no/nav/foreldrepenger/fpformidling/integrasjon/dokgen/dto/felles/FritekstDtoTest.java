@@ -50,4 +50,23 @@ class FritekstDtoTest {
         assertThat(resultat.getFritekst()).isEqualToIgnoringNewLines(String.format(fritekst, "[nav.no/utbetalinger](https://nav.no/utbetalinger)", "[nav.no/klage](https://nav.no/klage)" ));
 
     }
+
+    @Test
+    void linjer_som_starter_med_tall_og_punktum_skal_ikke_bli_nummerert_liste() {
+        var fritekst = "Du har ikke rett i periodene:\n\n18. mars 2024 - 1. april 2024\n3. mai 2024 - 7. mai 2024\n10) juni 2024";
+
+        var resultat = FritekstDto.fra(fritekst);
+
+        assertThat(resultat.getFritekst()).isEqualTo(
+            "Du har ikke rett i periodene:\n\n\n18\\. mars 2024 - 1. april 2024\\\n3\\. mai 2024 - 7. mai 2024\\\n10\\) juni 2024");
+    }
+
+    @Test
+    void tall_som_ikke_er_listemarkør_skal_ikke_endres() {
+        var fritekst = "18.03.2024 - 01.04.2024\nFra 3. mai 2024\n2024 var et år";
+
+        var resultat = FritekstDto.fra(fritekst);
+
+        assertThat(resultat.getFritekst()).isEqualTo("18.03.2024 - 01.04.2024\\\nFra 3. mai 2024\\\n2024 var et år");
+    }
 }

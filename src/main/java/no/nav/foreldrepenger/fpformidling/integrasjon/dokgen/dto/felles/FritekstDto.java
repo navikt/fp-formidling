@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -12,6 +13,8 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BrevGrunnlagDto;
  * Hjelpeklasse for håndtering av fritekst som sikrer at formatering blir riktig i Dokgen.
  */
 public class FritekstDto {
+
+    private static final Pattern NUMMERERT_LISTE = Pattern.compile("(?m)^( {0,3}\\d{1,9})([.)])(?=[ \\t]|$)");
 
     @JsonValue
     private String fritekst;
@@ -59,6 +62,7 @@ public class FritekstDto {
             return null;
         }
         fritekst = konverterOverskrifterTilDokgenFormat(fritekst);
+        fritekst = hindreNummerertListe(fritekst);
         fritekst = ivaretaLinjeskiftIFritekst(fritekst);
         fritekst = fiksNavNoLinker(fritekst);
         return new FritekstDto(fritekst);
@@ -101,6 +105,12 @@ public class FritekstDto {
             resultat.append(linje.replaceAll("^_", "##### "));
         }
         return resultat.toString();
+    }
+
+    // Linjer som starter med tall og punktum (feks "18. mars") blir tolket som nummerert liste i markdown og renummerert.
+    // Escaper skilletegnet slik at teksten vises slik saksbehandler skrev den:
+    static String hindreNummerertListe(String fritekst) {
+        return NUMMERERT_LISTE.matcher(fritekst).replaceAll("$1\\\\$2");
     }
 
     // Enkelt-linjeskift blir ignorert. Metoden sørger for at de kommer med ved å legge til ekstra der det trengs:

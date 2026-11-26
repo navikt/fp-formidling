@@ -2,17 +2,33 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class FritekstDtoTest {
 
-    @Test
-    void SjekkOmfraFinnerLenker() {
-        var fritekst = "nav.no/familie";
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("fritekstOgForventetResultat")
+    void fra_skal_formatere_fritekst(String beskrivelse, String fritekst, String forventet) {
         var resultat = FritekstDto.fra(fritekst);
-        assertThat(resultat.getFritekst()).isEqualTo("[nav.no/familie](https://nav.no/familie)");
+
+        assertThat(resultat.getFritekst()).isEqualTo(forventet);
     }
+
+    private static Stream<Arguments> fritekstOgForventetResultat() {
+        return Stream.of(
+            Arguments.of("Lenke blir gjort om til markdown-lenke", "nav.no/familie", "[nav.no/familie](https://nav.no/familie)"),
+            Arguments.of("Linjer som starter med tall og punktum skal ikke bli nummerert liste",
+                "Du har ikke rett i periodene:\n\n18. mars 2024 - 1. april 2024\n3. mai 2024 - 7. mai 2024\n10) juni 2024",
+                "Du har ikke rett i periodene:\n\n\n18\\. mars 2024 - 1. april 2024\\\n3\\. mai 2024 - 7. mai 2024\\\n10\\) juni 2024"),
+            Arguments.of("Tall som ikke er listemarkør skal ikke endres", "18.03.2024 - 01.04.2024\nFra 3. mai 2024\n2024 var et år",
+                "18.03.2024 - 01.04.2024\\\nFra 3. mai 2024\\\n2024 var et år"));
+    }
+
     @Test
     void SjekkOmfraFinnerLenker2() {
         var fritekst = "https://nav.no/familie/klage";
